@@ -13,8 +13,28 @@ library(tidyverse)
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r}
-summary()
+```{r dataframe setup}
+communities <- read_csv("communities.data")
+communities <- transform(communities,
+                         state = as.integer(state),
+                         county = as.integer(county),
+                         community = as.integer(county),
+                         communityname = as.factor(communityname),
+                         fold = as.integer(fold),
+                         racePctBlack = as.integer(racepctblack),
+                         numbUrban = as.integer(numbUrban),
+                         pctUrban = as.integer(pctUrban),
+                         NumIlleg = as.integer(NumIlleg),
+                         MedOwnCostPctIncNoMtg = as.integer(MedOwnCostPctIncNoMtg),
+                         NumInShelters = as.integer(NumInShelters),
+                         NumStreet = as.integer(NumStreet),
+                         LemasSwFTPerPop = as.integer(LemasSwFTPerPop),
+                         PolicPerPop = as.integer(PolicPerPop),
+                         LemasGangUnitDeploy = as.integer(LemasGangUnitDeploy),
+                         PolicBudgPerPop = as.integer(PolicBudgPerPop))
+communities <- relocate(communities, racePctBlack, .before = racePctWhite)
+communities <- subset(communities, select = -(racepctblack))
+communities
 ```
 
 ```{r, echo = FALSE}
