@@ -404,6 +404,10 @@ communities &lt;- read_csv(&quot;data/communities.data&quot;)</code></pre>
 ## #   pctWInvInc &lt;dbl&gt;, pctWSocSec &lt;dbl&gt;, pctWPubAsst &lt;dbl&gt;, pctWRetire &lt;dbl&gt;,
 ## #   medFamInc &lt;dbl&gt;, perCapInc &lt;dbl&gt;, whitepPerCap &lt;dbl&gt;, blackPerCap &lt;dbl&gt;,
 ## #   indianPerCap &lt;dbl&gt;, AsianPerCap &lt;dbl&gt;, OtherPerCap &lt;dbl&gt;, …</code></pre>
+<p>colnames(communities) &lt;- c(“state”, “county”, “community”,
+“communityname”, “fold”, “population”, “householdsize”, “racepctblack”,
+“racePctWhite”, “racePctAsian”, “racePctHisp”)</p>
+<p>colSums(is.na(communities)) data_clean &lt;- na.omit(communities)</p>
 
 
 

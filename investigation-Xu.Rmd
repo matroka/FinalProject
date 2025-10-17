@@ -29,9 +29,10 @@ library(tidyverse)
 communities <- read_csv("data/communities.data")
 head(communities)
 
-
-
-
 ```
-
-
+colnames(communities) <- c("state", "county", "community", "communityname", 
+                    "fold", "population", "householdsize", "racepctblack", 
+                    "racePctWhite", "racePctAsian", "racePctHisp")
+                
+colSums(is.na(communities))
+data_clean <- na.omit(communities)
