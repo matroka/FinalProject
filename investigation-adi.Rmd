@@ -18,22 +18,9 @@ communities <- read_csv("communities.data")
 communities <- transform(communities,
                          state = as.integer(state),
                          county = as.integer(county),
-                         community = as.integer(county),
-                         communityname = as.factor(communityname),
-                         fold = as.integer(fold),
-                         racePctBlack = as.integer(racepctblack),
-                         numbUrban = as.integer(numbUrban),
-                         pctUrban = as.integer(pctUrban),
-                         NumIlleg = as.integer(NumIlleg),
-                         MedOwnCostPctIncNoMtg = as.integer(MedOwnCostPctIncNoMtg),
-                         NumInShelters = as.integer(NumInShelters),
-                         NumStreet = as.integer(NumStreet),
-                         LemasSwFTPerPop = as.integer(LemasSwFTPerPop),
-                         PolicPerPop = as.integer(PolicPerPop),
-                         LemasGangUnitDeploy = as.integer(LemasGangUnitDeploy),
-                         PolicBudgPerPop = as.integer(PolicBudgPerPop))
-communities <- relocate(communities, racePctBlack, .before = racePctWhite)
-communities <- subset(communities, select = -(racepctblack))
+                         community = as.integer(community),
+                         communityname = as.factor(communityname))
+communities <- rename(communities, racePctBlack = racepctblack)
 communities
 ```
 
