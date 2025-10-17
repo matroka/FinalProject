@@ -21,6 +21,7 @@ communities <- transform(communities,
                          community = as.integer(county),
                          communityname = as.factor(communityname),
                          fold = as.integer(fold),
+                         racePctBlack = as.integer(racepctblack),
                          numbUrban = as.integer(numbUrban),
                          pctUrban = as.integer(pctUrban),
                          NumIlleg = as.integer(NumIlleg),
@@ -31,7 +32,7 @@ communities <- transform(communities,
                          PolicPerPop = as.integer(PolicPerPop),
                          LemasGangUnitDeploy = as.integer(LemasGangUnitDeploy),
                          PolicBudgPerPop = as.integer(PolicBudgPerPop))
-relocate(communities, racePctBlack, .before = racePctWhite)
+communities <- relocate(communities, racePctBlack, .before = racePctWhite)
 communities <- subset(communities, select = -(racepctblack))
 communities
 ```
