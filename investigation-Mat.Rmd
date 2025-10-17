@@ -24,11 +24,15 @@ library(tidyverse)
 
 
 ```{r load-data}
-# load your data 
+communities <- read_csv("data/communities.data")
 
 
 
 
 ```
 
+```{r observation}
 
+communities %>% names()
+
+```
