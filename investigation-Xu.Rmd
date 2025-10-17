@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
+
 # Add any other libraries here
 
 
@@ -25,6 +26,8 @@ library(tidyverse)
 
 ```{r load-data}
 # load your data 
+communities <- read_csv("data/communities.data")
+head(communities)
 
 
 
