@@ -37,6 +37,9 @@ missing_summary <- communities %>%
 head(missing_summary, 30)
 
 #Find the relationship between variables
-
+ggplot(communities, aes(x = ViolentCrimesPerPop)) +
+  geom_histogram(bins = 40, fill = "navyblue", color = "white") +
+  theme_minimal() +
+  labs(title = "Distribution of Violent Crimes per Population")
 ```
 
