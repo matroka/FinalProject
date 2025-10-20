@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
-
+library(ggplot2)
 # Add any other libraries here
 
 
@@ -25,14 +25,18 @@ library(tidyverse)
 
 
 ```{r load-data}
-# load your data 
+# load my data 
 communities <- read_csv("data/communities.data")
-head(communities)
+glimpse(communities)
+
+#summaries & missingness
+missing_summary <- communities %>%
+  summarise(across(everything(), ~ mean(is.na(.)))) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "prop_missing") %>%
+  arrange(desc(prop_missing))
+head(missing_summary, 30)
+
+#Find the relationship between variables
 
 ```
-colnames(communities) <- c("state", "county", "community", "communityname", 
-                    "fold", "population", "householdsize", "racepctblack", 
-                    "racePctWhite", "racePctAsian", "racePctHisp")
-                
-colSums(is.na(communities))
-data_clean <- na.omit(communities)
+
