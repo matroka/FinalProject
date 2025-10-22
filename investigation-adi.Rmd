@@ -40,7 +40,7 @@ us.region <- function(communities) {
 us.region
 ## something wrong with this thing here below, keeps insisting State doesn't exist
 communities <- communities |>
-  mutate(us.region == sapply(communities, us.region))
+  mutate(USRegion == sapply(State, us.region))
 ```
 
 ```{r, echo = FALSE}
