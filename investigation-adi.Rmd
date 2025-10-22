@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = "/Users/Addie/Intro to Data Science/FinalProject/data")
+knitr::opts_knit$set(root.dir = "/Users/Addie/Intro to Data Science/FinalProject")
 library(tidyverse)
 library(dplyr)
 library(tidyr)
@@ -16,18 +16,35 @@ library(tidyr)
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r dataframe setup}
-communities <- read_csv("communities.data")
+communities <- read_csv("data/communities.data")
+communities <- setNames(communities, c("State","County","Community","CommunityName","Fold","Population","HouseholdSize","RacePctBlack","RacePctWhite","RacePctAsian","RacePctHisp","AgePct12t21","AgePct12t29","AgePct16t24","AgePct65up","NumbUrban","PctUrban","MedIncome","PctWWage","PctWFarmSelf","PctWInvInc","PctWSocSec","PctWPubAsst","PctWRetire","MedFamInc","PerCapInc","WhitePerCap","BlackPerCap","IndianPerCap","AsianPerCap","OtherPerCap","HispPerCap","NumUnderPov","PctPopUnderPov","PctLess9thGrade","PctNotHSGrad","PctBSorMore","PctUnemployed","PctEmploy","PctEmplManu","PctEmplProfServ","PctOccupManu","PctOccupMgmtProf","MalePctDivorce","MalePctNevMarr","FemalePctDiv","TotalPctDiv","PersPerFam","PctFam2Par","PctKids2Par","PctYoungKids2Par","PctTeen2Par","PctWorkMomYoungKids","PctWorkMom","NumIlleg","PctIlleg","NumImmig","PctImmigRecent","PctImmigRec5","PctImmigRec8","PctImmigRec10","PctRecentImmig","PctRecImmig5","PctRecImmig8","PctRecImmig10","PctSpeakEnglOnly","PctNotSpeakEnglWell","PctLargHouseFam","PctLargHouseOccup","PersPerOccupHous","PersPerOwnOccHous","PersPerRentOccHous","PctPersOwnOccup","PctPersDenseHous","PctHousLess3BR","MedNumBR","HousVacant","PctHousOccup","PctHousOwnOcc","PctVacantBoarded","PctVacMore6Mos","MedYrHousBuilt","PctHousNoPhone","PctWOFullPlumb","OwnOccLowQuart","OwnOccMedVal","OwnOccHiQuart","RentLowQ","RentMedian","RentHighQ","MedRent","MedRentPctHousInc","MedOwnCostPctInc","MedOwnCostPctIncNoMtg","NumInShelters","NumStreet","PctForeignBorn","PctBornSameState","PctSameHouse85","PctSameCity85","PctSameState85","LemasSwornFT","LemasSwFTPerPop","LemasSwFTFieldOps","LemasSwFTFieldPerPop","LemasTotalReq","LemasTotReqPerPop","PolicRepPerOffic","PolicPerPop","RacialMatchCommPol","PctPolicWhite","PctPolicBlack","PctPolicHisp","PctPolicAsian","PctPolicMinor","OfficAssgnDrugUnits","NumKindsDrugSeiz","PolicAveOTWorked","LandArea","PopDens","PctUsePubTrans","PolicCars","PolicOperBudg","LemasPctPolicOnPatr","LemasGangUnitDeploy","LemasPctOfficDrugUn","PolicBudgPerPop","ViolentCrimesPerPop"))
 communities <- transform(communities,
-                         state = as.integer(state),
-                         county = as.integer(county),
-                         community = as.integer(community),
-                         communityname = as.factor(communityname))
-communities <- rename(communities, racePctBlack = racepctblack)
-communities
+                         State == as.integer(State),
+                         County == as.integer(County),
+                         Community == as.integer(Community),
+                         CommunityName == as.factor(CommunityName))
+colnames(communities)
+us.region <- function(communities) {
+  if (State == c(8,22,24,32,34,35,42,44,51)) {
+    return ("Northeast")
+  } else if (State == c(16,17,18,19,25,26,28,30,37,39,46,55)) {
+    return ("Midwest")
+  } else if (State == c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54)) {
+    return("South")
+  } else if (State == c(2,4,6,7,14,15,29,31,33,41,50,53,56)) {
+    return("West")
+  } else {
+    return("Territory")
+  }
+}
+us.region
+## something wrong with this thing here below, keeps insisting State doesn't exist
+communities <- communities |>
+  mutate(us.region == sapply(communities, us.region))
 ```
 
 ```{r, echo = FALSE}
-plot()
+ggplot()
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
