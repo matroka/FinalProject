@@ -24,7 +24,24 @@ communities <- transform(communities,
                          Community == as.integer(Community),
                          CommunityName == as.factor(CommunityName))
 colnames(communities)
-us.region <- function(communities) {
+view(communities)
+"State" %in% names(communities)
+```
+
+```{r, echo = FALSE}
+ggplot()
+```
+
+```{r unused/scrap code}
+communities$Region <- as.factor(ifelse(communities$State==c(8,22,24,32,34,35,42,44,51), "Northeast", ifelse(communities$State==c(16,17,18,19,25,26,28,30,37,39,46,55), "Midwest", ifelse(communities$State==c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54), "South", ifelse(communities$State==c(2,4,6,7,14,15,29,31,33,41,50,53,56), "West", "Territory")))))
+communities$Region <- communities |> mutate(State = case_when(
+  communities$State==c(8,22,24,32,34,35,42,44,51) ~ "Northeast",
+  communities$State==c(16,17,18,19,25,26,28,30,37,39,46,55) ~ "Midwest",
+  communities$State==c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54) ~ "South",
+  communities$State==c(2,4,6,7,14,15,29,31,33,41,50,53,56) ~ "West",
+  TRUE ~ "Territory"
+))
+us.region <- function(State) {
   if (State == c(8,22,24,32,34,35,42,44,51)) {
     return("Northeast")
   } else if (State == c(16,17,18,19,25,26,28,30,37,39,46,55)) {
@@ -37,14 +54,8 @@ us.region <- function(communities) {
     return("Territory")
   }
 }
-us.region
-## something wrong with this thing here below, keeps insisting State doesn't exist
 communities <- communities |>
-  mutate(USRegion = sapply(communities, us.region))
-```
-
-```{r, echo = FALSE}
-ggplot()
+  mutate(USRegion = sapply(State, us.region))
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
