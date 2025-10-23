@@ -23,9 +23,9 @@ communities <- transform(communities,
                          County == as.integer(County),
                          Community == as.integer(Community),
                          CommunityName == as.factor(CommunityName))
-colnames(communities)
-view(communities)
-"State" %in% names(communities)
+communities$Region <- as.factor(ifelse(communities$State%in%c(8,22,24,32,34,35,42,44,51), "Northeast", ifelse(communities$State%in%c(16,17,18,19,25,26,28,30,37,39,46,55), "Midwest", ifelse(communities$State%in%c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54), "South", ifelse(communities$State%in%c(2,4,6,7,14,15,29,31,33,41,50,53,56), "West", "Territory")))))
+communities <- relocate(communities, Region, .before="Fold")
+communities <- transform(communities, Region = as.factor(Region))
 ```
 
 ```{r, echo = FALSE}
@@ -33,7 +33,6 @@ ggplot()
 ```
 
 ```{r unused/scrap code}
-communities$Region <- as.factor(ifelse(communities$State==c(8,22,24,32,34,35,42,44,51), "Northeast", ifelse(communities$State==c(16,17,18,19,25,26,28,30,37,39,46,55), "Midwest", ifelse(communities$State==c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54), "South", ifelse(communities$State==c(2,4,6,7,14,15,29,31,33,41,50,53,56), "West", "Territory")))))
 communities$Region <- communities |> mutate(State = case_when(
   communities$State==c(8,22,24,32,34,35,42,44,51) ~ "Northeast",
   communities$State==c(16,17,18,19,25,26,28,30,37,39,46,55) ~ "Midwest",
@@ -42,13 +41,13 @@ communities$Region <- communities |> mutate(State = case_when(
   TRUE ~ "Territory"
 ))
 us.region <- function(State) {
-  if (State == c(8,22,24,32,34,35,42,44,51)) {
+  if (State %in% c(8,22,24,32,34,35,42,44,51)) {
     return("Northeast")
-  } else if (State == c(16,17,18,19,25,26,28,30,37,39,46,55)) {
+  } else if (State %in% c(16,17,18,19,25,26,28,30,37,39,46,55)) {
     return("Midwest")
-  } else if (State == c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54)) {
+  } else if (State %in% c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54)) {
     return("South")
-  } else if (State == c(2,4,6,7,14,15,29,31,33,41,50,53,56)) {
+  } else if (State %in% c(2,4,6,7,14,15,29,31,33,41,50,53,56)) {
     return("West")
   } else {
     return("Territory")
