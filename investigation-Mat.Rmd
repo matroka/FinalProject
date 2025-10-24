@@ -33,6 +33,7 @@ communities <- read_csv("data/communities.data")
 
 ```{r observation}
 
-communities %>% names()
-
+communities %>% select(communityname, NumStreet, NumInShelters) %>% 
+  filter(NumStreet>0 & NumInShelters>0) %>% 
+  view()
 ```

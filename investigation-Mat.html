@@ -11,7 +11,7 @@
 
 <meta name="author" content="by 4677: Mate Roka, Xu Sun, Adi Hirasaki, &amp; Xiufeng Zhu" />
 
-<meta name="date" content="2025-10-17" />
+<meta name="date" content="2025-10-24" />
 
 <title>IDS investigation worksheet</title>
 
@@ -353,7 +353,7 @@ display: none;
 <h1 class="title toc-ignore">IDS investigation worksheet</h1>
 <h4 class="author">by 4677: Mate Roka, Xu Sun, Adi Hirasaki, &amp;
 Xiufeng Zhu</h4>
-<h4 class="date">2025-10-17</h4>
+<h4 class="date">2025-10-24</h4>
 
 </div>
 
@@ -369,22 +369,29 @@ project.</p>
 <pre class="r"><code>library(tidyverse)
 # Add any other libraries here</code></pre>
 <pre class="r"><code>communities &lt;- read_csv(&quot;data/communities.data&quot;)</code></pre>
-<pre><code>## New names:
-## • `TotalPctDiv` -&gt; `TotalPctDiv...47`
-## • `TotalPctDiv` -&gt; `TotalPctDiv...48`</code></pre>
-<pre><code>## Warning: One or more parsing issues, call `problems()` on your data frame for details,
-## e.g.:
-##   dat &lt;- vroom(...)
-##   problems(dat)</code></pre>
-<pre><code>## Rows: 1994 Columns: 129
+<pre><code>## Rows: 1994 Columns: 128
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr   (1): communityname
 ## dbl (127): state, county, community, fold, population, householdsize, racepc...
-## lgl   (1): ViolentCrimesPerPop
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>communities %&gt;% select(communityname, NumStreet)</code></pre>
+<pre><code>## # A tibble: 1,994 × 2
+##    communityname       NumStreet
+##    &lt;chr&gt;                   &lt;dbl&gt;
+##  1 Lakewoodcity                0
+##  2 Tukwilacity                 0
+##  3 Aberdeentown                0
+##  4 Willingborotownship         0
+##  5 Bethlehemtownship           0
+##  6 SouthPasadenacity           0
+##  7 Lincolntown                 0
+##  8 Selmacity                   0
+##  9 Hendersoncity               0
+## 10 Claytoncity                 0
+## # ℹ 1,984 more rows</code></pre>
 
 
 
