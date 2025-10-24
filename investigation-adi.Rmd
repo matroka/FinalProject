@@ -21,23 +21,53 @@ communities <- setNames(communities, c("State","County","Community","CommunityNa
 communities <- transform(communities,
                          State == as.integer(State),
                          County == as.integer(County),
-                         Community == as.integer(Community),
-                         CommunityName == as.factor(CommunityName))
+                         Community == as.integer(Community))
 communities$Region <- as.factor(ifelse(communities$State%in%c(8,22,24,32,34,35,42,44,51), "Northeast", ifelse(communities$State%in%c(16,17,18,19,25,26,28,30,37,39,46,55), "Midwest", ifelse(communities$State%in%c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54), "South", ifelse(communities$State%in%c(2,4,6,7,14,15,29,31,33,41,50,53,56), "West", "Territory")))))
 communities <- relocate(communities, Region, .before="Fold")
 communities <- transform(communities, Region = as.factor(Region))
+communities
 ```
 
-```{r, echo = FALSE}
-ggplot()
+Things to investigate:
+* Correlations:
+** RacePerCap & VCPP
+** Incomes/Poverty & VCPP
+** Education & VCPP
+** Employment & VCPP
+** Rent & VCPP
+** PolicPerPop & VCPP
+
+```{r, graphs, echo = FALSE}
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = forcats::fct_reorder(Region, ViolentCrimesPerPop, .fun = median)
+       )) +
+  geom_boxplot() +
+  labs(
+    x = "Violent Crime (Normalized to 0.0-1.0)",
+    y = "US Region",
+    title = "Violent Crime in the USA",
+    subtitle = "1990"
+  )
+ggplot(data = communities,
+       mapping = aes(x = ViolentCrimesPerPop)) +
+  geom_density(fill = "pink4") +
+  labs(
+    x = "Violent Crimes Per Population",
+    y = "Frequency",
+    title = "Violent Crime in the USA",
+    subtitle = "1990 & 1995 Data"
+  ) +
+  theme_bw()
 ```
 
 ```{r unused/scrap code}
 communities$Region <- communities |> mutate(State = case_when(
-  communities$State==c(8,22,24,32,34,35,42,44,51) ~ "Northeast",
-  communities$State==c(16,17,18,19,25,26,28,30,37,39,46,55) ~ "Midwest",
-  communities$State==c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54) ~ "South",
-  communities$State==c(2,4,6,7,14,15,29,31,33,41,50,53,56) ~ "West",
+  communities$State%in%c(8,22,24,32,34,35,42,44,51) ~ "Northeast",
+  communities$State%in%c(16,17,18,19,25,26,28,30,37,39,46,55) ~ "Midwest",
+  communities$State%in%c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54) ~ "South",
+  communities$State%in%c(2,4,6,7,14,15,29,31,33,41,50,53,56) ~ "West",
   TRUE ~ "Territory"
 ))
 us.region <- function(State) {
@@ -55,6 +85,15 @@ us.region <- function(State) {
 }
 communities <- communities |>
   mutate(USRegion = sapply(State, us.region))
+ggplot(data = communities,
+       mapping = aes(x = ViolentCrimesPerPop)) +
+  geom_histogram(binwidth = 0.05) +
+  labs(
+    x = "Violent Crimes Per Population",
+    y = "Frequency",
+    title = "Violent Crime in the USA",
+    subtitle = "1990 & 1995 Data"
+  )
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
