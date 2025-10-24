@@ -17,14 +17,33 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r load-lib, message = FALSE}
 library(tidyverse)
 # Add any other libraries here
-
-
+library(dplyr)
+library(tidyr)
 
 ```
 
 
 ```{r load-data}
-# load your data 
+
+
+# Load the dataset
+data <- read.csv("data/communities.data", stringsAsFactors = FALSE)
+
+# Remove columns with more than 10% missing values
+missing <- colMeans(is.na(data)) * 100
+data <- data[, missing < 10]
+
+# Drop rows with any remaining missing values
+data <- data %>% drop_na()
+
+# Reset row indices
+data <- data %>% mutate(row_id = row_number())
+
+# Print the new shape of the cleaned data
+cat("Data cleaned. New shape:", nrow(data), "rows and", ncol(data), "columns\n")
+
+# View the cleaned data
+head(data)
 
 
 
