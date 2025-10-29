@@ -377,22 +377,23 @@ project.</p>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>communities %&gt;% select(communityname, NumStreet, NumInShelters) %&gt;% 
+<pre class="r"><code>communities %&gt;% select(communityname,PctLess9thGrade,PctNotHSGrad,PctBSorMore, NumStreet, NumInShelters) %&gt;% 
   filter(NumStreet&gt;0 &amp; NumInShelters&gt;0)</code></pre>
-<pre><code>## # A tibble: 315 × 3
-##    communityname    NumStreet NumInShelters
-##    &lt;chr&gt;                &lt;dbl&gt;         &lt;dbl&gt;
-##  1 DalyCitycity          0.14          0.07
-##  2 Albanycity            0.02          0.23
-##  3 Modestocity           0.09          0.12
-##  4 Jacksonvillecity      0.36          0.39
-##  5 SiouxCitycity         0.01          0.05
-##  6 DesMoinescity         0.04          0.18
-##  7 Evansvillecity        0.01          0.05
-##  8 FortCollinscity       0.02          0.02
-##  9 Riversidecity         0.03          0.1 
-## 10 Concordcity           0.01          0.03
-## # ℹ 305 more rows</code></pre>
+<pre><code>## # A tibble: 315 × 6
+##    communityname    PctLess9thGrade PctNotHSGrad PctBSorMore NumStreet
+##    &lt;chr&gt;                      &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+##  1 DalyCitycity                0.33         0.36        0.38      0.14
+##  2 Albanycity                  0.3          0.38        0.47      0.02
+##  3 Modestocity                 0.34         0.43        0.24      0.09
+##  4 Jacksonvillecity            0.25         0.39        0.28      0.36
+##  5 SiouxCitycity               0.29         0.37        0.27      0.01
+##  6 DesMoinescity               0.19         0.31        0.29      0.04
+##  7 Evansvillecity              0.38         0.48        0.22      0.01
+##  8 FortCollinscity             0.12         0.12        0.7       0.02
+##  9 Riversidecity               0.3          0.38        0.3       0.03
+## 10 Concordcity                 0.12         0.18        0.42      0.01
+## # ℹ 305 more rows
+## # ℹ 1 more variable: NumInShelters &lt;dbl&gt;</code></pre>
 
 
 
