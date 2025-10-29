@@ -11,7 +11,7 @@
 
 <meta name="author" content="by 4677: Mate Roka, Xu Sun, Adi Hirasaki, &amp; Xiufeng Zhu" />
 
-<meta name="date" content="2025-10-24" />
+<meta name="date" content="2025-10-29" />
 
 <title>IDS investigation worksheet</title>
 
@@ -353,7 +353,7 @@ display: none;
 <h1 class="title toc-ignore">IDS investigation worksheet</h1>
 <h4 class="author">by 4677: Mate Roka, Xu Sun, Adi Hirasaki, &amp;
 Xiufeng Zhu</h4>
-<h4 class="date">2025-10-24</h4>
+<h4 class="date">2025-10-29</h4>
 
 </div>
 
@@ -370,6 +370,43 @@ project.</p>
 # Add any other libraries here
 library(dplyr)
 library(tidyr)</code></pre>
+<p>Analysis Steps Load the Dataset:</p>
+<p>Imported from the CSV file. Summary statistics reviewed. Data
+Cleaning:</p>
+<p>Handled missing values. Removed features with excessive missing data.
+Standardized data for regression. Exploratory Data Analysis (EDA):</p>
+<p>Visualized relationships between features and crime rates. Identified
+patterns and key features. Regression Modeling:</p>
+<p>Linear Regression: Modeled continuous crime rates based on features.
+Logistic Regression: Converted the crime rate into binary classification
+(e.g., high/low) for logistic analysis. Evaluation:</p>
+<p>Analyzed model performance metrics (e.g., accuracy, R-squared,
+confusion matrix).</p>
+<p>Classic usage scenarios: In the field of crime analysis and
+prediction, the classic application scenarios of the Communities and
+Crime dataset mainly focus on predicting the crime rate of communities
+through regression models. Researchers utilize the socio-economic, law
+enforcement, and demographic data in this dataset to identify the key
+factors influencing the crime rate and make predictions. This analysis
+not only helps understand the drivers of the crime rate but also
+provides data support for policymakers to formulate more effective
+prevention strategies.</p>
+<p>Solve academic problems: The Communities and Crime dataset addresses
+a fundamental issue in criminology research: how to quantify and predict
+the crime rate in communities. By integrating multi-dimensional
+socio-economic and demographic data, this dataset provides a rich
+resource for the academic community to explore the complex relationships
+between crime rates and various social factors. This not only drives the
+research on crime prediction models but also offers scientific basis for
+decision-making in the fields of social policies and public safety.</p>
+<p>Practical application: In practical applications, the Communities and
+Crime dataset is widely used in urban planning and public safety
+management. For instance, local governments and law enforcement agencies
+can utilize the analysis results of this dataset to optimize resource
+allocation and enhance community security. Additionally, non-profit
+organizations and community groups can also leverage these data to
+design targeted social intervention programs in order to reduce crime
+rates and improve the community environment.</p>
 <pre class="r"><code># Load the dataset
 data &lt;- read.csv(&quot;data/communities.data&quot;, stringsAsFactors = FALSE)
 
