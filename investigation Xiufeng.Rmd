@@ -21,8 +21,29 @@ library(dplyr)
 library(tidyr)
 
 ```
+Analysis Steps
+Load the Dataset:
 
+Imported from the CSV file.
+Summary statistics reviewed.
+Data Cleaning:
 
+Handled missing values.
+Removed features with excessive missing data.
+Standardized data for regression.
+Exploratory Data Analysis (EDA):
+
+Visualized relationships between features and crime rates.
+Identified patterns and key features.
+Regression Modeling:
+
+Linear Regression:
+Modeled continuous crime rates based on features.
+Logistic Regression:
+Converted the crime rate into binary classification (e.g., high/low) for logistic analysis.
+Evaluation:
+
+Analyzed model performance metrics (e.g., accuracy, R-squared, confusion matrix).
 ```{r load-data}
 
 
