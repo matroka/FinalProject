@@ -1,7 +1,7 @@
 ---
-title: "IDS investigation worksheet"
-author: "by 4677: Mate Roka, Xu Sun, Adi Hirasaki, & Xiufeng Zhu"
-date: "`r Sys.Date()`"
+title: "IDS investigation worksheet by Xiufeng"
+author: "by 4677:Xiufeng Zhu"
+date: "`2025.10.28"
 output: html_document
 editor_options: 
   markdown: 
