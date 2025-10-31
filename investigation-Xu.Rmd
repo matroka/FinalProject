@@ -16,7 +16,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
-library(ggplot2)
 # Add any other libraries here
 
 
@@ -25,54 +24,11 @@ library(ggplot2)
 
 
 ```{r load-data}
-# Load my data 
-communities <- read_csv("data/communities.data")
-glimpse(communities)
+# load your data 
 
-# Remove identifiers & Check missing values
-data <- communities %>%
-  select(-c(state, county, community, communityname, fold))
-colSums(is.na(data)) %>% sort(decreasing = TRUE)
-data_clean <- data %>% select(where(~ mean(is.na(.)) < 0.3))
-data_clean <- data_clean %>% mutate(across(everything(), ~ replace_na(., mean(., na.rm = TRUE))))
 
-str(data_clean)
-summary(data_clean$ViolentCrimesPerPop)
 
-# Distribution of Violent Crime
-ggplot(data_clean, aes(x = ViolentCrimesPerPop)) +
-  geom_histogram(bins = 50, fill = "navyblue", color = "white") +
-  labs(title = "Distribution of Violent Crimes per Population", x = "Violent Crime Rate", y = "Count")
 
-# Education vs. Crime
-ggplot(data_clean, aes(x = PctNotHSGrad, y = ViolentCrimesPerPop)) +
-  geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm", color = "yellow") +
-  labs(title = "Violent Crime vs. % Without High School Education",
-       x = "% Not High School Graduates",
-       y = "Violent Crime Rate")
-
-# Unemployment vs. Crime
-ggplot(data_clean, aes(x = PctUnemployed, y = ViolentCrimesPerPop)) +
-  geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm", color = "pink") +
-  labs(title = "Unemployment vs. Violent Crime",
-       x = "% Unemployed", y = "Violent Crime Rate")
-
-# Correlation with Crime
-correlations <- data_clean %>%
-  select(-ViolentCrimesPerPop) %>%
-  summarise(across(everything(), ~ cor(., data_clean$ViolentCrimesPerPop, use = "complete.obs"))) %>%
-  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Correlation") %>%
-  arrange(desc(abs(Correlation)))
-head(correlations, 10)
-
-correlations %>%
-  top_n(5, abs(Correlation)) %>%
-  ggplot(aes(x = reorder(Variable, Correlation), y = Correlation, fill = Correlation > 0)) +
-  geom_col(show.legend = FALSE) +
-  coord_flip() +
-  labs(title = "Top 5 Features Most Correlated with Violent Crime",
-       x = "Variable", y = "Correlation")
 ```
+
 
