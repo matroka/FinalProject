@@ -1,6 +1,6 @@
 ---
 title: "IDS investigation worksheet"
-author: "by 4677: Mate Roka, Xu Sun, Adi Hirasaki, & Xiufeng Zhu"
+author: Xu Sun
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -40,32 +40,34 @@ str(data_clean)
 summary(data_clean$ViolentCrimesPerPop)
 
 # Distribution of Violent Crime
-ggplot(data_clean, aes(x = ViolentCrimesPerPop)) +
+ggplot(data = data_clean, mapping = aes(x = ViolentCrimesPerPop)) +
   geom_histogram(bins = 50, fill = "navyblue", color = "white") +
   labs(title = "Distribution of Violent Crimes per Population", x = "Violent Crime Rate", y = "Count")
 
 # Education vs. Crime
-ggplot(data_clean, aes(x = PctNotHSGrad, y = ViolentCrimesPerPop)) +
+ggplot(data = data_clean, mapping = aes(x = PctNotHSGrad, y = ViolentCrimesPerPop)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", color = "yellow") +
   labs(title = "Violent Crime vs. % Without High School Education",
        x = "% Not High School Graduates",
        y = "Violent Crime Rate")
 
-# Unemployment vs. Crime
-ggplot(data_clean, aes(x = PctUnemployed, y = ViolentCrimesPerPop)) +
+
+# Unemployment vs. Crime (95% confidence)
+ggplot(data = data_clean, mapping = aes(x = PctUnemployed, y = ViolentCrimesPerPop)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", color = "pink") +
   labs(title = "Unemployment vs. Violent Crime",
        x = "% Unemployed", y = "Violent Crime Rate")
 
-# Correlation with Crime
+
+# Correlation with Crime 
 correlations <- data_clean %>%
   select(-ViolentCrimesPerPop) %>%
   summarise(across(everything(), ~ cor(., data_clean$ViolentCrimesPerPop, use = "complete.obs"))) %>%
   pivot_longer(cols = everything(), names_to = "Variable", values_to = "Correlation") %>%
   arrange(desc(abs(Correlation)))
-head(correlations, 10)
+head(correlations, 30)
 
 correlations %>%
   top_n(5, abs(Correlation)) %>%
@@ -74,5 +76,15 @@ correlations %>%
   coord_flip() +
   labs(title = "Top 5 Features Most Correlated with Violent Crime",
        x = "Variable", y = "Correlation")
+
+#Income vs. Crime
+ggplot(data_clean, aes(x = medIncome, y = ViolentCrimesPerPop)) +
+  geom_point(alpha = 0.5, color = "black") +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Income vs. Violent Crime",
+       x = "Median Income",
+       y = "Violent Crimes per Population")
+
+
 ```
 
