@@ -25,7 +25,7 @@ communities <- transform(communities,
 communities$Region <- as.factor(ifelse(communities$State%in%c(8,22,24,32,34,35,42,44,51), "Northeast", ifelse(communities$State%in%c(16,17,18,19,25,26,28,30,37,39,46,55), "Midwest", ifelse(communities$State%in%c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54), "South", ifelse(communities$State%in%c(2,4,6,7,14,15,29,31,33,41,50,53,56), "West", "Territory")))))
 communities <- relocate(communities, Region, .before="Fold")
 communities <- transform(communities, Region = as.factor(Region))
-head(communities)
+communities
 ```
 
 Things to investigate:
@@ -40,6 +40,12 @@ Significant = 95% CIs have no overlap at VCPP = 0 and VCPP = 1
 Not Sig = 95% CIs have some overlap at VCPP = 0 and VCPP = 1
 
 ```{r racepercap graph(s), echo = false}
+ggplot(data = communities,
+       mapping = aes(
+         x = WhitePerCap,
+         y = ViolentCrimesPerPop
+       )) +
+  geom_boxplot()
 ggplot(data = communities,
        mapping = aes(
          x = c(WhitePerCap, BlackPerCap, IndianPerCap, AsianPerCap, OtherPerCap, HispPerCap),
