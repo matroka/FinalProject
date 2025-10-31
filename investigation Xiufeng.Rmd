@@ -1,18 +1,21 @@
 ---
-title: "IDS investigation worksheet"
-author: "by 4677: Mate Roka, Xu Sun, Adi Hirasaki, & Xiufeng Zhu"
-date: "`r Sys.Date()`"
+title: "IDS investigation worksheet by Xiufeng"
+author: "by 4677:Xiufeng Zhu"
+date: "`2025.10.28"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
-**Note:** You can use this file as you 'working document' where you can try out various investigation ideas and keep notes about your findings. How you use and structure this file is up to you. It is recommended that you keep notes about what you are investigating and what you find as this will make the process of creating your presentation and report easier. Please note that you _do not_ need to submit this file as part of your group project.
-
-
+**Note:** You can use this file as you 'working document' where you can try out various investigation ideas and keep notes about your findings.
+How you use and structure this file is up to you.
+It is recommended that you keep notes about what you are investigating and what you find as this will make the process of creating your presentation and report easier.
+Please note that you *do not* need to submit this file as part of your group project.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
@@ -21,8 +24,8 @@ library(dplyr)
 library(tidyr)
 
 ```
-Analysis Steps
-Load the Dataset:
+
+Analysis Steps Load the Dataset:
 
 Imported from the CSV file.
 Summary statistics reviewed.
@@ -37,49 +40,110 @@ Visualized relationships between features and crime rates.
 Identified patterns and key features.
 Regression Modeling:
 
-Linear Regression:
-Modeled continuous crime rates based on features.
-Logistic Regression:
-Converted the crime rate into binary classification (e.g., high/low) for logistic analysis.
+Linear Regression: Modeled continuous crime rates based on features.
+Logistic Regression: Converted the crime rate into binary classification (e.g., high/low) for logistic analysis.
 Evaluation:
 
 Analyzed model performance metrics (e.g., accuracy, R-squared, confusion matrix).
 
-Classic usage scenarios:
-In the field of crime analysis and prediction, the classic application scenarios of the Communities and Crime dataset mainly focus on predicting the crime rate of communities through regression models. Researchers utilize the socio-economic, law enforcement, and demographic data in this dataset to identify the key factors influencing the crime rate and make predictions. This analysis not only helps understand the drivers of the crime rate but also provides data support for policymakers to formulate more effective prevention strategies.
+Classic usage scenarios: In the field of crime analysis and prediction, the classic application scenarios of the Communities and Crime dataset mainly focus on predicting the crime rate of communities through regression models.
+Researchers utilize the socio-economic, law enforcement, and demographic data in this dataset to identify the key factors influencing the crime rate and make predictions.
+This analysis not only helps understand the drivers of the crime rate but also provides data support for policymakers to formulate more effective prevention strategies.
 
-Solve academic problems:
-The Communities and Crime dataset addresses a fundamental issue in criminology research: how to quantify and predict the crime rate in communities. By integrating multi-dimensional socio-economic and demographic data, this dataset provides a rich resource for the academic community to explore the complex relationships between crime rates and various social factors. This not only drives the research on crime prediction models but also offers scientific basis for decision-making in the fields of social policies and public safety.
+Solve academic problems: The Communities and Crime dataset addresses a fundamental issue in criminology research: how to quantify and predict the crime rate in communities.
+By integrating multi-dimensional socio-economic and demographic data, this dataset provides a rich resource for the academic community to explore the complex relationships between crime rates and various social factors.
+This not only drives the research on crime prediction models but also offers scientific basis for decision-making in the fields of social policies and public safety.
 
-Practical application:
-In practical applications, the Communities and Crime dataset is widely used in urban planning and public safety management. For instance, local governments and law enforcement agencies can utilize the analysis results of this dataset to optimize resource allocation and enhance community security. Additionally, non-profit organizations and community groups can also leverage these data to design targeted social intervention programs in order to reduce crime rates and improve the community environment.
+Practical application: In practical applications, the Communities and Crime dataset is widely used in urban planning and public safety management.
+For instance, local governments and law enforcement agencies can utilize the analysis results of this dataset to optimize resource allocation and enhance community security.
+Additionally, non-profit organizations and community groups can also leverage these data to design targeted social intervention programs in order to reduce crime rates and improve the community environment.
+
 ```{r load-data}
 
 
 # Load the dataset
-data <- read.csv("data/communities.data", stringsAsFactors = FALSE)
+crime <- read.csv("data/communities.data", stringsAsFactors = FALSE)
 
 # Remove columns with more than 10% missing values
-missing <- colMeans(is.na(data)) * 100
-data <- data[, missing < 10]
+missing <- colMeans(is.na(crime)) * 100
+crime <- crime[, missing < 10]
 
 # Drop rows with any remaining missing values
-data <- data %>% drop_na()
+library(dplyr)
+crime <- crime %>% 
+  drop_na()
 
 # Reset row indices
-data <- data %>% mutate(row_id = row_number())
+crime <- crime %>% mutate(row_id = row_number())
 
 # Print the new shape of the cleaned data
-cat("Data cleaned. New shape:", nrow(data), "rows and", ncol(data), "columns\n")
+cat("Data cleaned. New shape:", nrow(crime), "rows and", ncol(crime), "columns\n")
 
 # View the cleaned data
-head(data)
+head(crime)
 
 
+# Summary stats
+summary(data_clean)
 
+# Correlation with target
+corrs <- sapply(data_clean, function(x) cor(x, data_clean$ViolentCrimesPerPop, use = "complete.obs"))
+head(sort(corrs, decreasing = TRUE), 10)
 
+summary(data_clean$ViolentCrimesPerPop)
 
+# Check a few relationships
+plot(data_clean$medIncome, data_clean$ViolentCrimesPerPop,
+     main = "Crime vs Median Income",
+     xlab = "Median Income", ylab = "Violent Crime Rate")
+
+plot(data_clean$pctWWage, data_clean$ViolentCrimesPerPop,
+     main = "Crime vs WWage",
+     xlab = "WWage %", ylab = "Violent Crime Rate")
+
+library(caret)      
+library(randomForest) 
+
+set.seed(123)
+train_index <- createDataPartition(data_clean$ViolentCrimesPerPop, p = 0.8, list = FALSE)
+train <- data_clean[train_index, ]
+test  <- data_clean[-train_index, ]
+
+# ----  Build two models ----
+
+# (a) Linear Regression
+lm_model <- lm(ViolentCrimesPerPop ~ ., data = train)
+lm_pred <- predict(lm_model, newdata = test)
+
+# (b) Random Forest
+rf_model <- randomForest(ViolentCrimesPerPop ~ ., data = train, ntree = 150)
+rf_pred <- predict(rf_model, newdata = test)
+
+# ---- Evaluate models ----
+# Calculate R-squared (how well model fits) and RMSE (error)
+lm_r2 <- cor(lm_pred, test$ViolentCrimesPerPop)^2
+rf_r2 <- cor(rf_pred, test$ViolentCrimesPerPop)^2
+
+lm_rmse <- sqrt(mean((lm_pred - test$ViolentCrimesPerPop)^2))
+rf_rmse <- sqrt(mean((rf_pred - test$ViolentCrimesPerPop)^2))
+
+cat("Linear Regression: R2 =", lm_r2, " RMSE =", lm_rmse, "\n")
+cat("Random Forest: R2 =", rf_r2, " RMSE =", rf_rmse, "\n")
+
+# ---- 8. Visualize predictions ----
+results <- data.frame(
+  Actual = test$ViolentCrimesPerPop,
+  Predicted = rf_pred
+)
+
+ggplot(results, aes(x = Actual, y = Predicted)) +
+  geom_point(color = "blue", alpha = 0.5) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Random Forest Predictions vs Actual",
+       x = "Actual Violent Crime Rate",
+       y = "Predicted Crime Rate")
+
+# ---- Feature importance (which factors matter most) ----
+varImpPlot(rf_model, n.var = 10, main = "Most Important Features")
 
 ```
-
-

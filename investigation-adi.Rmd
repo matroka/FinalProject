@@ -25,19 +25,27 @@ communities <- transform(communities,
 communities$Region <- as.factor(ifelse(communities$State%in%c(8,22,24,32,34,35,42,44,51), "Northeast", ifelse(communities$State%in%c(16,17,18,19,25,26,28,30,37,39,46,55), "Midwest", ifelse(communities$State%in%c(1,5,9,10,11,12,20,21,23,27,36,40,45,47,48,52,54), "South", ifelse(communities$State%in%c(2,4,6,7,14,15,29,31,33,41,50,53,56), "West", "Territory")))))
 communities <- relocate(communities, Region, .before="Fold")
 communities <- transform(communities, Region = as.factor(Region))
-head(communities)
+communities
 ```
 
 Things to investigate:
-* Correlations:
-** RacePerCap & VCPP
-** Incomes/Poverty & VCPP
-** Education & VCPP
-** Employment & VCPP
-** Rent & VCPP
-** PolicPerPop & VCPP
+* RacePerCap & VCPP
+* Incomes/Poverty & VCPP
+* Education & VCPP
+* Employment & VCPP
+* Rent & VCPP
+* PolicPerPop & VCPP
 
-```{r racepercap, echo = false}
+Significant = 95% CIs have no overlap at VCPP = 0 and VCPP = 1
+Not Sig = 95% CIs have some overlap at VCPP = 0 and VCPP = 1
+
+```{r racepercap graph(s), echo = false}
+ggplot(data = communities,
+       mapping = aes(
+         x = WhitePerCap,
+         y = ViolentCrimesPerPop
+       )) +
+  geom_boxplot()
 ggplot(data = communities,
        mapping = aes(
          x = c(WhitePerCap, BlackPerCap, IndianPerCap, AsianPerCap, OtherPerCap, HispPerCap),
@@ -46,7 +54,250 @@ ggplot(data = communities,
   geom_boxplot()
 ```
 
-```{r, graphs, echo = FALSE}
+```{r, incomes/poverty graph(s), echo = FALSE}
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = MedIncome
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Med Income and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Med Income")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = MedFamInc
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Med Family Income and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Med Family Income")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PerCapInc
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "PC Income and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Per Capita Income")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PctPopUnderPov
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Poverty and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "% People in Poverty")
+```
+MedIncome - Significant
+MedFamInc - Significant
+PerCapInc - Significant
+PctPopUnderPov - Significant
+
+```{r, education graphs, echo = FALSE}
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PctLess9thGrade
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "No HS Education and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "% No HS Education")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PctNotHSGrad
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "No Diploma and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "% No HS Diploma")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PctBSorMore
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "College Graduates and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "% College Graduates")
+```
+PctLess9thGrade - Significant
+PctNotHSGrad - Significant
+PctBSorMore - Significant
+
+```{r, employment graphs, echo = FALSE}
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PctEmploy
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "% Employment and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "% Employment")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PctEmplManu
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "% Manual Workers and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "% Manual Workers")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PctEmplProfServ
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "% Professional Servicers and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "% Professional Servicers")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PctOccupMgmtProf
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "% Management and Professional Workers and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "% Management and Professional Workers")
+```
+PctEmploy - Significant
+PctEmplManu - NOT Sig
+PctEmplProfServ - Significant
+PctOccupMgmtProf - Significant
+
+```{r, housing graphs, echo = FALSE}
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = MedRentPctHousInc
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Rent, Income, and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Med Rent as % of House Income")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = MedOwnCostPctInc
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Mortages, Income, and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Med Owners Cost as % of Income")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = MedOwnCostPctIncNoMtg
+       )) +
+  geom_point(alpha = 0.1, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Owners Costs, Income, and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Med Non-Mortgage Owners Cost as % of Income")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = NumInShelters + NumStreet
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Homeless Populations and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "# of Homeless Persons")
+```
+MedRentPctHousInc - Significant
+MedOwnCostPctInc - Significant
+MedOwnCostPctIncNoMtg - Significant
+NumInShelters + NumInStreet - Significant
+
+```{r, police graphs, echo = FALSE}
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = LemasSwFTPerPop
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Police and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Full-Time Officers Per Pop")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = LemasTotReqPerPop
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Police Requests and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Police Requests Per Pop")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = RacialMatchCommPol
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Police Demographics and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Community/Police Racial Match")
+ggplot(data = communities,
+       mapping = aes(
+         x = ViolentCrimesPerPop,
+         y = PolicBudgPerPop
+       )) +
+  geom_point(alpha = 0.3, colour = "pink4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  labs(title = "Police Budget and Violent Crime",
+       subtitle = "1990 & 1995 Data",
+       x = "Violent Crime",
+       y = "Police Budget Per Pop")
+```
+LemasSwFTPerPop - Significant
+LemasTotReqPerPop - Significant
+RacialMatchCommPol - Significant
+PolicBudgPerPop - Not Sig
+
+```{r, regions & frequency graphs, echo = FALSE}
 ggplot(data = communities,
        mapping = aes(
          x = ViolentCrimesPerPop,
@@ -54,7 +305,7 @@ ggplot(data = communities,
        )) +
   geom_boxplot() +
   labs(
-    x = "Violent Crime (Normalized to 0.0-1.0)",
+    x = "Violent Crime",
     y = "US Region",
     title = "Violent Crime in the USA",
     subtitle = "1990"
@@ -63,7 +314,7 @@ ggplot(data = communities,
        mapping = aes(x = ViolentCrimesPerPop)) +
   geom_density(fill = "pink4") +
   labs(
-    x = "Violent Crimes Per Population",
+    x = "Violent Crime",
     y = "Frequency",
     title = "Violent Crime in the USA",
     subtitle = "1990 & 1995 Data"
