@@ -29,15 +29,14 @@ head(communities)
 ```
 
 Things to investigate:
-* Correlations:
-** RacePerCap & VCPP
-** Incomes/Poverty & VCPP
-** Education & VCPP
-** Employment & VCPP
-** Rent & VCPP
-** PolicPerPop & VCPP
+* RacePerCap & VCPP
+* Incomes/Poverty & VCPP
+* Education & VCPP
+* Employment & VCPP
+* Rent & VCPP
+* PolicPerPop & VCPP
 
-```{r racepercap, echo = false}
+```{r racepercap graph(s), echo = false}
 ggplot(data = communities,
        mapping = aes(
          x = c(WhitePerCap, BlackPerCap, IndianPerCap, AsianPerCap, OtherPerCap, HispPerCap),
@@ -45,8 +44,11 @@ ggplot(data = communities,
        )) +
   geom_boxplot()
 ```
+```{r, incomes/poverty graph(s), echo = FALSE}
+ggplot(data =)
+```
 
-```{r, graphs, echo = FALSE}
+```{r, regions & frequency graphs, echo = FALSE}
 ggplot(data = communities,
        mapping = aes(
          x = ViolentCrimesPerPop,
