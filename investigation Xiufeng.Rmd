@@ -62,25 +62,25 @@ Additionally, non-profit organizations and community groups can also leverage th
 
 
 # Load the dataset
-data <- read.csv("data/communities.data", stringsAsFactors = FALSE)
+crime <- read.csv("data/communities.data", stringsAsFactors = FALSE)
 
 # Remove columns with more than 10% missing values
-missing <- colMeans(is.na(data)) * 100
-data <- data[, missing < 10]
+missing <- colMeans(is.na(crime)) * 100
+crime <- crime[, missing < 10]
 
 # Drop rows with any remaining missing values
 library(dplyr)
-data <- data %>% 
+crime <- crime %>% 
   drop_na()
 
 # Reset row indices
-data <- data %>% mutate(row_id = row_number())
+crime <- crime %>% mutate(row_id = row_number())
 
 # Print the new shape of the cleaned data
-cat("Data cleaned. New shape:", nrow(data), "rows and", ncol(data), "columns\n")
+cat("Data cleaned. New shape:", nrow(crime), "rows and", ncol(crime), "columns\n")
 
 # View the cleaned data
-head(data)
+head(crime)
 
 
 # Summary stats
