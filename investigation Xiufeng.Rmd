@@ -64,7 +64,9 @@ missing <- colMeans(is.na(data)) * 100
 data <- data[, missing < 10]
 
 # Drop rows with any remaining missing values
-data <- data %>% drop_na()
+library(dplyr)
+data <- data %>% 
+  drop_na()
 
 # Reset row indices
 data <- data %>% mutate(row_id = row_number())
@@ -76,6 +78,23 @@ cat("Data cleaned. New shape:", nrow(data), "rows and", ncol(data), "columns\n")
 head(data)
 
 
+# Summary stats
+summary(data_clean)
+
+# Correlation with target
+corrs <- sapply(data_clean, function(x) cor(x, data_clean$ViolentCrimesPerPop, use = "complete.obs"))
+head(sort(corrs, decreasing = TRUE), 10)
+
+summary(data_clean$ViolentCrimesPerPop)
+
+# Check a few relationships
+plot(data_clean$medIncome, data_clean$ViolentCrimesPerPop,
+     main = "Crime vs Median Income",
+     xlab = "Median Income", ylab = "Violent Crime Rate")
+
+plot(data_clean$pctWWage, data_clean$ViolentCrimesPerPop,
+     main = "Crime vs WWage",
+     xlab = "WWage %", ylab = "Violent Crime Rate")
 
 
 
