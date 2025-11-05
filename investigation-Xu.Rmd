@@ -87,4 +87,19 @@ ggplot(data_clean, aes(x = medIncome, y = ViolentCrimesPerPop)) +
 
 
 ```
+1. Pctllleg: percentage of kids born to never married (numeric - decimal)
+This may reflect community-level social disorganization — weaker social networks, less supervision, and more economic strain.
+
+2. PctYoungKids2Par: percent of kids 4 and under in two parent households (numeric - decimal)
+
+3. racePctWhite: percentage of population that is caucasian (numeric - decimal)
+A negative association indicates that under this dataset, communities with lower levels of White residents/inhabitants also tend to be associated with higher criminality levels (-0.68).
+⚠️ Important: this does NOT mean that race causes crime, or not more than income, education, housing, or policing causes crime. The correlation may well represent systemic inequalities.
+(reflect upon it as a socioeconomic, correlated variable rather than a causal racial difference)
+
+4. PctFam2Par: percentage of families (with kids) that are headed by two parents (numeric - decimal)
+
+5. PctKids2Par: percentage of kids in family housing with two parents (numeric - decimal)
+From the correlation analysis, several strong relationships emerged between community family structure and violent crime rates.
+Variables such as PctKids2Par (-0.74), PctFam2Par (-0.71), and PctYoungKids2Par (-0.67) show strong negative correlations with violent crime, indicating that communities with fewer two-parent families tend to experience higher levels of violent crime.
 
