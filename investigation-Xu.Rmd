@@ -45,6 +45,13 @@ ggplot(data = data_clean, mapping = aes(x = ViolentCrimesPerPop)) +
   labs(title = "Distribution of Violent Crimes per Population", x = "Violent Crime Rate", y = "Count")
 
 # Education vs. Crime
+ggplot(data = data_clean, mapping = aes(x = PctLess9thGrade, y = ViolentCrimesPerPop)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", color = "purple") +
+  labs(title = "Violent Crime vs. % With Less Than A 9th Grade Education",
+       x = "% With Less Than A 9th Grade Education",
+       y = "Violent Crime Rate")
+
 ggplot(data = data_clean, mapping = aes(x = PctNotHSGrad, y = ViolentCrimesPerPop)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", color = "yellow") +
@@ -52,6 +59,12 @@ ggplot(data = data_clean, mapping = aes(x = PctNotHSGrad, y = ViolentCrimesPerPo
        x = "% Not High School Graduates",
        y = "Violent Crime Rate")
 
+ggplot(data = data_clean, mapping = aes(x = PctBSorMore, y = ViolentCrimesPerPop)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", color = "skyblue") +
+  labs(title = "Violent Crime vs. % With A Bachelors Degree Or Higher Education",
+       x = "% With A Bachelors Degree Or Higher Education",
+       y = "Violent Crime Rate")
 
 # Unemployment vs. Crime (95% confidence)
 ggplot(data = data_clean, mapping = aes(x = PctUnemployed, y = ViolentCrimesPerPop)) +
