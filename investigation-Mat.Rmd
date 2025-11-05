@@ -31,7 +31,7 @@ communities <- read_csv("data/communities.data")
 
 ```
 
-```{r observation}
+```{r homelessness1}
 
 communities %>% select(communityname,PctLess9thGrade,PctNotHSGrad,PctBSorMore, NumStreet, NumInShelters) %>% 
   ggplot(aes(y=NumStreet, x=PctBSorMore))+
@@ -40,7 +40,7 @@ communities %>% select(communityname,PctLess9thGrade,PctNotHSGrad,PctBSorMore, N
 #Nothing useful here
 ```
 
-```{r obs}
+```{r homelessness2}
 homelessness <- communities %>% 
   group_by(state) %>% 
   mutate(mean_homeless=mean(NumStreet), mean_shelter=mean(NumInShelters))
@@ -53,5 +53,32 @@ homelessness %>%
   summarise(mean1=mean(mean_homeless), mean2=mean(mean_shelter))
 ```
 
+```{r wage/employment/degree}
+wed <- communities %>%
+  select(PctBSorMore, perCapInc, PctEmploy, medIncome)
+wed %>% 
+  ggplot(aes(x=PctBSorMore, y=perCapInc)) +
+  geom_point(alpha=0.25)+
+  geom_smooth(colour="aquamarine")+
+  geom_smooth(method = lm)
+wed %>% 
+  ggplot(aes(x=PctBSorMore, y=PctEmploy))+
+  geom_point(alpha=0.25)+
+  geom_smooth(colour="springgreen")+
+  geom_smooth(method = lm)
 
 
+```
+
+
+```{r variable checking}
+
+communities %>% 
+  select(PctEmplManu,PctOccupManu) %>% 
+  filter(PctEmplManu==PctOccupManu)
+communities %>% 
+  select(PctEmplManu,PctOccupManu) %>% 
+  filter(PctEmplManu!=PctOccupManu)
+
+#for some reason there are two variables fro the same thing and they mostly have #different values!
+```
