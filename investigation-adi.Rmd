@@ -38,17 +38,31 @@ Things to investigate:
 
 Significant = 95% CIs have no overlap at VCPP = 0 and VCPP = 1
 Not Sig = 95% CIs have some overlap at VCPP = 0 and VCPP = 1
+PC = Per Capita
 
-```{r racepercap graph(s), echo = false}
+```{r racepercap data wrangling}
+communities_racepercap <- communities |>
+  pivot_longer(
+    cols = c("WhitePerCap","BlackPerCap","IndianPerCap","AsianPerCap","OtherPerCap","HispPerCap"),
+    names_to = "Race",
+    values_to = "RPC_VCPP"
+  )
+ggplot(
+  data = communities_racepercap,
+  mapping = aes(x = Race, y = RPC_Value)) +
+  geom_boxplot() +
+  labs(
+    title = "Race PC & Violent Crime",
+    subtitle = "1990 & 1995 Data",
+    x = "Race",
+    y = "Violent Crime"
+  )
+```
+
+```{r racepercap graph(s), echo = FALSE}
 ggplot(data = communities,
        mapping = aes(
          x = WhitePerCap,
-         y = ViolentCrimesPerPop
-       )) +
-  geom_boxplot()
-ggplot(data = communities,
-       mapping = aes(
-         x = c(WhitePerCap, BlackPerCap, IndianPerCap, AsianPerCap, OtherPerCap, HispPerCap),
          y = ViolentCrimesPerPop
        )) +
   geom_boxplot()
@@ -229,23 +243,11 @@ ggplot(data = communities,
        subtitle = "1990 & 1995 Data",
        x = "Med Non-Mortgage Owners Cost as % of Income",
        y = "Violent Crime")
-ggplot(data = communities,
-       mapping = aes(
-         x = NumInShelters + NumStreet,
-         y = ViolentCrimesPerPop
-       )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
-  labs(title = "Homeless Populations and Violent Crime",
-       subtitle = "1990 & 1995 Data",
-       x = "# of Homeless Persons",
-       y = "Violent Crime")
 ```
 MedRentPctHousInc - Significant
 MedOwnCostPctInc - Significant
 MedOwnCostPctIncNoMtg - Significant
-NumInShelters + NumInStreet - Significant
-# i wish i had the variable of like, (numinshelters+numinstreet)/(population) but because it's all normalized htat's not possible
+# i wish i had the variable of like, (numinshelters+numinstreet)/(population) but because it's all normalized htat's not possible so, no homeless graphs
 
 ```{r, police graphs, echo = FALSE}
 ggplot(data = communities,
