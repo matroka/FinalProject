@@ -109,7 +109,7 @@ train_index <- createDataPartition(data_clean$ViolentCrimesPerPop, p = 0.8, list
 train <- data_clean[train_index, ]
 test  <- data_clean[-train_index, ]
 
-# ----  Build two models ----
+# Build two models
 
 # (a) Linear Regression
 lm_model <- lm(ViolentCrimesPerPop ~ ., data = train)
@@ -119,7 +119,7 @@ lm_pred <- predict(lm_model, newdata = test)
 rf_model <- randomForest(ViolentCrimesPerPop ~ ., data = train, ntree = 150)
 rf_pred <- predict(rf_model, newdata = test)
 
-# ---- Evaluate models ----
+# Evaluate models
 # Calculate R-squared (how well model fits) and RMSE (error)
 lm_r2 <- cor(lm_pred, test$ViolentCrimesPerPop)^2
 rf_r2 <- cor(rf_pred, test$ViolentCrimesPerPop)^2
@@ -130,7 +130,7 @@ rf_rmse <- sqrt(mean((rf_pred - test$ViolentCrimesPerPop)^2))
 cat("Linear Regression: R2 =", lm_r2, " RMSE =", lm_rmse, "\n")
 cat("Random Forest: R2 =", rf_r2, " RMSE =", rf_rmse, "\n")
 
-# ---- 8. Visualize predictions ----
+# Visualize predictions 
 results <- data.frame(
   Actual = test$ViolentCrimesPerPop,
   Predicted = rf_pred
@@ -143,7 +143,7 @@ ggplot(results, aes(x = Actual, y = Predicted)) +
        x = "Actual Violent Crime Rate",
        y = "Predicted Crime Rate")
 
-# ---- Feature importance (which factors matter most) ----
+# Feature importance (which factors matter most) 
 varImpPlot(rf_model, n.var = 10, main = "Most Important Features")
 
 ```
