@@ -85,46 +85,56 @@ Additionally, non-profit organizations and community groups can also leverage th
 
 
 ```{r load-data}
+library(tidyverse)
 
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-# Load the dataset
-crime <- read.csv("data/communities.data", stringsAsFactors = FALSE)
+# Load column names
+names_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.names"
+name_lines <- readLines(names_url)
+name_lines <- name_lines[grepl("^@attribute", name_lines)]
+col_names <- gsub("^@attribute\\s+", "", name_lines)
+col_names <- sub("\\s+.*$", "", col_names)
+col_names <- col_names[col_names != ""]
 
-# Remove columns with more than 10% missing values
-missing <- colMeans(is.na(crime)) * 100
-crime <- crime[, missing < 10]
+# Load dataset
+data_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.data"
+crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_names)
 
-# Drop rows with any remaining missing values
+# Clean dataset
+crime <- crime %>%
+  select(-state, -county, -community, -communityname, -fold)
+
+# Replace missing values with column means
 library(dplyr)
-crime <- crime %>% 
-  drop_na()
+
+data_clean <- crime %>%
+  mutate(across(where(is.numeric),
+                ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
 
 # Print the new shape of the cleaned data
-cat("Data cleaned. New shape:", nrow(crime), "rows and", ncol(crime), "columns\n")
-
-# View the cleaned data
-head(crime)
-
-
-# Summary stats
 summary(data_clean)
+cat("Data cleaned. Shape:", nrow(data_clean), "rows and", ncol(data_clean), "columns\n")
 
-# Reset row indices
-crime <- crime %>% mutate(row_id = row_number())
 library(corrplot)
 
 # Compute correlations among numeric columns
-crime_num <- crime %>% select(where(is.numeric))
+crime_num <- data_clean %>% select(where(is.numeric))
 corr_matrix <- cor(crime_num, use = "complete.obs")
 
 # Plot heatmap for top correlated features
 corrplot(corr_matrix, type = "lower", tl.cex = 0.6, tl.col = "black")
 
 # Target Variable Distribution
-ggplot(crime, aes(x = ViolentCrimesPerPop)) +
+ggplot(data_clean, aes(x = ViolentCrimesPerPop)) +
   geom_histogram(bins = 30, fill = "steelblue", color = "white") +
   labs(title = "Distribution of Violent Crime Rate",
        x = "Violent Crimes per Population", y = "Frequency")
+
+ggplot(data_clean, aes(x = PctPopUnderPov, y = ViolentCrimesPerPop)) +
+geom_point(alpha = 0.5, color = "purple") +
+geom_smooth(method = "lm", se = FALSE, color = "red") +
+labs(title = "Violent Crime vs Poverty", x = "Poverty (%)", y = "Violent Crime Rate")
 
 # Residual Analysis (Model Diagnostics)
 residuals_rf <- test$ViolentCrimesPerPop - rf_pred
@@ -155,7 +165,7 @@ library(randomForest)
 set.seed(123)
 train_index <- createDataPartition(data_clean$ViolentCrimesPerPop, p = 0.8, list = FALSE)
 train <- data_clean[train_index, ]
-test  <- data_clean[-train_index, ]
+test <- data_clean[-train_index, ]
 
 # Build two models
 
@@ -177,6 +187,7 @@ rf_rmse <- sqrt(mean((rf_pred - test$ViolentCrimesPerPop)^2))
 
 cat("Linear Regression: R2 =", lm_r2, " RMSE =", lm_rmse, "\n")
 cat("Random Forest: R2 =", rf_r2, " RMSE =", rf_rmse, "\n")
+
 
 # Visualize predictions 
 results <- data.frame(
