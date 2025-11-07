@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r load-lib, message = FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 install.packages("plotly")
 install.packages("corrplot")
 install.packages("caret")
