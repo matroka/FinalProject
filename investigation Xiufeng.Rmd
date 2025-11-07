@@ -136,13 +136,13 @@ geom_point(alpha = 0.5, color = "purple") +
 geom_smooth(method = "lm", se = FALSE, color = "red") +
 labs(title = "Violent Crime vs Poverty", x = "Poverty (%)", y = "Violent Crime Rate")
 
-# Residual Analysis (Model Diagnostics)
-residuals_rf <- test$ViolentCrimesPerPop - rf_pred
+library(caret)      
+library(randomForest) 
 
-ggplot(data.frame(residuals_rf), aes(x = residuals_rf)) +
-  geom_histogram(bins = 30, fill = "darkorange", color = "white") +
-  labs(title = "Residual Distribution (Random Forest)",
-       x = "Residuals", y = "Count")
+set.seed(123)
+train_index <- createDataPartition(data_clean$ViolentCrimesPerPop, p = 0.8, list = FALSE)
+train <- data_clean[train_index, ]
+test  <- data_clean[-train_index, ]
 
 # Correlation with target
 corrs <- sapply(data_clean, function(x) cor(x, data_clean$ViolentCrimesPerPop, use = "complete.obs"))
@@ -158,14 +158,6 @@ plot(data_clean$medIncome, data_clean$ViolentCrimesPerPop,
 plot(data_clean$pctWWage, data_clean$ViolentCrimesPerPop,
      main = "Crime vs WWage",
      xlab = "WWage %", ylab = "Violent Crime Rate")
-
-library(caret)      
-library(randomForest) 
-
-set.seed(123)
-train_index <- createDataPartition(data_clean$ViolentCrimesPerPop, p = 0.8, list = FALSE)
-train <- data_clean[train_index, ]
-test <- data_clean[-train_index, ]
 
 # Build two models
 
@@ -205,6 +197,14 @@ ggplot(results, aes(x = Actual, y = Predicted)) +
 # Feature importance (which factors matter most) 
 varImpPlot(rf_model, n.var = 10, main = "Most Important Features")
 
+# Residual Analysis (Model Diagnostics)
+residuals_rf <- test$ViolentCrimesPerPop - rf_pred
+
+ggplot(data.frame(residuals_rf), aes(x = residuals_rf)) +
+  geom_histogram(bins = 30, fill = "darkorange", color = "white") +
+  labs(title = "Residual Distribution (Random Forest)",
+       x = "Residuals", y = "Count")
+
 library(plotly)
 
 
@@ -212,6 +212,7 @@ p <- ggplot(crime, aes(x = PctPopUnderPov, y = ViolentCrimesPerPop)) +
   geom_point(alpha = 0.6, color = "purple") +
   labs(title = "Interactive: Poverty vs Violent Crime",
        x = "Poverty (%)", y = "Violent Crime Rate")
+
 
 ggplotly(p)
 
