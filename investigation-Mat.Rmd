@@ -82,3 +82,44 @@ communities %>%
 
 #for some reason there are two variables fro the same thing and they mostly have #different values!
 ```
+
+
+
+```{r crimes/housing}
+communities %>% 
+  filter(NumStreet>0) %>% 
+  ggplot(aes(x=NumStreet, y=ViolentCrimesPerPop))+
+  geom_jitter(alpha=0.3)+
+  geom_smooth(method = lm)+
+  geom_smooth()
+
+communities %>% 
+  ggplot(aes(x=MedRent, y=HousVacant))+
+  geom_point()
+
+communities %>% 
+  ggplot(aes(x=PctLargeHouseOccup, y=MedRent))+
+  geom_point()
+```
+
+
+
+
+```{r education}
+communities %>%
+  filter(racePctWhite>=0.7) %>% 
+  filter(PctBSorMore!=0, PctBSorMore!=1, PctSpeakEnglOnly!=0) %>% 
+  ggplot(aes(x=PctBSorMore, y=PctSpeakEnglOnly))+
+  geom_point(alpha=0.3)+
+  geom_smooth()
+
+communities %>% 
+  filter(racePctWhite>=0.7) %>% 
+  ggplot(aes(x=PctNotHSGrad, y=PctSpeakEnglOnly))+
+  geom_point(alpha=0.3)
+
+communities %>% 
+  ggplot(aes(x=racePctWhite, y=PctSpeakEnglOnly))+
+  geom_point(alpha=0.3)
+
+```
