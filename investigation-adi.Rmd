@@ -325,6 +325,14 @@ ggplot(data = communities,
   theme_bw()
 ```
 
+```{r additional/inspired by others}
+communities |>
+  filter(racePctWhite>=0.7) |> 
+  ggplot(aes(x=PctLess9thGrade, y=PctSpeakEnglOnly)) +
+  geom_point(alpha=0.3) +
+  geom_smooth(method = lm)
+```
+
 ```{r unused/scrap code}
 communities$Region <- communities |> mutate(State = case_when(
   communities$State%in%c(8,22,24,32,34,35,42,44,51) ~ "Northeast",
