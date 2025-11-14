@@ -7,24 +7,84 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(corrplot)
+library(caret)      
+library(randomForest) 
+library(plotly)
 ```
 
-## R Markdown
+## Data
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is the original data set.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r data set}
+communities <- read_csv("data/communities.data")
 ```
 
-## Including Plots
+## Research Question
 
-You can also embed plots, for example:
+This is our research question.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+This is why we chose this question.
+
+## Data Setup
+
+The values are normalized. This is what that means. These are some issues that arise from this.
+
+There are varaibles that appear similar or the same but have different values. These are our hypotheses as to why this is true.
+
+There are missing variables in the initial data set. This is why.
+
+This is how we cleaned the original data set for our use.
+
+## randomForest
+
+This is what randomForest does, with a brief explanation as to how.
+
+This is how we used randomForest in exploring our data.
+
+## Highest Correlation
+
+These are the variables with the most significant correlation to the violent crime rate.
+
+```{r highest correlation}
+data <- communities %>%
+  select(-c(state, county, community, communityname, fold))
+colSums(is.na(data)) %>% sort(decreasing = TRUE)
+data_clean <- data %>% select(where(~ mean(is.na(.)) < 0.3))
+data_clean <- data_clean %>% mutate(across(everything(), ~ replace_na(., mean(., na.rm = TRUE))))
+correlations <- data_clean %>%
+  select(-ViolentCrimesPerPop) %>%
+  summarise(across(everything(), ~ cor(., data_clean$ViolentCrimesPerPop, use = "complete.obs"))) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Correlation") %>%
+  arrange(desc(abs(Correlation)))
+correlations %>%
+  top_n(15, abs(Correlation)) %>%
+  ggplot(aes(x = reorder(Variable, Correlation), y = Correlation, fill = Correlation > 0)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Top 15 Features Most Correlated with Violent Crime",
+       x = "Variable", y = "Correlation")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Adjusted r-squared
+
+These are the top 5 variables that produce the highest r-squared score.
+
+This is how we discovered the top 5 variables.
+
+These are the scatterplot/linear model graphs of the top 5 variables.
+
+```{r adjusted r-squared graphs}
+```
+
+## Possible explanations
+
+These are some possible explanations for why certain variables are more or elss correlated with the violent crime rate.
+
+Examples: Historical racism, racial discrepencies, slavery, and inequality, poverty and desperation, reasons for immigration, privilege
+
+# Note that the `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the plot.

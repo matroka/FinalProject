@@ -17,21 +17,21 @@ This is a template repository for your group project. One of your group members 
 
 - Report
   [ ] "normalization" explanation (Mat)
+  [ ] difficulties with normalized data
   [ ] data prep and cleaning explanation
+  [ ] best adjusted r-squareds (Xu)
+  [ ] some of Adi's graphs (not all of them i made arguably too many)
   [ ] randomForest (Xiufeng)
     - residuals, graphs, explanation
-  [ ] some of Adi's graphs (not all of them i made arguably too many)
-  [ ] best adjusted r-squareds (Xu)
   [ ] confounding variables & possible explanations behind corrrelations (historical racism, poverty, etc.)
   [ ] missing values due to data set production methods
   [ ] similar variables with different values -- idk why???
-  [ ] difficulties with normalized data
 
 - Presentation
   [ ] "normalization" explanation (Mat)
+  [ ] difficulties with normalized data
   [ ] data prep and cleaning explanation
-  [ ] some of Adi's graphs (not all of them i made arguably too many)
   [ ] best adjusted r-squareds (Xu)
+  [ ] some of Adi's graphs (not all of them i made arguably too many)
   [ ] confounding variables & possible explanations behind corrrelations (historical racism, poverty, etc.)
   [ ] similar variables with different values -- idk why???
-  [ ] difficulties with normalized data
