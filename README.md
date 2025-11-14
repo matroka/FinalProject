@@ -22,25 +22,16 @@ This is a template repository for your group project. One of your group members 
     - residuals, graphs, explanation
   [ ] some of Adi's graphs (not all of them i made arguably too many)
   [ ] best adjusted r-squareds (Xu)
+  [ ] confounding variables & possible explanations behind corrrelations (historical racism, poverty, etc.)
+  [ ] missing values due to data set production methods
+  [ ] similar variables with different values -- idk why???
+  [ ] difficulties with normalized data
 
 - Presentation
   [ ] "normalization" explanation (Mat)
   [ ] data prep and cleaning explanation
   [ ] some of Adi's graphs (not all of them i made arguably too many)
   [ ] best adjusted r-squareds (Xu)
-
-# Check-in
-
-There will be two check-in points where you will have a discussion with a tutor on what you have done so far and what you plan to investigate. To help make this meeting run smoothly, it is recommended that you use the space below to bullet point your key findings and your plans. You can also add here any feedback and suggestions you receive from your tutor for you to refer back to in the future.
-
-## Check-in 1 (week 6)
-
-- item 1
-- item 2
-- etc.
-
-## Check-in 2 (week 10)
-
-- item 1
-- item 2
-- etc.
+  [ ] confounding variables & possible explanations behind corrrelations (historical racism, poverty, etc.)
+  [ ] similar variables with different values -- idk why???
+  [ ] difficulties with normalized data

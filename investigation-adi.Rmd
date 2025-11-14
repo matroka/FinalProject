@@ -26,10 +26,11 @@ communities$Region <- as.factor(ifelse(communities$State%in%c(8,22,24,32,34,35,4
 communities <- relocate(communities, Region, .before="Fold")
 communities <- transform(communities, Region = as.factor(Region))
 head(communities)
+view(communities)
 ```
 
 Things to investigate:
-* RacePerCap & VCPP
+--* RacePerCap & VCPP--
 * Incomes/Poverty & VCPP
 * Education & VCPP
 * Employment & VCPP
@@ -49,7 +50,7 @@ communities_racepercap <- communities |>
   )
 ggplot(
   data = communities_racepercap,
-  mapping = aes(x = Race, y = RPC_Value)) +
+  mapping = aes(x = Race, y = RPC_VCPP)) +
   geom_boxplot() +
   labs(
     title = "Race PC & Violent Crime",
@@ -331,6 +332,9 @@ communities |>
   ggplot(aes(x=PctLess9thGrade, y=PctSpeakEnglOnly)) +
   geom_point(alpha=0.3) +
   geom_smooth(method = lm)
+
+# % NA values per column
+communities %>% summarize_all(funs(sum(is.na(.)) / length(.)))
 ```
 
 ```{r unused/scrap code}
