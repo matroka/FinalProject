@@ -18,9 +18,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggplot2)
 # Add any other libraries here
-
-
-
 ```
 
 
@@ -73,6 +70,13 @@ ggplot(data = data_clean, mapping = aes(x = PctUnemployed, y = ViolentCrimesPerP
   labs(title = "Unemployment vs. Violent Crime",
        x = "% Unemployed", y = "Violent Crime Rate")
 
+#Income vs. Crime
+ggplot(data_clean, aes(x = medIncome, y = ViolentCrimesPerPop)) +
+  geom_point(alpha = 0.5, color = "black") +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Income vs. Violent Crime",
+       x = "Median Income",
+       y = "Violent Crimes per Population")
 
 # Correlation with Crime 
 correlations <- data_clean %>%
@@ -90,14 +94,14 @@ correlations %>%
   labs(title = "Top 15 Features Most Correlated with Violent Crime",
        x = "Variable", y = "Correlation")
 
-#Income vs. Crime
-ggplot(data_clean, aes(x = medIncome, y = ViolentCrimesPerPop)) +
-  geom_point(alpha = 0.5, color = "black") +
-  geom_smooth(method = "lm", color = "red") +
-  labs(title = "Income vs. Violent Crime",
-       x = "Median Income",
-       y = "Violent Crimes per Population")
-
+top15_vars <- correlations %>%
+  top_n(15, abs(Correlation)) %>%
+  pull(Variable)
+formula_top15 <- as.formula(
+  paste("ViolentCrimesPerPop ~", paste(top15_vars, collapse = " + "))
+)
+model_top15 <- lm(formula_top15, data = communities)
+summary(model_top15)
 
 ```
 1. Pctllleg: percentage of kids born to never married (numeric - decimal)
