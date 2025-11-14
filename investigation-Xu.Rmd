@@ -83,11 +83,11 @@ correlations <- data_clean %>%
 head(correlations, 30)
 
 correlations %>%
-  top_n(5, abs(Correlation)) %>%
+  top_n(15, abs(Correlation)) %>%
   ggplot(aes(x = reorder(Variable, Correlation), y = Correlation, fill = Correlation > 0)) +
   geom_col(show.legend = FALSE) +
   coord_flip() +
-  labs(title = "Top 5 Features Most Correlated with Violent Crime",
+  labs(title = "Top 15 Features Most Correlated with Violent Crime",
        x = "Variable", y = "Correlation")
 
 #Income vs. Crime
