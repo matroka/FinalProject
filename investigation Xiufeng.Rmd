@@ -49,6 +49,7 @@ Evaluation:
 Analyzed model performance metrics (e.g., accuracy, R-squared, confusion matrix).
 
 Classic usage scenarios: In the field of crime analysis and prediction, the classic application scenarios of the Communities and Crime dataset mainly focus on predicting the crime rate of communities through regression models.
+
 Researchers utilize the socio-economic, law enforcement, and demographic data in this dataset to identify the key factors influencing the crime rate and make predictions.
 This analysis not only helps understand the drivers of the crime rate but also provides data support for policymakers to formulate more effective prevention strategies.
 
@@ -86,7 +87,6 @@ Additionally, non-profit organizations and community groups can also leverage th
 
 ```{r load-data}
 library(tidyverse)
-
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 # Load column names
@@ -123,7 +123,7 @@ crime_num <- data_clean %>% select(where(is.numeric))
 corr_matrix <- cor(crime_num, use = "complete.obs")
 
 # Plot heatmap for top correlated features
-corrplot(corr_matrix, type = "lower", tl.cex = 0.6, tl.col = "black")
+corrplot(corr_matrix, type = "lower", tl.cex = 0.2, tl.col = "black")
 
 # Target Variable Distribution
 ggplot(data_clean, aes(x = ViolentCrimesPerPop)) +
