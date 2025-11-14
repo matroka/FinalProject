@@ -20,8 +20,11 @@ library(plotly)
 
 This is the original data set.
 
+This is a brief explanation of some of the variables and types of variables it contains.
+
 ```{r data set}
 communities <- read_csv("data/communities.data")
+head(communities)
 ```
 
 ## Research Question
@@ -34,17 +37,28 @@ This is why we chose this question.
 
 The values are normalized. This is what that means. These are some issues that arise from this.
 
-There are varaibles that appear similar or the same but have different values. These are our hypotheses as to why this is true.
+There are variables that appear similar or the same but have different values. These are our hypotheses as to why this is true.
 
 There are missing variables in the initial data set. This is why.
 
 This is how we cleaned the original data set for our use.
 
+```{r data setup}
+communities <- setNames(communities, c("State","County","Community","CommunityName","Fold","Population","HouseholdSize","RacePctBlack","RacePctWhite","RacePctAsian","RacePctHisp","AgePct12t21","AgePct12t29","AgePct16t24","AgePct65up","NumbUrban","PctUrban","MedIncome","PctWWage","PctWFarmSelf","PctWInvInc","PctWSocSec","PctWPubAsst","PctWRetire","MedFamInc","PerCapInc","WhitePerCap","BlackPerCap","IndianPerCap","AsianPerCap","OtherPerCap","HispPerCap","NumUnderPov","PctPopUnderPov","PctLess9thGrade","PctNotHSGrad","PctBSorMore","PctUnemployed","PctEmploy","PctEmplManu","PctEmplProfServ","PctOccupManu","PctOccupMgmtProf","MalePctDivorce","MalePctNevMarr","FemalePctDiv","TotalPctDiv","PersPerFam","PctFam2Par","PctKids2Par","PctYoungKids2Par","PctTeen2Par","PctWorkMomYoungKids","PctWorkMom","NumIlleg","PctIlleg","NumImmig","PctImmigRecent","PctImmigRec5","PctImmigRec8","PctImmigRec10","PctRecentImmig","PctRecImmig5","PctRecImmig8","PctRecImmig10","PctSpeakEnglOnly","PctNotSpeakEnglWell","PctLargHouseFam","PctLargHouseOccup","PersPerOccupHous","PersPerOwnOccHous","PersPerRentOccHous","PctPersOwnOccup","PctPersDenseHous","PctHousLess3BR","MedNumBR","HousVacant","PctHousOccup","PctHousOwnOcc","PctVacantBoarded","PctVacMore6Mos","MedYrHousBuilt","PctHousNoPhone","PctWOFullPlumb","OwnOccLowQuart","OwnOccMedVal","OwnOccHiQuart","RentLowQ","RentMedian","RentHighQ","MedRent","MedRentPctHousInc","MedOwnCostPctInc","MedOwnCostPctIncNoMtg","NumInShelters","NumStreet","PctForeignBorn","PctBornSameState","PctSameHouse85","PctSameCity85","PctSameState85","LemasSwornFT","LemasSwFTPerPop","LemasSwFTFieldOps","LemasSwFTFieldPerPop","LemasTotalReq","LemasTotReqPerPop","PolicRepPerOffic","PolicPerPop","RacialMatchCommPol","PctPolicWhite","PctPolicBlack","PctPolicHisp","PctPolicAsian","PctPolicMinor","OfficAssgnDrugUnits","NumKindsDrugSeiz","PolicAveOTWorked","LandArea","PopDens","PctUsePubTrans","PolicCars","PolicOperBudg","LemasPctPolicOnPatr","LemasGangUnitDeploy","LemasPctOfficDrugUn","PolicBudgPerPop","ViolentCrimesPerPop"))
+communities <- transform(communities,
+                         State == as.integer(State),
+                         County == as.integer(County),
+                         Community == as.integer(Community))
+```
+
 ## randomForest
 
-This is what randomForest does, with a brief explanation as to how.
+This is what randomForest does, with a brief explanation as to how, since it is not one of the packages we have discussed in class.
 
 This is how we used randomForest in exploring our data.
+
+```{r randomForest}
+```
 
 ## Highest Correlation
 
@@ -74,11 +88,14 @@ correlations %>%
 
 These are the top 5 variables that produce the highest r-squared score.
 
+```{r adjusted r-squared}
+```
+
 This is how we discovered the top 5 variables.
 
 These are the scatterplot/linear model graphs of the top 5 variables.
 
-```{r adjusted r-squared graphs}
+```{r adjusted r-squared graphs, echo = FALSE}
 ```
 
 ## Possible explanations

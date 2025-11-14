@@ -162,6 +162,7 @@ library(dplyr)
 data_clean <- crime %>%
   mutate(across(where(is.numeric),
                 ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+    # why? -adi
 
 # Print the new shape of the cleaned data
 summary(data_clean)
