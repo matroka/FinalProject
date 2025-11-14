@@ -31,17 +31,68 @@ Analysis Steps Load the Dataset:
 
 Imported from the CSV file.
 Summary statistics reviewed.
-Data Cleaning:
 
+Data Cleaning:
 Handled missing values.
 Removed features with excessive missing data.
 Standardized data for regression.
-Exploratory Data Analysis (EDA):
 
+What kind of data does it contain?
+
+The dataset includes over 120 variables, mostly numerical, grouped into several categories:
+1. Crime-related variables
+Examples:
+ViolentCrimesPerPop (main target — violent crimes per 100K population),population
+These describe the crime levels in each community.
+
+2. Socioeconomic attributes
+Examples:
+medIncome (median income),pctWWage
+These capture the economic and educational environment.
+
+3. Demographic attributes
+Examples:
+racePctWhite, racepctBlack, racePctAsian
+These describe the population composition of each community.
+
+4. Family characteristics
+Examples:
+PctIlleg
+Reflect family structure and child well-being.
+
+5. Housing characteristics
+Examples:
+
+Capture living conditions and housing costs.
+
+6. Law enforcement attributes (LEMAS survey)
+Examples:
+
+These describe police department resources and characteristics.
+
+7. Community identifiers
+
+These exist in the original file but are usually removed:
+
+
+Problem Statement:
+The goal of this project is to investigate the factors that are most strongly associated with violent crime rates across U.S. communities using the UCI Communities and Crime dataset. This dataset contains a wide range of socioeconomic, demographic, housing, and policing attributes, all of which may contribute differently to community crime levels.
+
+The primary objectives are:
+
+1.To identify patterns and relationships between community characteristics and violent crime.
+
+2.To determine which variables are the strongest predictors of violent crime rates.
+
+3.To develop and evaluate predictive models (e.g., linear regression and random forest) capable of estimating violent crime rates using community-level attributes.
+
+A secondary objective is to reflect on ethical considerations, such as the potential risks of using demographic variables in crime prediction models.
+
+Exploratory Data Analysis (EDA):
 Visualized relationships between features and crime rates.
 Identified patterns and key features.
-Regression Modeling:
 
+Regression Modeling:
 Linear Regression: Modeled continuous crime rates based on features.
 Logistic Regression: Converted the crime rate into binary classification (e.g., high/low) for logistic analysis.
 Evaluation:
@@ -206,8 +257,6 @@ ggplot(data.frame(residuals_rf), aes(x = residuals_rf)) +
        x = "Residuals", y = "Count")
 
 library(plotly)
-
-
 p <- ggplot(crime, aes(x = PctPopUnderPov, y = ViolentCrimesPerPop)) +
   geom_point(alpha = 0.6, color = "purple") +
   labs(title = "Interactive: Poverty vs Violent Crime",
