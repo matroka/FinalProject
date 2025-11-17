@@ -7,8 +7,6 @@ output: html_document
 
 **Note:** You can use this file as you 'working document' where you can try out various investigation ideas and keep notes about your findings. How you use and structure this file is up to you. It is recommended that you keep notes about what you are investigating and what you find as this will make the process of creating your presentation and report easier. Please note that you _do not_ need to submit this file as part of your group project.
 
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -85,6 +83,11 @@ correlations <- data_clean %>%
   pivot_longer(cols = everything(), names_to = "Variable", values_to = "Correlation") %>%
   arrange(desc(abs(Correlation)))
 head(correlations, 30)
+# ~ cor(., data_clean$ViolentCrimesPerPop, use = "complete.obs")
+# . represents the current column.
+#	cor(x, y) computes Pearson correlation.
+#	use = "complete.obs" removes rows containing NA in either variable.
+
 
 correlations %>%
   top_n(15, abs(Correlation)) %>%
@@ -102,6 +105,47 @@ formula_top15 <- as.formula(
 )
 model_top15 <- lm(formula_top15, data = communities)
 summary(model_top15)
+
+# Creates the beginning of the regression formula.
+# "~" means predict using in R.
+# paste(top15_vars, collapse = " + ") turns the vector into a single string:
+# paste("ViolentCrimesPerPop ~", ...) combines the left-hand side (dependent variable) and the predictors
+
+formula_full <- as.formula(
+  paste("ViolentCrimesPerPop ~", paste(top15_vars, collapse = " + "))
+)
+model_full <- lm(formula_full, data = communities)
+# Fits a multiple linear regression model using:
+# dependent variable: ViolentCrimesPerPop
+# independent variables: the 15 predictors
+# dataset: communities
+full_adj_r2 <- summary(model_full)$adj.r.squared # $adj.r.squared pulls the adjusted R² value
+full_adj_r2
+
+results <- data.frame(
+  Removed_Variable = character(),
+  Adjusted_R2 = numeric()
+)
+
+for (v in top15_vars) {
+  remaining <- top15_vars[top15_vars != v]
+  f <- reformulate(remaining, "ViolentCrimesPerPop") 
+#reformulate(rhs_vector, lhs_string) is a convenience function that creates a formula from character vectors.
+
+  model <- lm(f, data = communities)
+  results <- rbind(results, data.frame(
+    Removed_Variable = v,
+    Adjusted_R2 = summary(model)$adj.r.squared
+  ))
+}
+
+results %>% arrange(desc(Adjusted_R2))
+ggplot(results, aes(x = reorder(Removed_Variable, Adjusted_R2), y = Adjusted_R2)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Adjusted R² After Removing Each Variable")
+
+
 
 ```
 1. Pctllleg: percentage of kids born to never married (numeric - decimal)
