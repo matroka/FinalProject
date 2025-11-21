@@ -104,11 +104,9 @@ These are the scatterplot/linear model graphs of the top 5 variables.
 
 ## Possible explanations
 
-These are some possible explanations for why certain variables are more or less correlated with the violent crime rate.
+There are many possible explanations for why certain variables are more or less correlated with the violent crime rate. 
+PctIlleg likely has a high correlation due to the lack of legal work opportunities for people who are not in the United States on a Visa, Green Card, or who are citizens, due to many employeres requiring things like SSNs and proof of visas. As such, many illegal immigrants may be forced to turn to crime, creating a larger crime community, which can lead to an increased prevalence of violence due to increases in power.
 
 Examples: Historical racism, racial discrepencies, slavery, and inequality, poverty and desperation, reasons for immigration, privilege
-
-## Further questions
-
 
 Note that the `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the plot.
