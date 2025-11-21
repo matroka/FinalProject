@@ -16,12 +16,22 @@ library(randomForest)
 library(plotly)
 ```
 
-## Data
+## Introduction
 
-This is the original data set. We chose the Communities and Crime data set, found at https://archive.ics.uci.edu/dataset/183/communities+and+crime and originialy created by Michael Redmond at UC Irvine in 2009, using data from 1990 and 1995.
+Understanding the social, economic, and demographic factors that influence crime rates has long been a central objective in the fields of criminology, sociology, and public policy.
+The growing availability of detailed community-level datasets has enabled data-driven approaches to more effectively uncover the complex relationships between population characteristics and crime levels. A prominent resource in this domain is the "Communities and Crime" dataset, which aggregates data from multiple U.S. government sources and is publicly accessible through the University of California, Irvine's Machine Learning Repository.This is the original data set.
 
-The data set starts with variables on each community's state, county, and community ID and name. The State variable is listed as 1-56, with each U.S. community or territory in alphabetical order.
+## Data description
+
+The dataset is found at https://archive.ics.uci.edu/dataset/183/communities+and+crime and originialy created by Michael Redmond at UC Irvine in 2009, using data from 1990 and 1995. Its primary purpose is to facilitate the development of predictive models for violent crime rates—exemplified by the target variable ViolentCrimesPerPop—while enabling comprehensive analysis of the associations between community attributes and criminal outcomes.
+
+The dataset contains 1,994 observations representing individual communities in the United States. Each observation describes a community using 122 predictive attributes and one target variable, totaling 127 fields.
+
+
+An important characteristic is the presence of missing values, especially in variables extracted from policing data. Although missing values are not abundant compared to the size of the dataset, they must still be accounted for to avoid bias during training.
+
 The data set then lists variables to do with populations, household size, race, ages, the size of urban populations, incomes, retirements, education, employment and field of employment, divorce, families, immigration, language, home size, home ownership, rent, homeless populations, and police statistics, ending with the variable measuring the amount of violent crime proportional to the population.
+
 
 ```{r data set}
 communities <- read_csv("data/communities.data")
@@ -30,17 +40,70 @@ head(communities)
 
 ## Research Question
 
-For this project, we chose this data set in order to explore how different things like race, income, and education may be related to the prevalence of violent crime. We wanted to find out what were the most and least correlated to violent crime, so that we could investigate the possible causes of violent crime.
+This project is guided by three primary objectives:
 
-## Data Setup
+1. Identify the most influential predictors of violent crime.  
+Analyze demographic, socioeconomic, and law enforcement variables to determine those exhibiting the strongest statistical associations with violent crime rates.
 
-The description provided to the data set tells us that besides the first 5 variables in the data set, State, County, Community, CommunityName and Fold, all of the remaining 122 variables are numeric and have been normalized into the decimal range of 0.00-1.00 with an equal-interval binning method. This means that after recording the value of a given variable for every observation, the creators of the data set first normalized any extreme values which were 3 standard deviations above the mean of the observations to 1 and any extreme values which were 3 standard deviations below the mean to 0. Then, having dealt with these extreme values, they divided the range of remaining values for the given variable into 101 equal bins, and allocated the number of the bin that its value falls into to every observation. So for example in the case of the Population variable, the creators of the data set recorded the values of every observation, and after dealing with the extreme values, they divided the range of populations into 101 bins, allocating every community to one of them, which can be seen in the graph below.
+2. Develop a predictive model for the violent crime rate.  
+Train and evaluate multiple regression models using a range of machine learning techniques—including linear regression and random forests boosting—to predict the target variable ViolentCrimesPerPop. Model performance will be assessed using standard evaluation metrics such as R².
+
+3. Ensure responsible interpretation of results.  
+Given that several variables pertain to sensitive demographic attributes, including race, findings must be interpreted with caution and contextual awareness. It is critical to emphasize that correlation does not imply causation, and demographic indicators often serve as proxies for broader structural and systemic inequities rather than direct causes of criminal behavior.
+
+## Methodology
+
+# 1.Data Preprocessing
+
+Several steps were taken to prepare the dataset for analysis:
+```{r}
+# maybe we can add some codes or not (if not just delete it) -Judy
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+# Load column names
+names_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.names"
+name_lines <- readLines(names_url)
+name_lines <- name_lines[grepl("^@attribute", name_lines)]
+col_names <- gsub("^@attribute\\s+", "", name_lines)
+col_names <- sub("\\s+.*$", "", col_names)
+col_names <- col_names[col_names != ""]
+
+# Load dataset
+data_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.data"
+crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_names)
+
+```
+
+# 2.Handling Missing Values
+
+Missing values were treated using:
+
+mean or median imputation for numerical variables.
+
+removal of attributes with a disproportionately large number of missing values.
+```{r}
+# the same, if we don't need it, just delete. But I think we need this step.
+crime <- crime %>%
+  select(-state, -county, -community, -communityname, -fold)
+
+data_clean <- crime %>%
+  mutate(across(where(is.numeric),
+                ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+summary(data_clean)
+cat("Data cleaned. Shape:", nrow(data_clean), "rows and", ncol(data_clean), "columns\n")
+```
+
+The dataset overall contains sparse missingness, so imputation was sufficient without significantly altering the data distribution.
+
+
+
 
 ```{r population visualisation, echo=FALSE}
-communities %>% 
+data_clean %>% 
   ggplot(aes(x=population))+
   geom_bar()+
   labs(x="Population bin number", y="Number of communities in bin")
+
 ```
 So the data set we were working with was the one containing all of these normalized values. Luckily, this method still preserves the distribution and skew of the real observations, as we can see from the plot above, most of the communities fall close to the 0.00 bin, which lines up with expectations as most communities are small. The plot also gives a good example of the treatment of extreme values, as there is a small bump at the 1.00 bin, which is caused by the few number of cities in the US with huge populations, such as New York city, Los Angeles and such.
 
@@ -71,6 +134,7 @@ This is how we used randomForest in exploring our data.
 
 ```
 
+!!!!!!!!!
 ## Highest Correlation
 
 These are the variables with the most significant correlation to the violent crime rate.
