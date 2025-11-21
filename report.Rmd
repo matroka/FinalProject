@@ -66,7 +66,7 @@ These are the variables with the most significant correlation to the violent cri
 
 ```{r highest correlation}
 data <- communities %>%
-  select(-c(state, county, community, communityname, fold))
+  select(-c(State, County, Community, CommunityName, Fold))
 colSums(is.na(data)) %>% sort(decreasing = TRUE)
 data_clean <- data %>% select(where(~ mean(is.na(.)) < 0.3))
 data_clean <- data_clean %>% mutate(across(everything(), ~ replace_na(., mean(., na.rm = TRUE))))
@@ -86,7 +86,7 @@ correlations %>%
 
 # Adjusted r-squared
 
-These are the top 5 variables that produce the highest r-squared score.
+These are the top 5 variables that produce the highest adjusted r-squared score.
 
 ```{r adjusted r-squared}
 ```
