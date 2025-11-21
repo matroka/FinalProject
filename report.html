@@ -455,8 +455,8 @@ direct causes of criminal behavior.</p></li>
 </div>
 <div id="methodology" class="section level2">
 <h2>Methodology</h2>
-<div id="data-preprocessing" class="section level4">
-<h4>1.Data Preprocessing</h4>
+<div id="data-preprocessing" class="section level3">
+<h3>1.Data Preprocessing</h3>
 <p>Several steps were taken to prepare the dataset for analysis:</p>
 <pre class="r"><code># maybe we can add some codes or not (if not just delete it) -Judy
 options(repos = c(CRAN = &quot;https://cloud.r-project.org&quot;))
@@ -472,9 +472,8 @@ col_names &lt;- col_names[col_names != &quot;&quot;]
 # Load dataset
 data_url &lt;- &quot;https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.data&quot;
 crime &lt;- read.csv(data_url, header = FALSE, na.strings = &quot;?&quot;, col.names = col_names)</code></pre>
-</div>
 <div id="handling-missing-values" class="section level4">
-<h4>2.Handling Missing Values</h4>
+<h4>1.1Handling Missing Values</h4>
 <p>Missing values were treated using:</p>
 <p>mean or median imputation for numerical variables.</p>
 <p>removal of attributes with a disproportionately large number of
@@ -492,7 +491,7 @@ cat(&quot;Data cleaned. Shape:&quot;, nrow(data_clean), &quot;rows and&quot;, nc
 sufficient without significantly altering the data distribution.</p>
 </div>
 <div id="capping-procedure" class="section level4">
-<h4>3.Capping procedure</h4>
+<h4>1.2 Capping procedure</h4>
 <p>After this progress, the range of the remaining values was divided
 into 101 equally spaced bins. Each observation was then assigned a bin
 number corresponding to the interval into which its value fell. For
@@ -531,6 +530,7 @@ communities &lt;- transform(communities,
                          State == as.factor(State),
                          County == as.factor(County),
                          Community == as.integer(Community))</code></pre>
+</div>
 </div>
 <div id="exploratory-data-analysis" class="section level3">
 <h3>2. Exploratory Data Analysis</h3>

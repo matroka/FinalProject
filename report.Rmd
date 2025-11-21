@@ -54,7 +54,7 @@ Given that several variables pertain to sensitive demographic attributes, includ
 
 ## Methodology
 
-####  1.Data Preprocessing
+###  1.Data Preprocessing
 
 Several steps were taken to prepare the dataset for analysis:
 ```{r}
@@ -75,7 +75,7 @@ crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_na
 
 ```
 
-#### 2.Handling Missing Values
+#### 1.1Handling Missing Values
 
 Missing values were treated using:
 
@@ -96,7 +96,7 @@ cat("Data cleaned. Shape:", nrow(data_clean), "rows and", ncol(data_clean), "col
 The dataset overall contains sparse missingness, so imputation was sufficient without significantly altering the data distribution.
 
 
-#### 3.Capping procedure
+#### 1.2 Capping procedure
 After this progress, the range of the remaining values was divided into 101 equally spaced bins. Each observation was then assigned a bin number corresponding to the interval into which its value fell. For instance, in the case of the Population variable, after adjusting extreme values, the population range was partitioned into 101 bins, with each community assigned to one of these bins, as illustrated in the graph below.
 
 ```{r population visualisation, echo=FALSE}
