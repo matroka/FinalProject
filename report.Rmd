@@ -89,7 +89,6 @@ crime <- crime %>%
 data_clean <- crime %>%
   mutate(across(where(is.numeric),
                 ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
-summary(data_clean)
 cat("Data cleaned. Shape:", nrow(data_clean), "rows and", ncol(data_clean), "columns\n")
 ```
 
