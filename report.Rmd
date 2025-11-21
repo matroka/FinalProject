@@ -1,5 +1,5 @@
 ---
-title: "report"
+title: "Final Report"
 author: "4677"
 date: "`r Sys.Date()`"
 output: html_document
@@ -8,7 +8,6 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-library(tidymodels)
 library(dplyr)
 library(tidyr)
 library(corrplot)
@@ -19,7 +18,7 @@ library(plotly)
 
 ## Data
 
-This is the original data set.
+This is the original data set. We chose the Communities and Crime data set, found at https://archive.ics.uci.edu/dataset/183/communities+and+crime and originialy created by Michael Redmond at UC Irvine in 2009, using data from 1990 and 1995.
 
 The data set starts with variables on each community's state, county, and community ID and name. The State variable is listed as 1-56, with each U.S. community or territory in alphabetical order.
 The data set then lists variables to do with populations, household size, race, ages, the size of urban populations, incomes, retirements, education, employment and field of employment, divorce, families, immigration, language, home size, home ownership, rent, homeless populations, and police statistics, ending with the variable measuring the amount of violent crime proportional to the population.
@@ -31,9 +30,7 @@ head(communities)
 
 ## Research Question
 
-This is our research question.
-
-This is why we chose this question.
+For this project, we chose this data set in order to explore how different things like race, income, and education may be related to the prevalence of violent crime. We wanted to find out what were the most and least correlated to violent crime, so that we could investigate the possible causes of violent crime.
 
 ## Data Setup
 
@@ -106,7 +103,6 @@ These are the scatterplot/linear model graphs of the top 5 variables.
 
 There are many possible explanations for why certain variables are more or less correlated with the violent crime rate. 
 PctIlleg likely has a high correlation due to the lack of legal work opportunities for people who are not in the United States on a Visa, Green Card, or who are citizens, due to many employeres requiring things like SSNs and proof of visas. As such, many illegal immigrants may be forced to turn to crime, creating a larger crime community, which can lead to an increased prevalence of violence due to increases in power.
-
-Examples: Historical racism, racial discrepencies, slavery, and inequality, poverty and desperation, reasons for immigration, privilege
+Other things like historical racism, slavery, bigotry, inequality, poverty and desperation, reasons for immigration, and the distribution of certain types of privilege are all related to why certain variables have high or low correlations with the prevalence of violent crime.
 
 Note that the `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the plot.
