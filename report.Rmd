@@ -59,6 +59,7 @@ This is what randomForest does, with a brief explanation as to how, since it is 
 This is how we used randomForest in exploring our data.
 
 ```{r randomForest}
+
 ```
 
 ## Highest Correlation
@@ -90,6 +91,7 @@ correlations %>%
 These are the top 5 variables that produce the highest adjusted r-squared score.
 
 ```{r adjusted r-squared}
+
 ```
 
 This is how we discovered the top 5 variables.
@@ -97,6 +99,7 @@ This is how we discovered the top 5 variables.
 These are the scatterplot/linear model graphs of the top 5 variables.
 
 ```{r adjusted r-squared graphs, echo = FALSE}
+
 ```
 
 ## Possible explanations
