@@ -1,9 +1,7 @@
 ---
-title: "Presentation"
-subtitle: "⚔<br/>with xaringan"
-author: "4677"
-institute: "RStudio, PBC"
-date: "r Sys.Date()"
+title: "Final Presentation"
+subtitle: "Communities & Crime"
+author: "4677</br>Adi, Mat, Xiufeng, Xu"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -11,55 +9,25 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+
 ---
 
-https://book.rwithoutstatistics.com/create-beautiful-presentations-with-r-markdown.html 
+# Setup
 
-background-image: url(https://upload.wikimedia.org/wikipedia/commons/b/be/Sharingan_triple.svg)
-
-```{r setup, include=FALSE}
+```{r setup}
 options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(corrplot)
+library(caret)      
+library(randomForest) 
+library(plotly)
+library(xaringan)
 ```
 
-???
-
-Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sharingan_triple.svg)
-
 ---
-class: center, middle
-
-# xaringan
-
-### /ʃaː.'riŋ.ɡan/
-
----
-class: inverse, center, middle
-
-# Get Started
-
----
-
-# Hello World
-
-Install the **xaringan** package from [Github](https://github.com/yihui/xaringan):
-
-```{r eval=FALSE, tidy=FALSE}
-remotes::install_github("yihui/xaringan")
-```
-
---
-
-You are recommended to use the [RStudio IDE](https://www.rstudio.com/products/rstudio/), but you do not have to.
-
-- Create a new R Markdown document from the menu `File -> New File -> R Markdown -> From Template -> Ninja Presentation`;<sup>1</sup>
-
---
-
-- Click the `Knit` button to compile it;
-
---
-
-- or use the [RStudio Addin](https://rstudio.github.io/rstudioaddins/)<sup>2</sup> "Infinite Moon Reader" to live preview the slides (every time you update and save the Rmd document, the slides will be automatically reloaded in RStudio Viewer.
 
 .footnote[
 [1] 中文用户请看[这份教程](https://slides.yihui.org/xaringan/zh-CN.html)
@@ -68,6 +36,7 @@ You are recommended to use the [RStudio IDE](https://www.rstudio.com/products/rs
 ]
 
 ---
+
 background-image: url(`r xaringan:::karl`)
 background-position: 50% 50%
 class: center, bottom, inverse
@@ -85,6 +54,18 @@ As a presentation ninja, you certainly should not be satisfied by the "Hello Wor
 1. The **xaringan** package;
 
 Basically **xaringan** injected the chakra of R Markdown (minus Pandoc) into **remark.js**. The slides are rendered by remark.js in the web browser, and the Markdown source needed by remark.js is generated from R Markdown (**knitr**).
+
+---
+
+# Data
+
+Data Set Source: [Communities and Crime](https://archive.ics.uci.edu/dataset/183/communities+and+crime). UC Irvine, Michael Redmond, 2009
+Observation Sources: 1990 US Census, 1990 US Lemas Survey, 1995 FBI UCR
+
+```{r data set}
+communities <- read_csv("data/communities.data")
+head(communities)
+```
 
 ---
 
@@ -207,10 +188,7 @@ grep('天', dojutsu, value = TRUE)
 
 # R Plots
 
-```{r cars, fig.height=4, dev='svg'}
-par(mar = c(4, 4, 1, .1))
-plot(cars, pch = 19, col = 'darkgray', las = 1)
-abline(fit, lwd = 2)
+```{r}
 ```
 
 ---
@@ -219,9 +197,9 @@ abline(fit, lwd = 2)
 
 If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
 
-```{r}
+``{r}
 knitr::kable(head(iris), format = 'html')
-```
+``
 
 ---
 
@@ -611,16 +589,6 @@ The **xaringan** package borrowed a few terms from Naruto, such as
 - The [summoning technique](https://naruto.fandom.com/wiki/Summoning_Technique) (download remark.js from the web)
 
 You can click the links to know more about them if you want. The jutsu "Moon Reader" may seem a little evil, but that does not mean your slides are evil.
-
----
-
-class: center
-
-# Hand seals (印)
-
-Press `h` or `?` to see the possible ninjutsu you can use in remark.js.
-
-![](https://upload.wikimedia.org/wikipedia/commons/7/7e/Mudra-Naruto-KageBunshin.svg)
 
 ---
 
