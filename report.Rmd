@@ -34,15 +34,15 @@ For this project, we chose this data set in order to explore how different thing
 
 ## Data Setup
 
-The description provided to the data set tells us that besides the first 5 variables in the data set, State, County, Community, CommunityName and Fold, all of the remaining 122 variables are numeric and have been normalized into the decimal range of 0.00-1.00 with an equal-interval binning method. This means that after recording the value of a given variable for every observation, the creators of the data set first normalized any extreme values which were 3 standard deviations above the mean of the observations to 1 and any extreme values which were 3 standard deviations below the mean to 0. Then, having dealt with these extreme values, they divided the range of remaining values for the given variable into 101 equal bins, and allocated the number of the bin that its value falls into to every observation.
+The description provided to the data set tells us that besides the first 5 variables in the data set, State, County, Community, CommunityName and Fold, all of the remaining 122 variables are numeric and have been normalized into the decimal range of 0.00-1.00 with an equal-interval binning method. This means that after recording the value of a given variable for every observation, the creators of the data set first normalized any extreme values which were 3 standard deviations above the mean of the observations to 1 and any extreme values which were 3 standard deviations below the mean to 0. Then, having dealt with these extreme values, they divided the range of remaining values for the given variable into 101 equal bins, and allocated the number of the bin that its value falls into to every observation. So for example in the case of the Population variable, the creators of the data set recorded the values of every observation, and after dealing with the extreme values, they divided the range of populations into 101 bins, allocating every community to one of them, which can be seen in the graph below.
 
 ```{r population visualisation, echo=FALSE}
 communities %>% 
   ggplot(aes(x=population))+
   geom_bar()+
-  labs(x="Population bin", y="Number of communities in bin")
+  labs(x="Population bin number", y="Number of communities in bin")
 ```
-
+So the data set we were working with was the one containing all of these normalized values. Luckily, this method still preserves the distribution and skew of the real observations, as we can see from the plot above, most of the communities fall close to the 0.00 bin, which lines up with expectations as most communities are small. The plot also gives a good example of the treatment of extreme values, as there is a small bump at the 1.00 bin, which is caused by the few number of cities in the US with huge populations, such as New York city, Los Angeles and such.
 
 One example of an issue that arises from the use of normalized variables comes from when we attempted to measure homeless populations. We wanted to combine the variables NumInShelters and NumStreet; however, since they were normalized, we could not combine them to compare the population to the ViolentCrimesPerPop variable. If the variables had not been normalized, this would have been possible.
 
