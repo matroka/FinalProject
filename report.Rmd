@@ -37,7 +37,14 @@ This is why we chose this question.
 
 ## Data Setup
 
-The values are normalized. This is what that means. These are some issues that arise from this.
+The description provided to the data set tells us that besides the first 5 variables in the data set, State, County, Community, CommunityName and Fold, all of the remaining 122 variables are numeric and have been normalized into the decimal range of 0.00-1.00 with an equal-interval binning method. This means that after recording the value of a given variable for every observation, the creators of the data set first normalized any extreme values which were 3 standard deviations above the mean of the observations to 1 and any extreme values which were 3 standard deviations below the mean to 0. Then, having dealt with these extreme values, they divided the range of remaining values for the given variable into 101 equal bins, and allocated the number of the bin that its value falls into to every observation.
+
+```{r population visualisation, echo=FALSE}
+communities %>% 
+  ggplot(aes(x=population))+
+  geom_bar()+
+  labs(x="Population bin", y="Number of communities in bin")
+```
 
 There are variables that appear similar or the same but have different values. These are our hypotheses as to why this is true.
 
