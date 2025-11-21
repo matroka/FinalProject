@@ -95,8 +95,13 @@ cat("Data cleaned. Shape:", nrow(data_clean), "rows and", ncol(data_clean), "col
 
 The dataset overall contains sparse missingness, so imputation was sufficient without significantly altering the data distribution.
 
+#### 1.2 Converted variables to correct data types
+```{r}
+# if possible
+```
 
-#### 1.2 Capping procedure
+
+#### 1.3 Capping procedure
 After this progress, the range of the remaining values was divided into 101 equally spaced bins. Each observation was then assigned a bin number corresponding to the interval into which its value fell. For instance, in the case of the Population variable, after adjusting extreme values, the population range was partitioned into 101 bins, with each community assigned to one of these bins, as illustrated in the graph below.
 
 ```{r population visualisation, echo=FALSE}
@@ -125,16 +130,21 @@ communities <- transform(communities,
 ### 2. Exploratory Data Analysis
 EDA focused on understanding patterns across demographic, socio-economic, and policing domains.
 
-## 1 Identifying the Highest Correlated Predictors
-1.1 Purpose
+```{r}
+# maybe we need some summaty stats like mean median ....
+```
+
+
+####  2.1 Identifying the Highest Correlated Predictors
+2.1.1 Purpose
 The first target before constructing any predictive models was to get an understanding of community characteristics that had the strongest linear relationships with violent crime. In addition to identifying promising predictors, it also provides insight into the social patterns.
 
-1.2 Method
+2.1.2 Method
 I calculated Pearson correlation coefficients between every predictor in the dataset and the target variable ViolentCrimesPerPop. Missing values were handled using use = "complete.obs".
 
 From these results, I extracted the top 15 variables with the strongest positive or negative correlations and visualized them using a bar plot.
 
-1.3 Findings
+2.1.3 Findings
 Top15 Features Most Correlated with Violent Crime:
 - Pctllleg: percentage of kids born to never married (numeric - decimal)
 - racepctblack: percentage of population that is african american (numeric - decimal)
@@ -152,7 +162,7 @@ Top15 Features Most Correlated with Violent Crime:
 - PctFam2Par: percentage of families (with kids) that are headed by two parents (numeric - decimal)
 - PctKids2Par: percentage of kids in family housing with two parents (numeric - decimal)
 
-1.4 Interpretation: What the Top 15 Correlated Variables Reveal
+2.1.4 Interpretation: What the Top 15 Correlated Variables Reveal
 The 15 variables most strongly correlated with ViolentCrimesPerPop reveal a consistent and interpretable social pattern. These variables fall into several meaningful categories that together describe the structural conditions of a community.
 
 (a) Family Structure Variables (Very Strong Negative Correlation)
@@ -269,8 +279,8 @@ correlations %>%
        x = "Variable", y = "Correlation")
 ```
 
-## 2 Adjusted R-Squared: Identifying the Most Useful Predictors
-2.1 Purpose
+#### 2.2 Adjusted R-Squared: Identifying the Most Useful Predictors
+2.2.1 Purpose
 While many variables exhibit a strong correlation with violent crime, most also exhibit a strong correlation with one another, particularly those pertaining to family structure. This results in multicollinearity, which tends to introduce noise to a regression model.
 
 In order to identify the most informative predictors, I attempted a leave-one-variable-out adjusted R² approach:
@@ -279,7 +289,7 @@ Each of the 15 variables was taken away from the model, and adjusted R² was mea
 If adjusted R² increased when removing a variable, then that variable was redundant or detracting from the model.
 If adjusted R² decreased when removing a variable, then that variable was informative.
 
-2.2 Method
+2.2.2 Method
 First, I fit a full model with all top 15 predictors. Then, for each of the 15 predictors:
 - remove the variable
 - re-fit the model
@@ -288,7 +298,7 @@ First, I fit a full model with all top 15 predictors. Then, for each of the 15 p
 
 Finally, I sorted the results to find which removal gave the highest adjusted R².
 
-2.3 Findings
+2.2.3 Findings
 Top 5 variables (adjusted R²):
 - PctTeen2Par: percent of kids age 12-17 in two-parent households (numeric - decimal)
 - PctPersOwnOccup: percent of people in owner-occupied households (numeric - decimal)
@@ -296,7 +306,7 @@ Top 5 variables (adjusted R²):
 - PctUnemployed: percentage of people 16 and over, in the labor force, and unemployed (numeric - decimal)
 - PctYoungKids2Par: percent of kids 4 and under in two-parent households (numeric - decimal)
 
-2.4 Interpretation: Why These Variables Are the Most Important Predictors
+2.2.4 Interpretation: Why These Variables Are the Most Important Predictors
 The adjusted R² analysis identifies the variables whose removal most reduces model performance. These are the predictors that contribute the most unique explanatory power.
 
 (a) PctTeen2Par — Most Important Predictor
@@ -416,11 +426,159 @@ ggplot(results, aes(x = reorder(Removed_Variable, Adjusted_R2), y = Adjusted_R2)
   coord_flip() +
   labs(title = "Adjusted R² After Removing Each Variable")
 ```
+### 3 Model Selection and Evaluation
+Several regression techniques were evaluated:
+
+#### 3.1 Linear Regression
+
+Linear regression was used as one of our first models because it is easy to interpret and gives a good baseline for comparison. This model tries to fit a straight-line relationship between all the predictors and the violent crime rate. In other words, it assumes that each variable has a linear effect on the target. One advantage of linear regression is that we can clearly see how each predictor influences the crime rate through the model coefficients. However, the Communities and Crime dataset contains many variables that are highly correlated with each other, which can make the linear model unstable. It also struggles when the relationships in the data are more complex or non-linear. Despite these limitations, linear regression is useful for understanding the general direction of relationships and serves as a starting point before applying more advanced models.
+
+```{r}
+# this part still need some other things 
+```
 
 
-```{r adjusted r-squared graphs, echo = FALSE}
+```{r}
+library(caret)      
+library(randomForest) 
+set.seed(123)
+train_index <- createDataPartition(data_clean$ViolentCrimesPerPop, p = 0.8, list = FALSE)
+train <- data_clean[train_index, ]
+test  <- data_clean[-train_index, ]
+lm_model <- lm(ViolentCrimesPerPop ~ ., data = train)
+lm_pred <- predict(lm_model, newdata = test)
+```
+
+#### 3.2 Tree-Based Models
+
+```{r}
+rf_model <- randomForest(ViolentCrimesPerPop ~ ., data = train, ntree = 150)
+rf_pred <- predict(rf_model, newdata = test)
 
 ```
+
+Random Forest was used as a more powerful model that can capture complex patterns. Unlike linear regression, Random Forest does not assume any simple or straight-line relationships. Instead, it builds many decision trees and combines their results, which helps improve accuracy and reduces overfitting. This makes Random Forest especially helpful for datasets like this one, where there are many predictors and the relationships between them may be non-linear. Another advantage is that Random Forest provides a ranking of feature importance, helping us see which variables contribute most to predicting violent crime. Overall, it performed better than the linear regression model and handled the complexity of the dataset more effectively.
+
+3.2.1 Visualising Random Forest Predictions
+
+From the plot, we see that most points follow the general upward trend, meaning the Random Forest model is able to capture the overall pattern in the data. Communities with higher actual crime rates also tend to have higher predicted values, which shows that the model is learning meaningful relationships.
+
+However, the points are still spread out around the line, especially for larger crime values. This indicates that while the Random Forest model performs better than linear regression, it still struggles with perfect accuracy—particularly in cases with very high crime rates. This is also reflected in the RMSE value: although Random Forest lowers the prediction error, there is still some variability it cannot fully explain.
+
+Overall, this visualisation helps confirm that the Random Forest model provides a reasonably strong fit, capturing the main pattern in the data while reducing prediction errors compared to simpler models.
+```{r}
+results <- data.frame(
+  Actual = test$ViolentCrimesPerPop,
+  Predicted = rf_pred
+)
+ggplot(results, aes(x = Actual, y = Predicted)) +
+  geom_point(color = "blue", alpha = 0.5) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Random Forest Predictions vs Actual",
+       x = "Actual Violent Crime Rate",
+       y = "Predicted Crime Rate")
+```
+
+3.2.2 Residual Analysis (Model Diagnostics)
+
+The histogram above shows the distribution of residuals from the Random Forest model. A residual is the difference between the actual violent crime rate and the predicted value. In a good predictive model, we want the residuals to be mostly close to zero, because that means the predictions are accurate.
+
+From the plot, we can see that:
+
+Most of the residuals are centered around 0, which means the Random Forest model generally predicts crime rates fairly well.
+
+The distribution is roughly bell-shaped, showing that the model does not consistently over-predict or under-predict.
+
+There are a few larger positive and negative residuals, which represent communities where the model made larger prediction errors. These outliers suggest that some areas might have unique conditions that the model cannot fully capture.
+
+Overall, this residual plot supports that the Random Forest model performs reasonably well, with most prediction errors being small. It also explains why the Random Forest achieves a lower RMSE compared to linear regression: its residuals are more tightly grouped around zero.
+```{r}
+
+residuals_rf <- test$ViolentCrimesPerPop - rf_pred
+
+ggplot(data.frame(residuals_rf), aes(x = residuals_rf)) +
+  geom_histogram(bins = 30, fill = "darkorange", color = "white") +
+  labs(title = "Residual Distribution (Random Forest)",
+       x = "Residuals", y = "Count")
+
+```
+
+#### 3.3 Model Evaluation
+
+R-square (R²) measures how much of the variation in violent crime can be explained by the model. A higher R-square means the model fits the data better. For example, if a model has an R-square of 0.60, it means the model explains 60% of the variation in crime rates. Linear regression usually gives a moderate R-square for this dataset, while Random Forest tends to give a higher value because it can capture more complex patterns.
+
+RMSE (Root Mean Squared Error) measures how far the model’s predictions are from the actual crime values on average. A lower RMSE means the predictions are more accurate. RMSE is helpful because it is in the same scale as the target variable, making it easier to understand the size of the prediction errors. In our project, Random Forest produced a lower RMSE than linear regression, showing that it predicted violent crime more accurately.
+
+Together, R-square and RMSE help us understand not only how well the model fits the data, but also how accurate the predictions are.
+
+```{r}
+lm_r2 <- cor(lm_pred, test$ViolentCrimesPerPop)^2
+rf_r2 <- cor(rf_pred, test$ViolentCrimesPerPop)^2
+
+lm_rmse <- sqrt(mean((lm_pred - test$ViolentCrimesPerPop)^2))
+rf_rmse <- sqrt(mean((rf_pred - test$ViolentCrimesPerPop)^2))
+
+cat("Linear Regression: R2 =", lm_r2, " RMSE =", lm_rmse, "\n")
+cat("Random Forest: R2 =", rf_r2, " RMSE =", rf_rmse, "\n")
+
+```
+
+### 4.Improvements and Ethical Considerations
+Possible Improvements
+
+Feature selection to reduce noise
+
+Hyperparameter tuning for deeper trees or more estimators
+
+Try Gradient Boosting or XGBoost
+
+Scale features for linear regression to improve stability
+
+Ethical Concerns
+
+Working with crime data raises several ethical issues:
+
+Bias amplification
+Models trained on biased data may reinforce unfair stereotypes about communities or racial groups.
+
+Misuse in policing
+Predictive models could be used for over-policing certain neighbourhoods.
+
+Privacy
+Socio-economic data must be handled responsibly.
+It is crucial to treat predictions carefully and avoid interpreting them as definitive or causal.
+
+### 5. Results & feedback
+
+In general, the models performed as follows:
+
+Linear Regression: Moderate accuracy; struggled with multicollinearity.
+
+Random Forest: Good performance; provided useful feature-importance rankings.
+
+These results suggest that the relationship between community attributes and violent crime is highly non-linear, making tree-based ensemble methods particularly suitable.
+
+### 6. Overall Summary
+
+This project explored the Communities and Crime dataset to investigate whether socio-economic variables can predict violent crime rates.
+
+Key Findings
+
+Violent crime correlates with poverty, unemployment, and family structure.
+
+Linear Regression provided moderate accuracy (R² ≈ 0.48).
+
+Random Forest performed strongly (R² ≈ 0.80) with much lower error.
+
+Visualisations confirmed that Random Forest made significantly better predictions.
+
+Ethical concerns must be considered when working with sensitive social data.
+
+Conclusion
+
+Random Forest is a highly effective method for predicting violent crime rates using community-level features.
+The dataset highlights the complex relationships between crime and socio-economic conditions, and machine learning models can help uncover these patterns—provided they are used responsibly.
+
 
 ## Possible explanations
 
