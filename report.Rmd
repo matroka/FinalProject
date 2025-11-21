@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(tidymodels)
 library(dplyr)
 library(tidyr)
 library(corrplot)
@@ -20,7 +21,8 @@ library(plotly)
 
 This is the original data set.
 
-This is a brief explanation of some of the variables and types of variables it contains.
+The data set starts with variables on each community's state, county, and community ID and name. The State variable is listed as 1-56, with each U.S. community or territory in alphabetical order.
+The data set then lists variables to do with populations, household size, race, ages, the size of urban populations, incomes, retirements, education, employment and field of employment, divorce, families, immigration, language, home size, home ownership, rent, homeless populations, and police statistics, ending with the variable measuring the amount of violent crime proportional to the population.
 
 ```{r data set}
 communities <- read_csv("data/communities.data")
