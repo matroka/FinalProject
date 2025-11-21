@@ -38,18 +38,20 @@ This is why we chose this question.
 ## Data Setup
 
 The values are normalized. This is what that means. These are some issues that arise from this.
+One example of an issue that arises from the use of normalized variables comes from when we attempted to measure homeless populations. We wanted to combine the variables NumInShelters and NumStreet; however, since they were normalized, we could not combine them to compare the population to the ViolentCrimesPerPop variable. If the variables had not been normalized, this would have been possible.
 
-There are variables that appear similar or the same but have different values. These are our hypotheses as to why this is true.
+There are variables that appear similar or the same but have different values. For example, BlackPerCap and RacePctBlack, have different values despite the fact that they are both normalized and measuring the same thing. In the first row, with community Lakewoodcity, RacePctBlack has a value of 0.02, while BlackPerCap has a value of 0.32. We have yet to construct a hypothesis as to why this might be true.
 
-There are missing variables in the initial data set. This is why.
+There are missing variables in the initial data set. This is because the initial data set was created using multiple sources, so not all of the sources had data for the complete set of communities. So, when placed together, many rows are missing observations.
 
 This is how we cleaned the original data set for our use.
+We cleaned the original data set by setting the names to make sure that they were standardized, and converting different columns into different types. State and County, for example, was converted into factors in order to allow communities to be grouped by location if necessary.
 
 ```{r data setup}
 communities <- setNames(communities, c("State","County","Community","CommunityName","Fold","Population","HouseholdSize","RacePctBlack","RacePctWhite","RacePctAsian","RacePctHisp","AgePct12t21","AgePct12t29","AgePct16t24","AgePct65up","NumbUrban","PctUrban","MedIncome","PctWWage","PctWFarmSelf","PctWInvInc","PctWSocSec","PctWPubAsst","PctWRetire","MedFamInc","PerCapInc","WhitePerCap","BlackPerCap","IndianPerCap","AsianPerCap","OtherPerCap","HispPerCap","NumUnderPov","PctPopUnderPov","PctLess9thGrade","PctNotHSGrad","PctBSorMore","PctUnemployed","PctEmploy","PctEmplManu","PctEmplProfServ","PctOccupManu","PctOccupMgmtProf","MalePctDivorce","MalePctNevMarr","FemalePctDiv","TotalPctDiv","PersPerFam","PctFam2Par","PctKids2Par","PctYoungKids2Par","PctTeen2Par","PctWorkMomYoungKids","PctWorkMom","NumIlleg","PctIlleg","NumImmig","PctImmigRecent","PctImmigRec5","PctImmigRec8","PctImmigRec10","PctRecentImmig","PctRecImmig5","PctRecImmig8","PctRecImmig10","PctSpeakEnglOnly","PctNotSpeakEnglWell","PctLargHouseFam","PctLargHouseOccup","PersPerOccupHous","PersPerOwnOccHous","PersPerRentOccHous","PctPersOwnOccup","PctPersDenseHous","PctHousLess3BR","MedNumBR","HousVacant","PctHousOccup","PctHousOwnOcc","PctVacantBoarded","PctVacMore6Mos","MedYrHousBuilt","PctHousNoPhone","PctWOFullPlumb","OwnOccLowQuart","OwnOccMedVal","OwnOccHiQuart","RentLowQ","RentMedian","RentHighQ","MedRent","MedRentPctHousInc","MedOwnCostPctInc","MedOwnCostPctIncNoMtg","NumInShelters","NumStreet","PctForeignBorn","PctBornSameState","PctSameHouse85","PctSameCity85","PctSameState85","LemasSwornFT","LemasSwFTPerPop","LemasSwFTFieldOps","LemasSwFTFieldPerPop","LemasTotalReq","LemasTotReqPerPop","PolicRepPerOffic","PolicPerPop","RacialMatchCommPol","PctPolicWhite","PctPolicBlack","PctPolicHisp","PctPolicAsian","PctPolicMinor","OfficAssgnDrugUnits","NumKindsDrugSeiz","PolicAveOTWorked","LandArea","PopDens","PctUsePubTrans","PolicCars","PolicOperBudg","LemasPctPolicOnPatr","LemasGangUnitDeploy","LemasPctOfficDrugUn","PolicBudgPerPop","ViolentCrimesPerPop"))
 communities <- transform(communities,
-                         State == as.integer(State),
-                         County == as.integer(County),
+                         State == as.factor(State),
+                         County == as.factor(County),
                          Community == as.integer(Community))
 ```
 
@@ -86,7 +88,7 @@ correlations %>%
        x = "Variable", y = "Correlation")
 ```
 
-# Adjusted r-squared
+## Adjusted r-squared
 
 These are the top 5 variables that produce the highest adjusted r-squared score.
 
@@ -102,8 +104,11 @@ These are the scatterplot/linear model graphs of the top 5 variables.
 
 ## Possible explanations
 
-These are some possible explanations for why certain variables are more or elss correlated with the violent crime rate.
+These are some possible explanations for why certain variables are more or less correlated with the violent crime rate.
 
 Examples: Historical racism, racial discrepencies, slavery, and inequality, poverty and desperation, reasons for immigration, privilege
 
-# Note that the `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the plot.
+## Further questions
+
+
+Note that the `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the plot.
