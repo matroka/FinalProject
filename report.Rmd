@@ -27,8 +27,9 @@ The dataset is found at https://archive.ics.uci.edu/dataset/183/communities+and+
 
 The dataset contains 1,994 observations representing individual communities in the United States. Each observation describes a community using 122 predictive attributes and one target variable, totaling 127 fields.
 
+The dataset documentation indicates that, apart from the first five variables—State, County, Community, CommunityName, and Fold—all of the remaining 122 variables are numeric and have been normalized to the interval [0.00, 1.00] using an equal-interval binning method. Specifically, for each variable, values exceeding three standard deviations above the mean were capped at 1.00, while those falling more than three standard deviations below the mean were set to 0.00. For example, a normalized value of 0.7 for medianIncome cannot be compared directly to a normalized value of 0.7 for PctKids2Par. Each attribute’s range is scaled independently.
 
-An important characteristic is the presence of missing values, especially in variables extracted from policing data. Although missing values are not abundant compared to the size of the dataset, they must still be accounted for to avoid bias during training.
+Another important characteristic is the presence of missing values, especially in variables extracted from policing data. Although missing values are not abundant compared to the size of the dataset, they must still be accounted for to avoid bias during training.
 
 The data set then lists variables to do with populations, household size, race, ages, the size of urban populations, incomes, retirements, education, employment and field of employment, divorce, families, immigration, language, home size, home ownership, rent, homeless populations, and police statistics, ending with the variable measuring the amount of violent crime proportional to the population.
 
@@ -53,7 +54,7 @@ Given that several variables pertain to sensitive demographic attributes, includ
 
 ## Methodology
 
-# 1.Data Preprocessing
+####  1.Data Preprocessing
 
 Several steps were taken to prepare the dataset for analysis:
 ```{r}
@@ -74,7 +75,7 @@ crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_na
 
 ```
 
-# 2.Handling Missing Values
+#### 2.Handling Missing Values
 
 Missing values were treated using:
 
@@ -95,7 +96,8 @@ cat("Data cleaned. Shape:", nrow(data_clean), "rows and", ncol(data_clean), "col
 The dataset overall contains sparse missingness, so imputation was sufficient without significantly altering the data distribution.
 
 
-
+#### 3.Capping procedure
+After this progress, the range of the remaining values was divided into 101 equally spaced bins. Each observation was then assigned a bin number corresponding to the interval into which its value fell. For instance, in the case of the Population variable, after adjusting extreme values, the population range was partitioned into 101 bins, with each community assigned to one of these bins, as illustrated in the graph below.
 
 ```{r population visualisation, echo=FALSE}
 data_clean %>% 
@@ -110,9 +112,7 @@ One example of an issue that arises from the use of normalized variables comes f
 
 There are variables that appear similar or the same but have different values. For example, BlackPerCap and RacePctBlack, have different values despite the fact that they are both normalized and measuring the same thing. In the first row, with community Lakewoodcity, RacePctBlack has a value of 0.02, while BlackPerCap has a value of 0.32. We have yet to construct a hypothesis as to why this might be true.
 
-There are missing variables in the initial data set. This is because the initial data set was created using multiple sources, so not all of the sources had data for the complete set of communities. So, when placed together, many rows are missing observations.
-
-This is how we cleaned the original data set for our use.
+This is how we processed the original data set for our use.
 We cleaned the original data set by setting the names to make sure that they were standardized, and converting different columns into different types. State and County, for example, was converted into factors in order to allow communities to be grouped by location if necessary.
 
 ```{r data setup}
@@ -122,18 +122,9 @@ communities <- transform(communities,
                          County == as.factor(County),
                          Community == as.integer(Community))
 ```
+### 2. Exploratory Data Analysis
+EDA focused on understanding patterns across demographic, socio-economic, and policing domains.
 
-## randomForest
-
-This is what randomForest does, with a brief explanation as to how, since it is not one of the packages we have discussed in class.
-
-This is how we used randomForest in exploring our data.
-
-```{r randomForest}
-
-```
-
-!!!!!!!!!
 ## Highest Correlation
 
 These are the variables with the most significant correlation to the violent crime rate.
