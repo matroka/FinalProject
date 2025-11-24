@@ -111,6 +111,8 @@ data_clean %>%
   labs(x="Population bin number", y="Number of communities in bin")
 
 ```
+
+
 So the data set we were working with was the one containing all of these normalized values. Luckily, this method still preserves the distribution and skew of the real observations, as we can see from the plot above, most of the communities fall close to the 0.00 bin, which lines up with expectations as most communities are small. The plot also gives a good example of the treatment of extreme values, as there is a small bump at the 1.00 bin, which is caused by the few number of cities in the US with huge populations, such as New York city, Los Angeles and such.
 
 One example of an issue that arises from the use of normalized variables comes from when we attempted to measure homeless populations. We wanted to combine the variables NumInShelters and NumStreet; however, since they were normalized, we could not combine them to compare the population to the ViolentCrimesPerPop variable. If the variables had not been normalized, this would have been possible.
