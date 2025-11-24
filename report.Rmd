@@ -19,7 +19,7 @@ library(plotly)
 ## Introduction
 
 Understanding the social, economic, and demographic factors that influence crime rates has long been a central objective in the fields of criminology, sociology, and public policy.
-The growing availability of detailed community-level datasets has enabled data-driven approaches to more effectively uncover the complex relationships between population characteristics and crime levels. A prominent resource in this domain is the "Communities and Crime" dataset, which aggregates data from multiple U.S. government sources and is publicly accessible through the University of California, Irvine's Machine Learning Repository.This is the original data set.
+The growing availability of detailed community-level datasets has enabled data-driven approaches to more effectively uncover the complex relationships between population characteristics and crime levels. A prominent resource in this domain is the "Communities and Crime" dataset, which aggregates data from multiple U.S. government sources and is publicly accessible through the University of California, Irvine's Machine Learning Repository. This is the original data set.
 
 ## Data description
 
@@ -54,7 +54,7 @@ Given that several variables pertain to sensitive demographic attributes, includ
 
 ## Methodology
 
-###  1.Data Preprocessing
+###  1. Data Preprocessing
 
 Several steps were taken to prepare the dataset for analysis:
 ```{r}
@@ -72,16 +72,14 @@ col_names <- col_names[col_names != ""]
 # Load dataset
 data_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.data"
 crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_names)
-
 ```
 
-#### 1.1Handling Missing Values
+#### 1.1 Handling Missing Values
 
 Missing values were treated using:
+- mean or median imputation for numerical variables.
+- removal of attributes with a disproportionately large number of missing values.
 
-mean or median imputation for numerical variables.
-
-removal of attributes with a disproportionately large number of missing values.
 ```{r}
 # the same, if we don't need it, just delete. But I think we need this step.
 crime <- crime %>%
@@ -97,7 +95,7 @@ The dataset overall contains sparse missingness, so imputation was sufficient wi
 
 #### 1.2 Converted variables to correct data types
 ```{r}
-# if possible
+# they are all dbl, so i dont think we need to
 ```
 
 
@@ -109,18 +107,15 @@ data_clean %>%
   ggplot(aes(x=population))+
   geom_bar()+
   labs(x="Population bin number", y="Number of communities in bin")
-
 ```
 
-
-So the data set we were working with was the one containing all of these normalized values. Luckily, this method still preserves the distribution and skew of the real observations, as we can see from the plot above, most of the communities fall close to the 0.00 bin, which lines up with expectations as most communities are small. The plot also gives a good example of the treatment of extreme values, as there is a small bump at the 1.00 bin, which is caused by the few number of cities in the US with huge populations, such as New York city, Los Angeles and such.
+The data set we were working with contained all of these normalized values. Luckily, this method still preserves the distribution and skew of the real observations, as we can see from the plot above, most of the communities fall close to the 0.00 bin, which lines up with expectations as most communities are small. The plot also gives a good example of the treatment of extreme values, as there is a small bump at the 1.00 bin, which is caused by the few number of cities in the US with huge populations, such as New York City, Los Angeles, etc.
 
 One example of an issue that arises from the use of normalized variables comes from when we attempted to measure homeless populations. We wanted to combine the variables NumInShelters and NumStreet; however, since they were normalized, we could not combine them to compare the population to the ViolentCrimesPerPop variable. If the variables had not been normalized, this would have been possible.
 
 There are variables that appear similar or the same but have different values. For example, BlackPerCap and RacePctBlack, have different values despite the fact that they are both normalized and measuring the same thing. In the first row, with community Lakewoodcity, RacePctBlack has a value of 0.02, while BlackPerCap has a value of 0.32. We have yet to construct a hypothesis as to why this might be true.
 
-This is how we processed the original data set for our use.
-We cleaned the original data set by setting the names to make sure that they were standardized, and converting different columns into different types. State and County, for example, was converted into factors in order to allow communities to be grouped by location if necessary.
+For our EDA, we cleaned the original data set by setting the names to make sure that they were standardized, and converting different columns into different types. State and County, for example, was converted into factors in order to allow communities to be grouped by location if necessary.
 
 ```{r data setup}
 communities <- setNames(communities, c("State","County","Community","CommunityName","Fold","Population","HouseholdSize","RacePctBlack","RacePctWhite","RacePctAsian","RacePctHisp","AgePct12t21","AgePct12t29","AgePct16t24","AgePct65up","NumbUrban","PctUrban","MedIncome","PctWWage","PctWFarmSelf","PctWInvInc","PctWSocSec","PctWPubAsst","PctWRetire","MedFamInc","PerCapInc","WhitePerCap","BlackPerCap","IndianPerCap","AsianPerCap","OtherPerCap","HispPerCap","NumUnderPov","PctPopUnderPov","PctLess9thGrade","PctNotHSGrad","PctBSorMore","PctUnemployed","PctEmploy","PctEmplManu","PctEmplProfServ","PctOccupManu","PctOccupMgmtProf","MalePctDivorce","MalePctNevMarr","FemalePctDiv","TotalPctDiv","PersPerFam","PctFam2Par","PctKids2Par","PctYoungKids2Par","PctTeen2Par","PctWorkMomYoungKids","PctWorkMom","NumIlleg","PctIlleg","NumImmig","PctImmigRecent","PctImmigRec5","PctImmigRec8","PctImmigRec10","PctRecentImmig","PctRecImmig5","PctRecImmig8","PctRecImmig10","PctSpeakEnglOnly","PctNotSpeakEnglWell","PctLargHouseFam","PctLargHouseOccup","PersPerOccupHous","PersPerOwnOccHous","PersPerRentOccHous","PctPersOwnOccup","PctPersDenseHous","PctHousLess3BR","MedNumBR","HousVacant","PctHousOccup","PctHousOwnOcc","PctVacantBoarded","PctVacMore6Mos","MedYrHousBuilt","PctHousNoPhone","PctWOFullPlumb","OwnOccLowQuart","OwnOccMedVal","OwnOccHiQuart","RentLowQ","RentMedian","RentHighQ","MedRent","MedRentPctHousInc","MedOwnCostPctInc","MedOwnCostPctIncNoMtg","NumInShelters","NumStreet","PctForeignBorn","PctBornSameState","PctSameHouse85","PctSameCity85","PctSameState85","LemasSwornFT","LemasSwFTPerPop","LemasSwFTFieldOps","LemasSwFTFieldPerPop","LemasTotalReq","LemasTotReqPerPop","PolicRepPerOffic","PolicPerPop","RacialMatchCommPol","PctPolicWhite","PctPolicBlack","PctPolicHisp","PctPolicAsian","PctPolicMinor","OfficAssgnDrugUnits","NumKindsDrugSeiz","PolicAveOTWorked","LandArea","PopDens","PctUsePubTrans","PolicCars","PolicOperBudg","LemasPctPolicOnPatr","LemasGangUnitDeploy","LemasPctOfficDrugUn","PolicBudgPerPop","ViolentCrimesPerPop"))
@@ -129,129 +124,62 @@ communities <- transform(communities,
                          County == as.factor(County),
                          Community == as.integer(Community))
 ```
+
 ### 2. Exploratory Data Analysis
 EDA focused on understanding patterns across demographic, socio-economic, and policing domains.
 
 ```{r}
-# maybe we need some summaty stats like mean median ....
+communities <- communities |>
+  select(-State, -County, -Community, -CommunityName, -Fold)
+summary(communities)
 ```
 
-
 ####  2.1 Identifying the Highest Correlated Predictors
-2.1.1 Purpose
+
+**2.1.1 Purpose**
+
 The first target before constructing any predictive models was to get an understanding of community characteristics that had the strongest linear relationships with violent crime. In addition to identifying promising predictors, it also provides insight into the social patterns.
 
-2.1.2 Method
+**2.1.2 Method**
+
 I calculated Pearson correlation coefficients between every predictor in the dataset and the target variable ViolentCrimesPerPop. Missing values were handled using use = "complete.obs".
 
 From these results, I extracted the top 15 variables with the strongest positive or negative correlations and visualized them using a bar plot.
 
-2.1.3 Findings
-Top15 Features Most Correlated with Violent Crime:
+**2.1.3 Findings**
+
+Top 15 Features Most Correlated with Violent Crime:
+
 - Pctllleg: percentage of kids born to never married (numeric - decimal)
+
 - racepctblack: percentage of population that is african american (numeric - decimal)
+
 - pctWPubAsst: percentage of households with public assistance income in 1989 (numeric - decimal)
+
 - FemalePctDiv: percentage of females who are divorced (numeric - decimal)
+
 - TotalPctDIv: percentage of population who are divorced (numeric - decimal)
+
 - MalePctDivorce: percentage of males who are divorced (numeric - decimal)
+
 - PctPopUnderPov: percentage of people under the poverty level (numeric - decimal)
+
 - PctUnemployed: percentage of people 16 and over, in the labor force, and unemployed (numeric - decimal)
+
 - PctPersOwnOccup: percent of people in owner occupied households (numeric - decimal)
+
 - pctWInvInc: percentage of households with investment / rent income in 1989 (numeric - decimal)
+
 - PctTeen2Par: percent of kids age 12-17 in two parent households (numeric - decimal)
+
 - PctYoungKids2Par: percent of kids 4 and under in two parent households (numeric - decimal)
+
 - racePctWhite: percentage of population that is caucasian (numeric - decimal)
+
 - PctFam2Par: percentage of families (with kids) that are headed by two parents (numeric - decimal)
+
 - PctKids2Par: percentage of kids in family housing with two parents (numeric - decimal)
 
-2.1.4 Interpretation: What the Top 15 Correlated Variables Reveal
-The 15 variables most strongly correlated with ViolentCrimesPerPop reveal a consistent and interpretable social pattern. These variables fall into several meaningful categories that together describe the structural conditions of a community.
-
-(a) Family Structure Variables (Very Strong Negative Correlation)
-Examples include:
-- PctTeen2Par — % of teens living with two parents
-- PctKids2Par — % of children living with two parents
-- PctYoungKids2Par — % of young children living with two parents
-- PctFam2Par — % of families with two parents
-
-Interpretation:
-1) Family stability may act as a protective factor against community-level violence.
-Two-parent households often correlate with:
-- greater household supervision
-- higher economic stability
-- more time and resources to support youth
-- lower likelihood of family disruption
-
-2) These variables appear repeatedly in the top rankings because they measure similar underlying phenomena:
-family cohesion, stability, and social support.
-
-3) The strength of the correlations is especially notable because it appears across multiple child age groups—infants, kids, and teens.
-This indicates that the relationship is not age-dependent, but instead a broad community structure effect.
-
-
-(b) Socioeconomic Disadvantage Variables
-Examples:
-- PctPopUnderPov — % of population under poverty line
-- PctUnemployed — unemployment rate
-- pctWPubAsst — % households receiving public assistance
-- PctIlleg — % of births to unmarried mothers
-
-Interpretation:
-1) Economic deprivation is a key structural factor linked with higher violent crime rates.
-Communities with more poverty, unemployment, or reliance on public assistance often experience:
-- limited access to resources
-- fewer employment opportunities
-- reduced public services
-- greater stress and instability
-
-2) PctIlleg (non-marital births) captures family and economic instability.
-It is not a moral variable—it is a proxy for:
-- inconsistent parental support
-- unstable financial environments
-- limited childcare and family resources
-
-3) These socioeconomic indicators reinforce a classic sociological pattern:
-Economic disadvantage increases social strain, which correlates with higher violent crime rates.
-
-
-(c) Demographic Composition Variables (Correlation, Not Causation)
-Examples:
-- racepctblack
-- racePctWhite
-
-Interpretation:
-These variables do show correlation but should never be interpreted as causal.
-
-Instead, they reflect:
-- the spatial concentration of racial groups due to historical housing policies
-- segregation patterns
-- unequal access to jobs, schools, and wealth
-- unemployment and poverty burdens disproportionately affecting some communities
-
-The correlations are capturing structural inequalities, not characteristics of individuals.
-
-
-(d) Housing and Wealth Indicators
-Examples:
-- PctPersOwnOccup — % living in owner-occupied homes
-- pctWInvInc — % with investment income
-
-Interpretation:
-Higher homeownership and investment income correlate negatively with violent crime.
-
-This likely reflects:
-- long-term community stability
-- stronger neighborhood ties
-- more consistent property maintenance
-- greater economic buffer against shocks
-- higher collective efficacy (neighbors intervene more)
-
-These variables do not measure wealth directly but capture community-level economic security.
-
-In general, the highest correlations indicate a coherent trend:
-Violent crime closely correlates to economic distress, social unrest, and weaker family/community ties.
-On the flip-side, areas with stable families, better economic and financial foundations, and long-term residents tend to have a lower incidence of violent crime.
-This information helps identify which variables should be examined in greater depth.
 ```{r highest correlation}
 communities <- read_csv("data/communities.data")
 glimpse(communities)
@@ -281,8 +209,114 @@ correlations %>%
        x = "Variable", y = "Correlation")
 ```
 
+**2.1.4 Interpretation: What the Top 15 Correlated Variables Reveal**
+
+The 15 variables most strongly correlated with ViolentCrimesPerPop reveal a consistent and interpretable social pattern. These variables fall into several meaningful categories that together describe the structural conditions of a community.
+
+*Family Structure Variables (Very Strong Negative Correlation)*
+
+  Examples include:
+  
+  - PctTeen2Par — % of teens living with two parents
+  - PctKids2Par — % of children living with two parents
+  - PctYoungKids2Par — % of young children living with two parents
+  - PctFam2Par — % of families with two parents
+
+  Interpretation:
+
+  1. Family stability may act as a protective factor against community-level violence.
+  Two-parent households often correlate with:
+  
+  - greater household supervision
+  - higher economic stability
+  - more time and resources to support youth
+  - lower likelihood of family disruption
+
+  2. These variables appear repeatedly in the top rankings because they measure similar underlying phenomena: family cohesion, stability, and social support.
+
+  3. The strength of the correlations is especially notable because it appears across multiple child age groups—infants, kids, and teens. This indicates that the relationship is not age-dependent, but instead a broad community structure effect.
+
+*Socioeconomic Disadvantage Variables*
+
+  Examples:
+  
+  - PctPopUnderPov — % of population under poverty line
+  - PctUnemployed — unemployment rate
+  - pctWPubAsst — % households receiving public assistance
+  - PctIlleg — % of births to unmarried mothers
+
+  Interpretation:
+
+  1. Economic deprivation is a key structural factor linked with higher violent crime rates.
+  Communities with more poverty, unemployment, or reliance on public assistance often experience:
+  
+  - limited access to resources
+  - fewer employment opportunities
+  - reduced public services
+  - greater stress and instability
+
+  2. PctIlleg (non-marital births) captures family and economic instability.
+  It is not a moral variable; it is a proxy for:
+  
+  - inconsistent parental support
+  - unstable financial environments
+  - limited childcare and family resources
+
+  3. These socioeconomic indicators reinforce a classic sociological pattern:
+  Economic disadvantage increases social strain, which correlates with higher violent crime rates.
+
+*Demographic Composition Variables (Correlation, Not Causation)*
+
+  Examples:
+  
+  - racepctblack
+  - racePctWhite
+
+  Interpretation:
+  
+  These variables do show correlation, but should never be interpreted as causal.
+
+  Instead, they reflect:
+  
+  - the spatial concentration of racial groups due to historical housing policies
+  - segregation patterns
+  - unequal access to jobs, schools, and wealth
+  - unemployment and poverty burdens disproportionately affecting some communities
+
+  The correlations are capturing structural inequalities, not characteristics of individuals.
+
+*Housing and Wealth Indicators*
+ 
+  Examples:
+  
+  - PctPersOwnOccup — % living in owner-occupied homes
+  - pctWInvInc — % with investment income
+
+  Interpretation:
+  
+  Higher homeownership and investment income correlate negatively with violent crime.
+
+  This likely reflects:
+  
+  - long-term community stability
+  - stronger neighborhood ties
+  - more consistent property maintenance
+  - greater economic buffer against shocks
+  - higher collective efficacy (neighbors intervene more)
+
+  These variables do not measure wealth directly but capture community-level economic security.
+
+In general, the highest correlations indicate a coherent trend:
+
+Violent crime closely correlates to economic distress, social unrest, and weaker family/community ties.
+
+On the flip-side, areas with stable families, better economic and financial foundations, and long-term residents tend to have a lower incidence of violent crime.
+
+This information helps identify which variables should be examined in greater depth.
+
 #### 2.2 Adjusted R-Squared: Identifying the Most Useful Predictors
-2.2.1 Purpose
+**2.2.1 Purpose**
+
 While many variables exhibit a strong correlation with violent crime, most also exhibit a strong correlation with one another, particularly those pertaining to family structure. This results in multicollinearity, which tends to introduce noise to a regression model.
 
 In order to identify the most informative predictors, I attempted a leave-one-variable-out adjusted R² approach:
@@ -291,7 +325,8 @@ Each of the 15 variables was taken away from the model, and adjusted R² was mea
 If adjusted R² increased when removing a variable, then that variable was redundant or detracting from the model.
 If adjusted R² decreased when removing a variable, then that variable was informative.
 
-2.2.2 Method
+**2.2.2 Method**
+
 First, I fit a full model with all top 15 predictors. Then, for each of the 15 predictors:
 - remove the variable
 - re-fit the model
@@ -300,93 +335,15 @@ First, I fit a full model with all top 15 predictors. Then, for each of the 15 p
 
 Finally, I sorted the results to find which removal gave the highest adjusted R².
 
-2.2.3 Findings
+**2.2.3 Findings**
+
 Top 5 variables (adjusted R²):
-- PctTeen2Par: percent of kids age 12-17 in two-parent households (numeric - decimal)
-- PctPersOwnOccup: percent of people in owner-occupied households (numeric - decimal)
-- racepctblack: percentage of population that is African American (numeric - decimal)
-- PctUnemployed: percentage of people 16 and over, in the labor force, and unemployed (numeric - decimal)
-- PctYoungKids2Par: percent of kids 4 and under in two-parent households (numeric - decimal)
 
-2.2.4 Interpretation: Why These Variables Are the Most Important Predictors
-The adjusted R² analysis identifies the variables whose removal most reduces model performance. These are the predictors that contribute the most unique explanatory power.
-
-(a) PctTeen2Par — Most Important Predictor
-Why it matters:
-1) Teen-related family structure may be the most direct reflection of community environment for at-risk youth.
-
-2) Teens are more susceptible to:
-- peer pressure
-- gang involvement
-- unsupervised activities
-- school disengagement
-
-3) A higher percentage of teens living with two parents likely signals:
-- stronger monitoring
-- more consistent support
-- more household resources
-	
-4) It outperforms similar variables (like PctKids2Par) because teenagers are more directly connected to the age groups typically involved in violent crime—either as offenders or victims.
-
-Thus, PctTeen2Par is not just correlated; it is uniquely predictive.
-
-
-(b) PctPersOwnOccup — A Key Indicator of Neighborhood Stability
-Why it contributes so much predictive power:
-Communities with higher homeownership generally exhibit:
-- stronger long-term residency
--	stable neighborhood relationships
--	investment in local institutions
--	higher collective efficacy (neighbors watch out for each other)
--	more consistent social control mechanisms
-
-This variable captures community qualities that are not duplicated by any single poverty or family structure variable.
-It is therefore a structural stability index.
-
-
-(c) racepctblack — A Statistically Important but Structural Proxy
-Although the variable is statistically important, it is critical to interpret it correctly:
-1) It likely captures structural inequality, not inherent traits of racial groups.
-2) Because of historic redlining, wage gaps, and segregation, this variable may be acting as a proxy for:
-- concentrated poverty
--	systemic underinvestment
--	school quality disparities
--	housing discrimination
--	unemployment clustering
-
-Importantly, its statistical significance does not imply racial causation.
-It reflects structural conditions disproportionately affecting certain communities.
-
-
-(d) PctUnemployed — A Direct Measure of Economic Strain
-Why it adds unique predictive value:
-Even though poverty-related variables correlate with crime, PctUnemployed captures a more acute form of economic instability:
--	lack of steady income
--	reduced social mobility
--	higher stress and tension
--	higher idle time (especially for younger adults)
-
-Unemployment often predicts:
--	weakened social networks
--	increased reliance on informal or illegal economies
-Because unemployment reflects current economic stress, it adds information that poverty alone cannot capture.
-
-
-(e) PctYoungKids2Par — Reflects Long-Term Family Stability
-This variable extends the predictive strength of PctTeen2Par by showing that:
-1) Family structure disadvantages start long before adolescence.
-2) Communities with fewer two-parent households for young children may face long-term cumulative disadvantages, such as:
-- inconsistent childcare
--	higher stress for single parents
--	limited early childhood resources
--	developmental risks that extend into later life
-Although it overlaps with other family-structure variables, it still contributes enough independent signal to be selected by the adjusted R² method.
-
-
-In general, the adjusted R² results enhance the correlation results by identifying which variables are significant versus being simply related.
-
-The pattern demonstrates that stable home life, economic stability, and continuity of residence are the only unique variables that explain variance in violent crime.  Thus, demographic and poverty-related variables are still significant but become negligible when paired with the strongest predictors.
-
+  - PctTeen2Par: percent of kids age 12-17 in two-parent households (numeric - decimal)
+  - PctPersOwnOccup: percent of people in owner-occupied households (numeric - decimal)
+  - racepctblack: percentage of population that is African American (numeric - decimal)
+  - PctUnemployed: percentage of people 16 and over, in the labor force, and unemployed (numeric - decimal)
+  - PctYoungKids2Par: percent of kids 4 and under in two-parent households (numeric - decimal)
 
 ```{r adjusted r-squared}
 top15_vars <- correlations %>%
@@ -428,7 +385,104 @@ ggplot(results, aes(x = reorder(Removed_Variable, Adjusted_R2), y = Adjusted_R2)
   coord_flip() +
   labs(title = "Adjusted R² After Removing Each Variable")
 ```
+
+**2.2.4 Interpretation: Why These Variables Are the Most Important Predictors**
+The adjusted R² analysis identifies the variables whose removal most reduces model performance. These are the predictors that contribute the most unique explanatory power.
+
+*PctTeen2Par — Most Important Predictor*
+
+Why it matters:
+
+  1. Teen-related family structure may be the most direct reflection of community environment for at-risk youth.
+
+  2. Teens are more susceptible to:
+  
+  - peer pressure
+  - gang involvement
+  - unsupervised activities
+  - school disengagement
+
+  3. A higher percentage of teens living with two parents likely signals:
+    
+  - stronger monitoring
+  - more consistent support
+  - more household resources
+	
+  4. It outperforms similar variables (like PctKids2Par) because teenagers are more directly connected to the age groups typically involved in violent crime—either as offenders or victims.
+
+Thus, PctTeen2Par is not just correlated; it is uniquely predictive.
+
+*PctPersOwnOccup — A Key Indicator of Neighborhood Stability*
+
+Why it contributes so much predictive power:
+
+Communities with higher homeownership generally exhibit:
+
+  - stronger long-term residency
+  -	stable neighborhood relationships
+  -	investment in local institutions
+  -	higher collective efficacy (neighbors watch out for each other)
+  -	more consistent social control mechanisms
+
+This variable captures community qualities that are not duplicated by any single poverty or family structure variable.
+
+It is therefore a structural stability index.
+
+*RacePctBlack — A Statistically Important but Structural Proxy*
+
+Although the variable is statistically important, it is critical to interpret it correctly:
+
+  1. It likely captures structural inequality, not inherent traits of racial groups.
+  
+  2. Because of historic redlining, wage gaps, and segregation, this variable may be acting as a proxy for:
+  
+  - concentrated poverty
+  -	systemic underinvestment
+  -	school quality disparities
+  -	housing discrimination
+  -	unemployment clustering
+
+Importantly, its statistical significance does not imply racial causation. Rather, it reflects structural conditions disproportionately affecting certain communities.
+
+*PctUnemployed — A Direct Measure of Economic Strain*
+
+Why it adds unique predictive value:
+
+Even though poverty-related variables correlate with crime, PctUnemployed captures a more acute form of economic instability:
+
+  -	lack of steady income
+  -	reduced social mobility
+  -	higher stress and tension
+  -	higher idle time (especially for younger adults)
+
+Unemployment often predicts:
+
+  -	weakened social networks
+  -	increased reliance on informal or illegal economies
+  
+Because unemployment reflects current economic stress, it adds information that poverty alone cannot capture.
+
+*PctYoungKids2Par — Reflects Long-Term Family Stability*
+
+This variable extends the predictive strength of PctTeen2Par by showing that:
+
+  1. Family structure disadvantages start long before adolescence.
+  
+  2. Communities with fewer two-parent households for young children may face long-term cumulative disadvantages, such as:
+  
+  - inconsistent childcare
+  -	higher stress for single parents
+  -	limited early childhood resources
+  -	developmental risks that extend into later life
+  
+Although it overlaps with other family-structure variables, it still contributes enough independent signal to be selected by the adjusted R² method.
+
+In general, the adjusted R² results enhance the correlation results by identifying which variables are significant versus being simply related.
+
+The pattern demonstrates that stable home life, economic stability, and continuity of residence are the only unique variables that explain variance in violent crime.  Thus, demographic and poverty-related variables are still significant but become negligible when paired with the strongest predictors.
+
 ### 3 Model Selection and Evaluation
+
 Several regression techniques were evaluated:
 
 #### 3.1 Linear Regression
@@ -461,13 +515,14 @@ rf_pred <- predict(rf_model, newdata = test)
 
 Random Forest was used as a more powerful model that can capture complex patterns. Unlike linear regression, Random Forest does not assume any simple or straight-line relationships. Instead, it builds many decision trees and combines their results, which helps improve accuracy and reduces overfitting. This makes Random Forest especially helpful for datasets like this one, where there are many predictors and the relationships between them may be non-linear. Another advantage is that Random Forest provides a ranking of feature importance, helping us see which variables contribute most to predicting violent crime. Overall, it performed better than the linear regression model and handled the complexity of the dataset more effectively.
 
-3.2.1 Visualising Random Forest Predictions
+**3.2.1 Visualising Random Forest Predictions**
 
 From the plot, we see that most points follow the general upward trend, meaning the Random Forest model is able to capture the overall pattern in the data. Communities with higher actual crime rates also tend to have higher predicted values, which shows that the model is learning meaningful relationships.
 
 However, the points are still spread out around the line, especially for larger crime values. This indicates that while the Random Forest model performs better than linear regression, it still struggles with perfect accuracy—particularly in cases with very high crime rates. This is also reflected in the RMSE value: although Random Forest lowers the prediction error, there is still some variability it cannot fully explain.
 
 Overall, this visualisation helps confirm that the Random Forest model provides a reasonably strong fit, capturing the main pattern in the data while reducing prediction errors compared to simpler models.
+
 ```{r}
 results <- data.frame(
   Actual = test$ViolentCrimesPerPop,
@@ -481,7 +536,7 @@ ggplot(results, aes(x = Actual, y = Predicted)) +
        y = "Predicted Crime Rate")
 ```
 
-3.2.2 Residual Analysis (Model Diagnostics)
+**3.2.2 Residual Analysis (Model Diagnostics)**
 
 The histogram above shows the distribution of residuals from the Random Forest model. A residual is the difference between the actual violent crime rate and the predicted value. In a good predictive model, we want the residuals to be mostly close to zero, because that means the predictions are accurate.
 
@@ -494,15 +549,14 @@ The distribution is roughly bell-shaped, showing that the model does not consist
 There are a few larger positive and negative residuals, which represent communities where the model made larger prediction errors. These outliers suggest that some areas might have unique conditions that the model cannot fully capture.
 
 Overall, this residual plot supports that the Random Forest model performs reasonably well, with most prediction errors being small. It also explains why the Random Forest achieves a lower RMSE compared to linear regression: its residuals are more tightly grouped around zero.
-```{r}
 
+```{r}
 residuals_rf <- test$ViolentCrimesPerPop - rf_pred
 
 ggplot(data.frame(residuals_rf), aes(x = residuals_rf)) +
   geom_histogram(bins = 30, fill = "darkorange", color = "white") +
   labs(title = "Residual Distribution (Random Forest)",
        x = "Residuals", y = "Count")
-
 ```
 
 #### 3.3 Model Evaluation
@@ -522,10 +576,9 @@ rf_rmse <- sqrt(mean((rf_pred - test$ViolentCrimesPerPop)^2))
 
 cat("Linear Regression: R2 =", lm_r2, " RMSE =", lm_rmse, "\n")
 cat("Random Forest: R2 =", rf_r2, " RMSE =", rf_rmse, "\n")
-
 ```
 
-### 4.Improvements and Ethical Considerations
+### 4. Improvements and Ethical Considerations
 Possible Improvements
 
 Feature selection to reduce noise
@@ -576,16 +629,7 @@ Visualisations confirmed that Random Forest made significantly better prediction
 
 Ethical concerns must be considered when working with sensitive social data.
 
-Conclusion
+#### Conclusion
 
 Random Forest is a highly effective method for predicting violent crime rates using community-level features.
 The dataset highlights the complex relationships between crime and socio-economic conditions, and machine learning models can help uncover these patterns—provided they are used responsibly.
-
-
-## Possible explanations
-
-There are many possible explanations for why certain variables are more or less correlated with the violent crime rate. 
-PctIlleg likely has a high correlation due to the lack of legal work opportunities for people who are not in the United States on a Visa, Green Card, or who are citizens, due to many employeres requiring things like SSNs and proof of visas. As such, many illegal immigrants may be forced to turn to crime, creating a larger crime community, which can lead to an increased prevalence of violence due to increases in power.
-Other things like historical racism, slavery, bigotry, inequality, poverty and desperation, reasons for immigration, and the distribution of certain types of privilege are all related to why certain variables have high or low correlations with the prevalence of violent crime.
-
-Note that the `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the plot.
