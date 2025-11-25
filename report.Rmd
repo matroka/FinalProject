@@ -403,3 +403,7 @@ Thus, Random Forest demonstrates superior predictive ability compared to linear 
 However, it is critical to note that the primary goal of the study is to develop an accurate method of prediction as well as revealing the depth of social structure and transforming the findings of this analysis into useful intervention strategies.
 
 In conclusion, this project demonstrates both the potential and limitations of predictive modeling in social science, taking into consideration the ethical implications of using sensitive social data and having a thorough understanding of the social context in which the data were collected. Ultimately, if utilized properly, predictive models can provide policymakers with sound evidence to develop targeted public safety policies to enhance the overall well-being of society.
+
+## 10.Reference
+
+Redmond, M. (2002). Communities and Crime [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C53W3X.
