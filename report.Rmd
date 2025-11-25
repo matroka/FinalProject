@@ -16,22 +16,35 @@ library(randomForest)
 library(plotly)
 ```
 
-## Introduction
+## 1.Introduction
 
-Understanding the social, economic, and demographic factors that influence crime rates has long been a central objective in the fields of criminology, sociology, and public policy.
-The growing availability of detailed community-level datasets has enabled data-driven approaches to more effectively uncover the complex relationships between population characteristics and crime levels. A prominent resource in this domain is the "Communities and Crime" dataset, which aggregates data from multiple U.S. government sources and is publicly accessible through the University of California, Irvine's Machine Learning Repository. This is the original data set.
+Understanding the factors that cause crime in the community has always been an important research topic in the fields of sociology, criminology and public policy. With the increasing popularity of large-scale social and population data sets, data science provides powerful tools for revealing complex relationships, generating predictions and guiding decision-making. In this project, we studied the "Community and Crime" data set from the UCI machine learning library, which contains rich information such as social, economic, security and demographic indicators of nearly 2,000 American communities.
 
-## Data description
+The overall goal of the project is to explore which community characteristics are most relevant to the violent crime rate, and to determine whether machine learning models (especially linear regression and random forest regression models) can accurately predict the violent crime rate. To this end, we have carried out detailed data cleaning, exploratory data analysis (EDA), model construction, performance evaluation, and visualization of prediction results and errors.
 
-The dataset is found at https://archive.ics.uci.edu/dataset/183/communities+and+crime and originialy created by Michael Redmond at UC Irvine in 2009, using data from 1990 and 1995. Its primary purpose is to facilitate the development of predictive models for violent crime rates—exemplified by the target variable ViolentCrimesPerPop—while enabling comprehensive analysis of the associations between community attributes and criminal outcomes.
+This report adopts a systematic research method. First, it selects and familiarizes it with the data set, then enters the modeling process, and finally reflects on ethical considerations and insights. The final model used in this project not only has excellent predictive performance, but also has meaningful explanations, which can support extensive discussions on crime prevention and community well-being.
 
-The dataset contains 1,994 observations representing individual communities in the United States. Each observation describes a community using 122 predictive attributes and one target variable, totaling 127 fields.
+## 2.Dataset Selection and Understanding
 
-The dataset documentation indicates that, apart from the first five variables—State, County, Community, CommunityName, and Fold—all of the remaining 122 variables are numeric and have been normalized to the interval [0.00, 1.00] using an equal-interval binning method. Specifically, for each variable, values exceeding three standard deviations above the mean were capped at 1.00, while those falling more than three standard deviations below the mean were set to 0.00. For example, a normalized value of 0.7 for medianIncome cannot be compared directly to a normalized value of 0.7 for PctKids2Par. Each attribute’s range is scaled independently.
+The reason for choosing the "Community and Crime" data set is that it is widely recognized in machine learning research, has comprehensive multi-dimensional characteristics, and is suitable for regression analysis. The data set contains 122 variables from law enforcement reports, U.S. census data, and various socio-economic factors.
 
-Another important characteristic is the presence of missing values, especially in variables extracted from policing data. Although missing values are not abundant compared to the size of the dataset, they must still be accounted for to avoid bias during training.
+### 2.1 What the dataset contains
 
-The data set then lists variables to do with populations, household size, race, ages, the size of urban populations, incomes, retirements, education, employment and field of employment, divorce, families, immigration, language, home size, home ownership, rent, homeless populations, and police statistics, ending with the variable measuring the amount of violent crime proportional to the population.
+The data set covers a variety of characteristic information, specifically including:
+
+·Demographic characteristics: race percentages, age distributions, population size.
+
+·Socio-economic status: median income, unemployment rate, education levels, poverty rates.
+
+·Housing-related indicators: occupancy density, rental costs, home ownership.
+
+·Family constituent variables: single-parent households, young children in two-parent households.
+
+·Police resource data: number of sworn full-time officers, police budget, drug-unit assignments.
+
+·Crime situation: violent crimes per 100,000 residents (target variable).
+
+Each sample corresponds to a community or block unit, so the data set has strong empirical research value in analyzing regional differences.
 
 
 ```{r data set}
@@ -39,18 +52,19 @@ communities <- read_csv("data/communities.data")
 head(communities)
 ```
 
-## Research Question
+### 2.2 Research Question
 
-This project is guided by three primary objectives:
+In view of the richness of this data set, a series of research problems have emerged:
 
-1. Identify the most influential predictors of violent crime.  
-Analyze demographic, socioeconomic, and law enforcement variables to determine those exhibiting the strongest statistical associations with violent crime rates.
+Which community characteristics are most closely related to violent crimes?
 
-2. Develop a predictive model for the violent crime rate.  
-Train and evaluate multiple regression models using a range of machine learning techniques—including linear regression and random forests boosting—to predict the target variable ViolentCrimesPerPop. Model performance will be assessed using standard evaluation metrics such as R².
+Can the frequency of violent incidents be predicted based on factors such as socio-economic factors and public security management measures?
 
-3. Ensure responsible interpretation of results.  
-Given that several variables pertain to sensitive demographic attributes, including race, findings must be interpreted with caution and contextual awareness. It is critical to emphasize that correlation does not imply causation, and demographic indicators often serve as proxies for broader structural and systemic inequities rather than direct causes of criminal behavior.
+Which machine learning model can capture the crime pattern best?
+
+Are there any community groups with similar criminal behavior patterns?
+
+Our project aims to predict the number of violent crimes per million people, which is a supervised return task. This prediction goal not only enables us to explore various relationships, but also allows us to test different modeling methods.
 
 ## Methodology
 
