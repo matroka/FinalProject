@@ -463,18 +463,13 @@ the linear regression model and the random forest model.</p>
 <div id="data-preprocessing" class="section level3">
 <h3>3.1 Data Preprocessing</h3>
 <p>Several steps were taken to prepare the dataset for analysis:</p>
-<pre class="r"><code># maybe we can add some codes or not (if not just delete it) -Judy
-options(repos = c(CRAN = &quot;https://cloud.r-project.org&quot;))
-
-# Load column names
+<pre class="r"><code>options(repos = c(CRAN = &quot;https://cloud.r-project.org&quot;))
 names_url &lt;- &quot;https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.names&quot;
 name_lines &lt;- readLines(names_url)
 name_lines &lt;- name_lines[grepl(&quot;^@attribute&quot;, name_lines)]
 col_names &lt;- gsub(&quot;^@attribute\\s+&quot;, &quot;&quot;, name_lines)
 col_names &lt;- sub(&quot;\\s+.*$&quot;, &quot;&quot;, col_names)
 col_names &lt;- col_names[col_names != &quot;&quot;]
-
-# Load dataset
 data_url &lt;- &quot;https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.data&quot;
 crime &lt;- read.csv(data_url, header = FALSE, na.strings = &quot;?&quot;, col.names = col_names)</code></pre>
 </div>
@@ -495,8 +490,7 @@ field into integers.</p>
 <p>By making sure that the cleaned dataset is consistent and readable by
 the computer model, we remove interference sources for better model
 reliability.</p>
-<pre class="r"><code># the same, if we don&#39;t need it, just delete. But I think we need this step.
-crime &lt;- crime %&gt;%
+<pre class="r"><code>crime &lt;- crime %&gt;%
   select(-state, -county, -community, -communityname, -fold)
 
 data_clean &lt;- crime %&gt;%

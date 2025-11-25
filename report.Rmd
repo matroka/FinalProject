@@ -77,19 +77,14 @@ Build a model that can predict the violent crime rate based on the characteristi
 
 Several steps were taken to prepare the dataset for analysis:
 
-```{r}
-# maybe we can add some codes or not (if not just delete it) -Judy
+```{r data preprocessing }
 options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-# Load column names
 names_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.names"
 name_lines <- readLines(names_url)
 name_lines <- name_lines[grepl("^@attribute", name_lines)]
 col_names <- gsub("^@attribute\\s+", "", name_lines)
 col_names <- sub("\\s+.*$", "", col_names)
 col_names <- col_names[col_names != ""]
-
-# Load dataset
 data_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.data"
 crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_names)
 ```
@@ -110,8 +105,7 @@ Ensure the data types are correct by possibly converting state and county number
 
 By making sure that the cleaned dataset is consistent and readable by the computer model, we remove interference sources for better model reliability.
 
-```{r}
-# the same, if we don't need it, just delete. But I think we need this step.
+```{r handling missing value}
 crime <- crime %>%
   select(-state, -county, -community, -communityname, -fold)
 
@@ -129,7 +123,7 @@ Before performing any modelling, I conducted a statistical and visual assessment
 
 I also produced summary statistics to give an overview of the main variables and how they can be described:
 
-```{r}
+```{r summary statistics}
 library(dplyr)
 
 data_clean %>%
@@ -236,7 +230,7 @@ b.RMSE (Root Mean Squared Error): ≈ 0.13 This indicates the average error in t
 
 Compared to the other models, the performance of the Linear Regression model was modest. However, the model struggled in addressing intricate patterns. The moderate value of R² along with the high error rate clearly indicates that linearity is not sufficient for the analysis of violent crime dynamics.
 
-```{r}
+```{r linear regression}
 library(caret)      
 library(randomForest) 
 set.seed(123)
@@ -253,7 +247,7 @@ cat("Linear Regression: R2 =", lm_r2, " RMSE =", lm_rmse, "\n")
 
 ### 5.2 Random Forest Regression
 
-```{r}
+```{r random forest}
 rf_model <- randomForest(ViolentCrimesPerPop ~ ., data = train, ntree = 150)
 rf_pred <- predict(rf_model, newdata = test)
 rf_r2 <- cor(rf_pred, test$ViolentCrimesPerPop)^2
@@ -322,7 +316,7 @@ There are some extreme cases that correspond to communities with abnormally high
 
 This shows that the model can capture general patterns well, and most of the errors are random.
 
-```{r}
+```{r visual evaluation}
 results <- data.frame(
   Actual = test$ViolentCrimesPerPop,
   Predicted = rf_pred
