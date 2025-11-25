@@ -587,23 +587,6 @@ bar plot.</p>
 <div id="findings" class="section level4">
 <h4>4.3.3 Findings</h4>
 <p>Top 15 Features Most Correlated with Violent Crime:</p>
-<ul>
-<li><p>Pctllleg</p></li>
-<li><p>racepctblack</p></li>
-<li><p>pctWPubAsst</p></li>
-<li><p>FemalePctDiv</p></li>
-<li><p>TotalPctDIv</p></li>
-<li><p>MalePctDivorce</p></li>
-<li><p>PctPopUnderPov</p></li>
-<li><p>PctUnemployed</p></li>
-<li><p>PctPersOwnOccup</p></li>
-<li><p>pctWInvInc</p></li>
-<li><p>PctTeen2Par</p></li>
-<li><p>PctYoungKids2Par</p></li>
-<li><p>racePctWhite</p></li>
-<li><p>PctFam2Par</p></li>
-<li><p>PctKids2Par</p></li>
-</ul>
 <pre class="r"><code>glimpse(data_clean)</code></pre>
 <pre><code>## Rows: 1,994
 ## Columns: 123
@@ -779,19 +762,6 @@ head(correlations, 20)</code></pre>
 integrated learning.</p>
 <div id="linear-regression-model" class="section level3">
 <h3>5.1 Linear Regression Model</h3>
-<p>Linear regression is one of the models we first adopted, because it
-is easy to understand and can provide a good benchmark for comparison.
-The model tries to establish a linear relationship between all
-predictors and the violent crime rate. In other words, it assumes that
-each variable has a linear effect on the target variable. One advantage
-of linear regression is that we can clearly see how each prediction
-variable affects the crime rate through the model coefficient. However,
-community and crime data sets contain many highly interrelated
-variables, which may make linear models unstable. When the relationship
-in the data is more complex or nonlinear, it will also encounter
-difficulties. Despite these limitations, linear regression is still
-useful for understanding the general direction of a relationship and can
-be used as a starting point for applying more advanced models.</p>
 <p>·Advantages</p>
 <p>a.Easy to interpret coefficients</p>
 <p>b.Provides baseline performance</p>
@@ -834,18 +804,6 @@ rf_r2 &lt;- cor(rf_pred, test$ViolentCrimesPerPop)^2
 rf_rmse &lt;- sqrt(mean((rf_pred - test$ViolentCrimesPerPop)^2))
 cat(&quot;Random Forest: R2 =&quot;, rf_r2, &quot; RMSE =&quot;, rf_rmse, &quot;\n&quot;)</code></pre>
 <pre><code>## Random Forest: R2 = 0.7044982  RMSE = 0.1251186</code></pre>
-<p>Random forests are used as a more powerful model that can capture
-complex patterns. Unlike linear regression, random forests do not assume
-that there is any simple or linear relationship. Instead, it builds many
-decision trees and combines their results, which helps to improve
-accuracy and reduce overfitting. This makes random forests particularly
-useful on data sets like this, because there are many predictors in
-them, and the relationship between them may be nonlinear. Another
-advantage is that random forests provide a ranking of the importance of
-features, which helps us understand which variables contribute the most
-to the prediction of violent crimes. In general, it performs better than
-the linear regression model and handles the complexity of data sets more
-effectively.</p>
 <p>·Advantages</p>
 <p>a.Handles nonlinear relationships</p>
 <p>b.Captures interactions between variables</p>
@@ -923,47 +881,25 @@ ggplot(results, aes(x = Actual, y = Predicted)) +
 <div id="potential-model-improvements" class="section level3">
 <h3>6.1 Potential Model Improvements</h3>
 <p>Possible Improvements:</p>
-<p>Although the random forest model has shown excellent performance, its
-prediction accuracy can be further improved in the following ways:</p>
-<p>·Hyperparameter optimization:</p>
-<p>By systematically adjusting key parameters such as the number of
-decision trees, maximum depth and sample sampling strategies, it is
-helpful to tap into the potential of the model.</p>
-<p>·Feature structure:</p>
-<p>Introduce more explanatory new features, such as constructing
-compound variables such as “interaction between poverty rate and
-unemployment rate”, to enhance the model’s ability to capture complex
-relationships.</p>
-<p>·Standardized processing of data:</p>
-<p>Normalization or standardization of input characteristics is
-especially conducive to improving the convergence speed and stability of
-linear models.</p>
-<p>·Try the gradient enhancement algorithm:</p>
-<p>Using gradient-based integration methods such as XGBoost or LightGBM,
-it may achieve better modeling results than random forests in the same
-task.</p>
+<p>Hyperparameter Tuning: Systematically optimize parameters (trees,
+depth, etc.).</p>
+<p>Feature Engineering: Create complex, explanatory features (e.g.,
+interaction terms).</p>
+<p>Standardization: Normalize data for better model stability.</p>
+<p>Explore Gradient Boosting: Test advanced ensemble methods
+(XGBoost/LightGBM).</p>
 </div>
 <div id="ethical-concerns" class="section level3">
 <h3>6.2 Ethical Concerns</h3>
-<p>Crime prediction involves sensitive data and is accompanied by major
-ethical considerations:</p>
-<p>·Enhanced risk of deviation:</p>
-<p>The algorithm model may inherit and amplify the existing biases in
-law enforcement practice or demographic information.</p>
-<p>·The possibility of policy misuse:</p>
-<p>If prediction technology is abused, it may become the basis for
-excessive monitoring or law enforcement against specific groups.</p>
-<p>·Privacy protection challenges:</p>
-<p>Socio-economic-related data should be handled carefully to prevent
-labeling or discrimination against specific groups.</p>
-<p>·Correlation &amp; causality:</p>
-<p>The prediction results only reflect the correlation between
-variables, and do not prove that individuals or groups have direct
-causal responsibility for criminal behavior.</p>
-<p>Therefore, model output must be interpreted and applied in a
-responsible manner - prediction tools should be designed to promote
-community support and intervention, not to promote punitive law
-enforcement decision-making.</p>
+<p>Crime prediction requires extreme caution:</p>
+<p>Risk of Bias: Models can amplify existing demographic biases.</p>
+<p>Misuse Potential: Technology may enable excessive monitoring or
+targeted policing.</p>
+<p>Privacy: Handle sensitive socio-economic data carefully to prevent
+discrimination.</p>
+<p>Correlation: Prediction is correlation, not causality.</p>
+<p>Mandate: Model application must be responsible, promoting community
+intervention over punitive enforcement.</p>
 </div>
 </div>
 <div id="results-feedback" class="section level2">
@@ -995,31 +931,22 @@ social data.</p>
 </div>
 <div id="conclusion" class="section level2">
 <h2>9.Conclusion</h2>
-<p>This research reveals the powerful ability of data science and
-technology to analyze real social problems when dealing with large-scale
-complex data sets. The “Community and Crime” data set provides a solid
-data basis for in-depth exploration of the socio-economic motives behind
-violent crimes and the construction of effective prediction models.
-After systematic data preprocessing, exploratory analysis, modeling and
-evaluation processes, the research results show that the nonlinear
-integrated learning method represented by random forests is
-significantly superior to the traditional linear model in terms of
-prediction performance.</p>
-<p>However, the purpose of the research is not limited to improving the
-accuracy of prediction, but also to reveal the deep social structure and
-economic conditions that affect the phenomenon of crime, and to
-transform the results of the analysis into actionable intervention
-strategies. Although machine learning technology shows strong modeling
-ability, its application must be based on ethical considerations, a deep
-understanding of the social background, and a responsible
-decision-making framework.</p>
-<p>In general, this project reflects the potential and boundaries of
-predictive models in social science applications. Under the premise of
-careful use, such models are expected to provide evidence-based support
-tools for policymakers, academic researchers and community
-organizations, promote the formation of more targeted and scientific
-public security policies, and thus promote the improvement of the
-overall well-being of society.</p>
+<p>This study uses the data science analysis methods in the “Community
+and Crime” data set to explore the socio-economic drivers of violent
+crime.</p>
+<p>The predictive performance of the random forest nonlinear integration
+model is significantly better than that of the traditional linear model,
+which confirms the complexity of crime determinants.</p>
+<p>Crucially, the purpose of this study is not only to be accurate, but
+also to reveal the deep social structure and transform the analysis
+results into implementable intervention strategies.</p>
+<p>This project highlights the potential and limitations of predictive
+models in the field of social science. Such tools must be used with
+caution, combining ethical considerations with a deep understanding of
+the social environment. If used well, these models can provide
+evidence-based support for policymakers, so as to formulate more
+targeted public safety policies and improve the well-being of the whole
+society.</p>
 </div>
 
 
