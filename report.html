@@ -453,10 +453,14 @@ enables us to explore various relationships, but also allows us to test
 different modeling methods.</p>
 </div>
 </div>
-<div id="methodology" class="section level2">
-<h2>Methodology</h2>
+<div id="data-overview" class="section level2">
+<h2>3.Data Overview</h2>
+<p>The main goals of this project are:</p>
+<p>Build a model that can predict the violent crime rate based on the
+characteristics of the community level, and compare the performance of
+the linear regression model and the random forest model.</p>
 <div id="data-preprocessing" class="section level3">
-<h3>1. Data Preprocessing</h3>
+<h3>3.1 Data Preprocessing</h3>
 <p>Several steps were taken to prepare the dataset for analysis:</p>
 <pre class="r"><code># maybe we can add some codes or not (if not just delete it) -Judy
 options(repos = c(CRAN = &quot;https://cloud.r-project.org&quot;))
@@ -472,11 +476,25 @@ col_names &lt;- col_names[col_names != &quot;&quot;]
 # Load dataset
 data_url &lt;- &quot;https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.data&quot;
 crime &lt;- read.csv(data_url, header = FALSE, na.strings = &quot;?&quot;, col.names = col_names)</code></pre>
-<div id="handling-missing-values" class="section level4">
-<h4>1.1 Handling Missing Values</h4>
-<p>Missing values were treated using: - mean or median imputation for
-numerical variables. - removal of attributes with a disproportionately
-large number of missing values.</p>
+</div>
+<div id="handling-missing-values" class="section level3">
+<h3>3.2 Handling Missing Values</h3>
+<p>Because there are a lot of “?” in the original data set. The value
+indicated is missing, so it needs to be carefully cleaned up. Our main
+steps include:</p>
+<p>Will “?” Replace the character with the “NA” value.</p>
+<p>Remove those rows with too many missing data to avoid deviations in
+the model.</p>
+<p>Fill in the low-level missing values under reasonable
+circumstances.</p>
+<p>Change the original ambiguous variable names of the data set to a
+clearer and more readable form.</p>
+<p>Make sure that the data type is correct, such as converting state and
+county numbers into classification variables, and community numbers into
+integers.</p>
+<p>By ensuring that the cleaned data set is consistent and easy to read
+by the machine, we reduce interference factors and improve the
+reliability of the model.</p>
 <pre class="r"><code># the same, if we don&#39;t need it, just delete. But I think we need this step.
 crime &lt;- crime %&gt;%
   select(-state, -county, -community, -communityname, -fold)
@@ -486,9 +504,66 @@ data_clean &lt;- crime %&gt;%
                 ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
 cat(&quot;Data cleaned. Shape:&quot;, nrow(data_clean), &quot;rows and&quot;, ncol(data_clean), &quot;columns\n&quot;)</code></pre>
 <pre><code>## Data cleaned. Shape: 1994 rows and 123 columns</code></pre>
-<p>The dataset overall contains sparse missingness, so imputation was
-sufficient without significantly altering the data distribution.</p>
 </div>
+</div>
+<div id="exploratory-data-analysis-eda" class="section level2">
+<h2>4. Exploratory Data Analysis (EDA)</h2>
+<p>Before conducting the modeling, we conducted statistical and visual
+analysis on the dataset to identify the patterns and anomalies within
+it.</p>
+<div id="summary-statistics" class="section level3">
+<h3>4.1 Summary Statistics</h3>
+<p>The overview of key variables reveals their important
+characteristics:</p>
+<pre class="r"><code>library(dplyr)
+
+data_clean %&gt;%
+  select(ViolentCrimesPerPop, medIncome, PctPopUnderPov, PctUnemployed) %&gt;%
+  summarise_all(list(
+    mean = ~mean(. , na.rm = TRUE),
+    sd = ~sd(. , na.rm = TRUE),
+    min = ~min(. , na.rm = TRUE),
+    max = ~max(. , na.rm = TRUE)
+  ))</code></pre>
+<pre><code>##   ViolentCrimesPerPop_mean medIncome_mean PctPopUnderPov_mean
+## 1                0.2379789      0.3611234           0.3030241
+##   PctUnemployed_mean ViolentCrimesPerPop_sd medIncome_sd PctPopUnderPov_sd
+## 1          0.3635306              0.2329849    0.2093625         0.2284741
+##   PctUnemployed_sd ViolentCrimesPerPop_min medIncome_min PctPopUnderPov_min
+## 1        0.2021713                       0             0                  0
+##   PctUnemployed_min ViolentCrimesPerPop_max medIncome_max PctPopUnderPov_max
+## 1                 0                       1             1                  1
+##   PctUnemployed_max
+## 1                 1</code></pre>
+<p>·Violent crime rate (target)</p>
+<p>a.Meaning: about 0.23</p>
+<p>b.Standard deviation: about 0.15</p>
+<p>c.Deviation: The crime rate in some communities is extremely
+high.</p>
+<p>·Socio-economic indicators</p>
+<p>a.The average poverty rate is about 14%.</p>
+<p>b.The average unemployment rate is about 7%.</p>
+<p>c.The middle income level varies greatly from community to
+community.</p>
+<p>·Demographic data</p>
+<p>a.There are huge differences in the distribution of ethnic
+proportions in different communities, which reflects the significant
+differences in the representativeness of each community.</p>
+</div>
+<div id="visual-exploration" class="section level3">
+<h3>4.2 Visual Exploration</h3>
+<p>EDA reveals several significant trends:</p>
+<p>Positive correlation</p>
+<p>There is a moderate positive correlation between variables such as
+poverty, unemployment and the proportion of single-parent families and
+violent crimes.</p>
+<p>Weak or nonlinear relationship</p>
+<p>Some police-related variables (such as per capita budget) show a
+nonlinear trend, indicating a more complex interaction.</p>
+<p>Partial distribution</p>
+<p>Crime and poverty-related variables show a right-biased heavy
+distribution, indicating that despite the low crime rate or poverty
+level in many communities, there are still a few extreme situations.</p>
 <div id="converted-variables-to-correct-data-types" class="section level4">
 <h4>1.2 Converted variables to correct data types</h4>
 <pre class="r"><code># they are all dbl, so i dont think we need to</code></pre>

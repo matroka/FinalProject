@@ -66,9 +66,13 @@ Are there any community groups with similar criminal behavior patterns?
 
 Our project aims to predict the number of violent crimes per million people, which is a supervised return task. This prediction goal not only enables us to explore various relationships, but also allows us to test different modeling methods.
 
-## Methodology
+## 3.Data Overview
 
-###  1. Data Preprocessing
+The main goals of this project are:
+
+Build a model that can predict the violent crime rate based on the characteristics of the community level, and compare the performance of the linear regression model and the random forest model.
+
+###  3.1 Data Preprocessing
 
 Several steps were taken to prepare the dataset for analysis:
 ```{r}
@@ -88,11 +92,21 @@ data_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communiti
 crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_names)
 ```
 
-#### 1.1 Handling Missing Values
+### 3.2 Handling Missing Values
 
-Missing values were treated using:
-- mean or median imputation for numerical variables.
-- removal of attributes with a disproportionately large number of missing values.
+Because there are a lot of "?" in the original data set. The value indicated is missing, so it needs to be carefully cleaned up. Our main steps include:
+
+Will "?" Replace the character with the "NA" value.
+
+Remove those rows with too many missing data to avoid deviations in the model.
+
+Fill in the low-level missing values under reasonable circumstances.
+
+Change the original ambiguous variable names of the data set to a clearer and more readable form.
+
+Make sure that the data type is correct, such as converting state and county numbers into classification variables, and community numbers into integers.
+
+By ensuring that the cleaned data set is consistent and easy to read by the machine, we reduce interference factors and improve the reliability of the model.
 
 ```{r}
 # the same, if we don't need it, just delete. But I think we need this step.
@@ -105,7 +119,62 @@ data_clean <- crime %>%
 cat("Data cleaned. Shape:", nrow(data_clean), "rows and", ncol(data_clean), "columns\n")
 ```
 
-The dataset overall contains sparse missingness, so imputation was sufficient without significantly altering the data distribution.
+## 4. Exploratory Data Analysis (EDA)
+
+Before conducting the modeling, we conducted statistical and visual analysis on the dataset to identify the patterns and anomalies within it.
+
+###   4.1 Summary Statistics
+The overview of key variables reveals their important characteristics:
+```{r}
+library(dplyr)
+
+data_clean %>%
+  select(ViolentCrimesPerPop, medIncome, PctPopUnderPov, PctUnemployed) %>%
+  summarise_all(list(
+    mean = ~mean(. , na.rm = TRUE),
+    sd = ~sd(. , na.rm = TRUE),
+    min = ~min(. , na.rm = TRUE),
+    max = ~max(. , na.rm = TRUE)
+  ))
+
+```
+
+·Violent crime rate (target)
+
+a.Meaning: about 0.23
+
+b.Standard deviation: about 0.15
+
+c.Deviation: The crime rate in some communities is extremely high.
+
+·Socio-economic indicators
+
+a.The average poverty rate is about 14%.
+
+b.The average unemployment rate is about 7%.
+
+c.The middle income level varies greatly from community to community.
+
+·Demographic data
+
+a.There are huge differences in the distribution of ethnic proportions in different communities, which reflects the significant differences in the representativeness of each community.
+
+### 4.2 Visual Exploration
+
+EDA reveals several significant trends:
+
+Positive correlation
+
+There is a moderate positive correlation between variables such as poverty, unemployment and the proportion of single-parent families and violent crimes.
+
+Weak or nonlinear relationship
+
+Some police-related variables (such as per capita budget) show a nonlinear trend, indicating a more complex interaction.
+
+Partial distribution
+
+Crime and poverty-related variables show a right-biased heavy distribution, indicating that despite the low crime rate or poverty level in many communities, there are still a few extreme situations.
+
 
 #### 1.2 Converted variables to correct data types
 ```{r}
