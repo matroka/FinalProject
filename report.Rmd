@@ -317,22 +317,22 @@ The histogram of the residual shows:
 This shows that the model can capture general patterns well, and most of the errors are random.
 
 ```{r visual evaluation}
-results <- data.frame(
+rf_results <- data.frame(
   Actual = test$ViolentCrimesPerPop,
   Predicted = rf_pred
 )
-ggplot(results, aes(x = Actual, y = Predicted)) +
+ggplot(rf_results, aes(x = Actual, y = Predicted)) +
   geom_point(color = "blue", alpha = 0.5) +
   geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
   labs(title = "Random Forest Predictions vs Actual",
        x = "Actual Violent Crime Rate",
        y = "Predicted Crime Rate")
 
-results <- data.frame(
+lm_results <- data.frame(
   Actual = test$ViolentCrimesPerPop,
   Predicted = lm_pred
 )
-ggplot(results, aes(x = Actual, y = Predicted)) +
+ggplot(lm_results, aes(x = Actual, y = Predicted)) +
   geom_point(color = "orange", alpha = 0.5) +
   geom_abline(slope = 1, intercept = 0, color = "black", linetype = "dashed") +
   labs(title = "Linear regression Predictions vs Actual",
