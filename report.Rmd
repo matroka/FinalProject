@@ -407,3 +407,8 @@ In conclusion, this project demonstrates both the potential and limitations of p
 ## 10.Reference
 
 Redmond, M. (2002). Communities and Crime [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C53W3X>.
+
+```{r, include=FALSE}
+library(rmdwc)
+rmdcount("report.Rmd")
+```
