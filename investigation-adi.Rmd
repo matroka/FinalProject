@@ -78,8 +78,8 @@ ggplot(data = communities,
          x = MedIncome,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Med Income and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Med Income",
@@ -89,8 +89,8 @@ ggplot(data = communities,
          x = MedFamInc,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Med Family Income and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Med Family Income",
@@ -100,8 +100,8 @@ ggplot(data = communities,
          x = PerCapInc,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "PC Income and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Per Capita Income",
@@ -111,8 +111,8 @@ ggplot(data = communities,
          x = PctPopUnderPov,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Poverty and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "% People in Poverty",
@@ -129,8 +129,8 @@ ggplot(data = communities,
          x = PctLess9thGrade,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "No HS Education and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "% No HS Education",
@@ -140,8 +140,8 @@ ggplot(data = communities,
          x = PctNotHSGrad,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "No Diploma and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "% No HS Diploma",
@@ -151,8 +151,8 @@ ggplot(data = communities,
          x = PctBSorMore,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "College Graduates and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "% College Graduates",
@@ -168,8 +168,8 @@ ggplot(data = communities,
          x = PctEmploy,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "% Employment and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "% Employment",
@@ -179,8 +179,8 @@ ggplot(data = communities,
          x = PctEmplManu,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "% Manual Workers and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "% Manual Workers",
@@ -190,8 +190,8 @@ ggplot(data = communities,
          x = PctEmplProfServ,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "% Professional Servicers and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "% Professional Servicers",
@@ -201,8 +201,8 @@ ggplot(data = communities,
          x = PctOccupMgmtProf,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "% Management and Professional Workers and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "% Management and Professional Workers",
@@ -219,8 +219,8 @@ ggplot(data = communities,
          x = MedRentPctHousInc,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Rent, Income, and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Med Rent as % of House Income",
@@ -230,8 +230,8 @@ ggplot(data = communities,
          x = MedOwnCostPctInc,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Mortages, Income, and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Med Owners Cost as % of Income",
@@ -241,8 +241,8 @@ ggplot(data = communities,
          x = MedOwnCostPctIncNoMtg,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.1, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.1, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Owners Costs, Income, and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Med Non-Mortgage Owners Cost as % of Income",
@@ -259,8 +259,8 @@ ggplot(data = communities,
          x = LemasSwFTPerPop,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Police and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Full-Time Officers Per Pop",
@@ -270,8 +270,8 @@ ggplot(data = communities,
          x = LemasTotReqPerPop,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Police Requests and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Police Requests Per Pop",
@@ -281,8 +281,8 @@ ggplot(data = communities,
          x = RacialMatchCommPol,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Police Demographics and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Community/Police Racial Match",
@@ -292,8 +292,8 @@ ggplot(data = communities,
          x = PolicBudgPerPop,
          y = ViolentCrimesPerPop
        )) +
-  geom_point(alpha = 0.3, colour = "pink4") +
-  geom_smooth(method = lm, fullrange = TRUE, colour = "pink1") +
+  geom_point(alpha = 0.3, colour = "steelblue4") +
+  geom_smooth(method = lm, fullrange = TRUE, colour = "steelblue1") +
   labs(title = "Police Budget and Violent Crime",
        subtitle = "1990 & 1995 Data",
        x = "Police Budget Per Pop",
@@ -319,7 +319,7 @@ ggplot(data = communities,
   )
 ggplot(data = communities,
        mapping = aes(x = ViolentCrimesPerPop)) +
-  geom_density(fill = "pink4") +
+  geom_density(fill = "steelblue4") +
   labs(
     x = "Violent Crime",
     y = "Frequency",
@@ -331,7 +331,7 @@ ggplot(data = communities,
 
 ```{r additional/inspired by others}
 communities |>
-  filter(racePctWhite>=0.7) |> 
+  filter(RacePctWhite>=0.7) |> 
   ggplot(aes(x=PctLess9thGrade, y=PctSpeakEnglOnly)) +
   geom_point(alpha=0.3) +
   geom_smooth(method = lm)

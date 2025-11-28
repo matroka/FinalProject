@@ -16,7 +16,7 @@ library(randomForest)
 library(plotly)
 ```
 
-## 1.Introduction
+## 1. Introduction
 
 In Sociology, Criminology, and Public Policy, the causes of crime are studied in relation to society. The emergence of massive street and population datasets has created new opportunities for researchers to analyze large amounts of information using Data Science techniques to uncover new relationships and make better predictions.
 
@@ -26,7 +26,7 @@ To that end, we undertook intensive efforts in Data Preparation, Exploratory Dat
 
 This report follows a systematic research procedure. First, it identifies and reviews the datasets and utilizes them in the modelling step and finally, evaluates the ethical issues and reflections. The prediction of the final model used in the project was not only accurate, but provided significant rationales which could provide an opportunity for further discussions about crime prevention or community safety.
 
-## 2.Dataset Selection and Understanding
+## 2. Dataset Selection and Understanding
 
 The reason why the "Community and Crime" is selected for the data set is because it is well known within the field of machine learning research literature. Additionally, the data set presents comprehensive multi-dimensional values. There are 122 variables in the data set. These come from law enforcement data, U.S. census data, and other socio-economic measures.
 
@@ -67,7 +67,7 @@ In view of the richness of this data set, a series of research problems have eme
 
 Our project aims to predict the number of violent crimes per million people, which is a supervised return task. This prediction goal not only enables us to explore various relationships, but also allows us to test different modeling methods.
 
-## 3.Data Overview
+## 3. Data Overview
 
 The main goals of this project are:
 
@@ -91,19 +91,19 @@ crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_na
 
 ### 3.2 Handling Missing Values
 
-Firstly, because the given data set has many “?” in it. This indicates the missing value. Thus, we must treat it carefully during the data cleaning process. Our procedure mainly includes:
+Firstly, because the given data set has many “?” in it. This indicates the missing value. Thus, we must treat it carefully during the data cleaning process. Our procedure includes:
 
--   Will “?” Replace the character with the “NA” value.
+-   Replacing the “?” character with the “NA” value.
 
--   Remove the rows that contain too much missing data in order to prevent discrepancies in the model.
+-   Removing the rows that contain too much missing data in order to prevent discrepancies in the model.
 
--   Fill in the low-level missing values in reasonable cases.
+-   Filling in the low-level missing values in reasonable cases.
 
--   Use meaningful variable names instead of the unclear variable names used in the original data set.
+-   Using meaningful variable names instead of the unclear variable names from the original data set.
 
--   Ensure the data types are correct by possibly converting state and county numbers into class variables and the numbers in the community field into integers.
+-   Ensuring the data types are correct by converting state and county values into class variables and the numbers in the community field into integers.
 
-By making sure that the cleaned dataset is consistent and readable by the computer model, we remove interference sources for better model reliability.
+By making sure that the cleaned dataset is consistent and readable by the computer model, we remove interference for better model reliability.
 
 ```{r handling missing value}
 crime <- crime %>%
@@ -316,22 +316,22 @@ The histogram of the residual shows:
 This shows that the model can capture general patterns well, and most of the errors are random.
 
 ```{r visual evaluation}
-results <- data.frame(
+rf_results <- data.frame(
   Actual = test$ViolentCrimesPerPop,
   Predicted = rf_pred
 )
-ggplot(results, aes(x = Actual, y = Predicted)) +
+ggplot(rf_results, aes(x = Actual, y = Predicted)) +
   geom_point(color = "blue", alpha = 0.5) +
   geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
   labs(title = "Random Forest Predictions vs Actual",
        x = "Actual Violent Crime Rate",
        y = "Predicted Crime Rate")
 
-results <- data.frame(
+lm_results <- data.frame(
   Actual = test$ViolentCrimesPerPop,
   Predicted = lm_pred
 )
-ggplot(results, aes(x = Actual, y = Predicted)) +
+ggplot(lm_results, aes(x = Actual, y = Predicted)) +
   geom_point(color = "orange", alpha = 0.5) +
   geom_abline(slope = 1, intercept = 0, color = "black", linetype = "dashed") +
   labs(title = "Linear regression Predictions vs Actual",
@@ -339,7 +339,7 @@ ggplot(results, aes(x = Actual, y = Predicted)) +
        y = "Predicted Crime Rate")
 ```
 
-## 6.Model Improvements and Ethical Considerations
+## 6. Model Improvements and Ethical Considerations
 
 ### 6.1 Potential Model Enhancements
 
@@ -367,11 +367,11 @@ Crime prediction requires extreme caution:
 
 -   Mandate: Model application must be responsible, promoting community intervention over punitive enforcement.
 
-## 7.Results & feedback
+## 7. Results & feedback
 
 Generally, the outcome of the models was:
 
-Linear Regression: Fair results. Suffered from multicollinearity
+Linear Regression: Fair results. Suffered from multicolinearity.
 
 Random Forest: Strong performance, gave good indication on importance.
 
@@ -393,7 +393,7 @@ The results of the visualizations highlighted the substantial improvement in pre
 
 Both the ethical implications of utilizing sensitive social data are an important consideration with regards to the outcomes of this project.
 
-## 9.Conclusion
+## 9. Conclusion
 
 Through the application of data science, the study analyzed the socio-economic factors contributing to violent crime using the “Community and Crime” dataset, with a specific focus on the application of the Random Forest technique to predict future violent crime based on historical data.
 
@@ -403,6 +403,11 @@ However, it is critical to note that the primary goal of the study is to develop
 
 In conclusion, this project demonstrates both the potential and limitations of predictive modeling in social science, taking into consideration the ethical implications of using sensitive social data and having a thorough understanding of the social context in which the data were collected. Ultimately, if utilized properly, predictive models can provide policymakers with sound evidence to develop targeted public safety policies to enhance the overall well-being of society.
 
-## 10.Reference
+## 10. Reference
 
 Redmond, M. (2002). Communities and Crime [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C53W3X>.
+
+```{r, include=FALSE}
+library(rmdwc)
+rmdcount("report.Rmd")
+```

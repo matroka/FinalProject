@@ -57,14 +57,36 @@ Basically **xaringan** injected the chakra of R Markdown (minus Pandoc) into **r
 
 ---
 
-# Data
+# Data Set and Processing
 
 Data Set Source: [Communities and Crime](https://archive.ics.uci.edu/dataset/183/communities+and+crime). UC Irvine, Michael Redmond, 2009
 Observation Sources: 1990 US Census, 1990 US Lemas Survey, 1995 FBI UCR
 
-```{r data set}
-communities <- read_csv("data/communities.data")
-head(communities)
+-   Load variable names
+-   Load data set
+-   Combine data set and variable names
+-   Remove non-predictive variables
+-   Handle missing values
+-   Clean data
+
+```{r data set and processing, echo=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+names_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.names"
+name_lines <- readLines(names_url)
+name_lines <- name_lines[grepl("^@attribute", name_lines)]
+col_names <- gsub("^@attribute\\s+", "", name_lines)
+col_names <- sub("\\s+.*$", "", col_names)
+col_names <- col_names[col_names != ""]
+data_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/communities/communities.data"
+crime <- read.csv(data_url, header = FALSE, na.strings = "?", col.names = col_names)
+crime <- crime %>%
+  select(-state, -county, -community, -communityname, -fold)
+data_clean <- crime %>%
+  mutate(across(where(is.numeric),
+                ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+```
+```{r data_clean, out.width=2000}
+head(data_clean)
 ```
 
 ---

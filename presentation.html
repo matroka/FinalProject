@@ -165,48 +165,193 @@ Basically **xaringan** injected the chakra of R Markdown (minus Pandoc) into **r
 
 ---
 
-# Data
+# Data Set and Processing
 
 Data Set Source: [Communities and Crime](https://archive.ics.uci.edu/dataset/183/communities+and+crime). UC Irvine, Michael Redmond, 2009
 Observation Sources: 1990 US Census, 1990 US Lemas Survey, 1995 FBI UCR
 
+-   Load variable names
+-   Load data set
+-   Combine data set and variable names
+-   Remove non-predictive variables
+-   Handle missing values
+-   Clean data
+
+
 
 ``` r
-communities &lt;- read_csv("data/communities.data")
+head(data_clean)
 ```
 
 ```
-## Rows: 1994 Columns: 128
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr   (1): communityname
-## dbl (127): state, county, community, fold, population, householdsize, racepc...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-``` r
-head(communities)
-```
-
-```
-## # A tibble: 6 × 128
-##   state county community communityname        fold population householdsize
-##   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;               &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
-## 1     8     NA        NA Lakewoodcity            1       0.19          0.33
-## 2    53     NA        NA Tukwilacity             1       0             0.16
-## 3    24     NA        NA Aberdeentown            1       0             0.42
-## 4    34      5     81440 Willingborotownship     1       0.04          0.77
-## 5    42     95      6096 Bethlehemtownship       1       0.01          0.55
-## 6     6     NA        NA SouthPasadenacity       1       0.02          0.28
-## # ℹ 121 more variables: racepctblack &lt;dbl&gt;, racePctWhite &lt;dbl&gt;,
-## #   racePctAsian &lt;dbl&gt;, racePctHisp &lt;dbl&gt;, agePct12t21 &lt;dbl&gt;,
-## #   agePct12t29 &lt;dbl&gt;, agePct16t24 &lt;dbl&gt;, agePct65up &lt;dbl&gt;, numbUrban &lt;dbl&gt;,
-## #   pctUrban &lt;dbl&gt;, medIncome &lt;dbl&gt;, pctWWage &lt;dbl&gt;, pctWFarmSelf &lt;dbl&gt;,
-## #   pctWInvInc &lt;dbl&gt;, pctWSocSec &lt;dbl&gt;, pctWPubAsst &lt;dbl&gt;, pctWRetire &lt;dbl&gt;,
-## #   medFamInc &lt;dbl&gt;, perCapInc &lt;dbl&gt;, whitepPerCap &lt;dbl&gt;, blackPerCap &lt;dbl&gt;,
-## #   indianPerCap &lt;dbl&gt;, AsianPerCap &lt;dbl&gt;, OtherPerCap &lt;dbl&gt;, …
+##   population householdsize racepctblack racePctWhite racePctAsian racePctHisp
+## 1       0.19          0.33         0.02         0.90         0.12        0.17
+## 2       0.00          0.16         0.12         0.74         0.45        0.07
+## 3       0.00          0.42         0.49         0.56         0.17        0.04
+## 4       0.04          0.77         1.00         0.08         0.12        0.10
+## 5       0.01          0.55         0.02         0.95         0.09        0.05
+## 6       0.02          0.28         0.06         0.54         1.00        0.25
+##   agePct12t21 agePct12t29 agePct16t24 agePct65up numbUrban pctUrban medIncome
+## 1        0.34        0.47        0.29       0.32      0.20      1.0      0.37
+## 2        0.26        0.59        0.35       0.27      0.02      1.0      0.31
+## 3        0.39        0.47        0.28       0.32      0.00      0.0      0.30
+## 4        0.51        0.50        0.34       0.21      0.06      1.0      0.58
+## 5        0.38        0.38        0.23       0.36      0.02      0.9      0.50
+## 6        0.31        0.48        0.27       0.37      0.04      1.0      0.52
+##   pctWWage pctWFarmSelf pctWInvInc pctWSocSec pctWPubAsst pctWRetire medFamInc
+## 1     0.72         0.34       0.60       0.29        0.15       0.43      0.39
+## 2     0.72         0.11       0.45       0.25        0.29       0.39      0.29
+## 3     0.58         0.19       0.39       0.38        0.40       0.84      0.28
+## 4     0.89         0.21       0.43       0.36        0.20       0.82      0.51
+## 5     0.72         0.16       0.68       0.44        0.11       0.71      0.46
+## 6     0.68         0.20       0.61       0.28        0.15       0.25      0.62
+##   perCapInc whitePerCap blackPerCap indianPerCap AsianPerCap OtherPerCap
+## 1      0.40        0.39        0.32         0.27        0.27        0.36
+## 2      0.37        0.38        0.33         0.16        0.30        0.22
+## 3      0.27        0.29        0.27         0.07        0.29        0.28
+## 4      0.36        0.40        0.39         0.16        0.25        0.36
+## 5      0.43        0.41        0.28         0.00        0.74        0.51
+## 6      0.72        0.76        0.77         0.28        0.52        0.48
+##   HispPerCap NumUnderPov PctPopUnderPov PctLess9thGrade PctNotHSGrad
+## 1       0.41        0.08           0.19            0.10         0.18
+## 2       0.35        0.01           0.24            0.14         0.24
+## 3       0.39        0.01           0.27            0.27         0.43
+## 4       0.44        0.01           0.10            0.09         0.25
+## 5       0.48        0.00           0.06            0.25         0.30
+## 6       0.60        0.01           0.12            0.13         0.12
+##   PctBSorMore PctUnemployed PctEmploy PctEmplManu PctEmplProfServ PctOccupManu
+## 1        0.48          0.27      0.68        0.23            0.41         0.25
+## 2        0.30          0.27      0.73        0.57            0.15         0.42
+## 3        0.19          0.36      0.58        0.32            0.29         0.49
+## 4        0.31          0.33      0.71        0.36            0.45         0.37
+## 5        0.33          0.12      0.65        0.67            0.38         0.42
+## 6        0.80          0.10      0.65        0.19            0.77         0.06
+##   PctOccupMgmtProf MalePctDivorce MalePctNevMarr FemalePctDiv TotalPctDiv
+## 1             0.52           0.68           0.40         0.75        0.75
+## 2             0.36           1.00           0.63         0.91        1.00
+## 3             0.32           0.63           0.41         0.71        0.70
+## 4             0.39           0.34           0.45         0.49        0.44
+## 5             0.46           0.22           0.27         0.20        0.21
+## 6             0.91           0.49           0.57         0.61        0.58
+##   PersPerFam PctFam2Par PctKids2Par PctYoungKids2Par PctTeen2Par
+## 1       0.35       0.55        0.59             0.61        0.56
+## 2       0.29       0.43        0.47             0.60        0.39
+## 3       0.45       0.42        0.44             0.43        0.43
+## 4       0.75       0.65        0.54             0.83        0.65
+## 5       0.51       0.91        0.91             0.89        0.85
+## 6       0.44       0.62        0.69             0.87        0.53
+##   PctWorkMomYoungKids PctWorkMom NumIlleg PctIlleg NumImmig PctImmigRecent
+## 1                0.74       0.76     0.04     0.14     0.03           0.24
+## 2                0.46       0.53     0.00     0.24     0.01           0.52
+## 3                0.71       0.67     0.01     0.46     0.00           0.07
+## 4                0.85       0.86     0.03     0.33     0.02           0.11
+## 5                0.40       0.60     0.00     0.06     0.00           0.03
+## 6                0.30       0.43     0.00     0.11     0.04           0.30
+##   PctImmigRec5 PctImmigRec8 PctImmigRec10 PctRecentImmig PctRecImmig5
+## 1         0.27         0.37          0.39           0.07         0.07
+## 2         0.62         0.64          0.63           0.25         0.27
+## 3         0.06         0.15          0.19           0.02         0.02
+## 4         0.20         0.30          0.31           0.05         0.08
+## 5         0.07         0.20          0.27           0.01         0.02
+## 6         0.35         0.43          0.47           0.50         0.50
+##   PctRecImmig8 PctRecImmig10 PctSpeakEnglOnly PctNotSpeakEnglWell
+## 1         0.08          0.08             0.89                0.06
+## 2         0.25          0.23             0.84                0.10
+## 3         0.04          0.05             0.88                0.04
+## 4         0.11          0.11             0.81                0.08
+## 5         0.04          0.05             0.88                0.05
+## 6         0.56          0.57             0.45                0.28
+##   PctLargHouseFam PctLargHouseOccup PersPerOccupHous PersPerOwnOccHous
+## 1            0.14              0.13             0.33              0.39
+## 2            0.16              0.10             0.17              0.29
+## 3            0.20              0.20             0.46              0.52
+## 4            0.56              0.62             0.85              0.77
+## 5            0.16              0.19             0.59              0.60
+## 6            0.25              0.19             0.29              0.53
+##   PersPerRentOccHous PctPersOwnOccup PctPersDenseHous PctHousLess3BR MedNumBR
+## 1               0.28            0.55             0.09           0.51      0.5
+## 2               0.17            0.26             0.20           0.82      0.0
+## 3               0.43            0.42             0.15           0.51      0.5
+## 4               1.00            0.94             0.12           0.01      0.5
+## 5               0.37            0.89             0.02           0.19      0.5
+## 6               0.18            0.39             0.26           0.73      0.0
+##   HousVacant PctHousOccup PctHousOwnOcc PctVacantBoarded PctVacMore6Mos
+## 1       0.21         0.71          0.52             0.05           0.26
+## 2       0.02         0.79          0.24             0.02           0.25
+## 3       0.01         0.86          0.41             0.29           0.30
+## 4       0.01         0.97          0.96             0.60           0.47
+## 5       0.01         0.89          0.87             0.04           0.55
+## 6       0.02         0.84          0.30             0.16           0.28
+##   MedYrHousBuilt PctHousNoPhone PctWOFullPlumb OwnOccLowQuart OwnOccMedVal
+## 1           0.65           0.14           0.06           0.22         0.19
+## 2           0.65           0.16           0.00           0.21         0.20
+## 3           0.52           0.47           0.45           0.18         0.17
+## 4           0.52           0.11           0.11           0.24         0.21
+## 5           0.73           0.05           0.14           0.31         0.31
+## 6           0.25           0.02           0.05           0.94         1.00
+##   OwnOccHiQuart RentLowQ RentMedian RentHighQ MedRent MedRentPctHousInc
+## 1          0.18     0.36       0.35      0.38    0.34              0.38
+## 2          0.21     0.42       0.38      0.40    0.37              0.29
+## 3          0.16     0.27       0.29      0.27    0.31              0.48
+## 4          0.19     0.75       0.70      0.77    0.89              0.63
+## 5          0.30     0.40       0.36      0.38    0.38              0.22
+## 6          1.00     0.67       0.63      0.68    0.62              0.47
+##   MedOwnCostPctInc MedOwnCostPctIncNoMtg NumInShelters NumStreet PctForeignBorn
+## 1             0.46                  0.25          0.04         0           0.12
+## 2             0.32                  0.18          0.00         0           0.21
+## 3             0.39                  0.28          0.00         0           0.14
+## 4             0.51                  0.47          0.00         0           0.19
+## 5             0.51                  0.21          0.00         0           0.11
+## 6             0.59                  0.11          0.00         0           0.70
+##   PctBornSameState PctSameHouse85 PctSameCity85 PctSameState85 LemasSwornFT
+## 1             0.42           0.50          0.51           0.64   0.03000000
+## 2             0.50           0.34          0.60           0.52   0.06965517
+## 3             0.49           0.54          0.67           0.56   0.06965517
+## 4             0.30           0.73          0.64           0.65   0.06965517
+## 5             0.72           0.64          0.61           0.53   0.06965517
+## 6             0.42           0.49          0.73           0.64   0.06965517
+##   LemasSwFTPerPop LemasSwFTFieldOps LemasSwFTFieldPerPop LemasTotalReq
+## 1       0.1300000         0.9600000            0.1700000    0.06000000
+## 2       0.2174608         0.9247335            0.2463323    0.09799373
+## 3       0.2174608         0.9247335            0.2463323    0.09799373
+## 4       0.2174608         0.9247335            0.2463323    0.09799373
+## 5       0.2174608         0.9247335            0.2463323    0.09799373
+## 6       0.2174608         0.9247335            0.2463323    0.09799373
+##   LemasTotReqPerPop PolicReqPerOffic PolicPerPop RacialMatchCommPol
+## 1         0.1800000        0.4400000   0.1300000          0.9400000
+## 2         0.2152038        0.3436364   0.2174922          0.6894044
+## 3         0.2152038        0.3436364   0.2174922          0.6894044
+## 4         0.2152038        0.3436364   0.2174922          0.6894044
+## 5         0.2152038        0.3436364   0.2174922          0.6894044
+## 6         0.2152038        0.3436364   0.2174922          0.6894044
+##   PctPolicWhite PctPolicBlack PctPolicHisp PctPolicAsian PctPolicMinor
+## 1     0.9300000     0.0300000    0.0700000     0.1000000      0.070000
+## 2     0.7269592     0.2204702    0.1348589     0.1148589      0.259185
+## 3     0.7269592     0.2204702    0.1348589     0.1148589      0.259185
+## 4     0.7269592     0.2204702    0.1348589     0.1148589      0.259185
+## 5     0.7269592     0.2204702    0.1348589     0.1148589      0.259185
+## 6     0.7269592     0.2204702    0.1348589     0.1148589      0.259185
+##   OfficAssgnDrugUnits NumKindsDrugsSeiz PolicAveOTWorked LandArea PopDens
+## 1          0.02000000         0.5700000        0.2900000     0.12    0.26
+## 2          0.07554859         0.5560502        0.3059875     0.02    0.12
+## 3          0.07554859         0.5560502        0.3059875     0.01    0.21
+## 4          0.07554859         0.5560502        0.3059875     0.02    0.39
+## 5          0.07554859         0.5560502        0.3059875     0.04    0.09
+## 6          0.07554859         0.5560502        0.3059875     0.01    0.58
+##   PctUsePubTrans PolicCars PolicOperBudg LemasPctPolicOnPatr
+## 1           0.20 0.0600000    0.04000000           0.9000000
+## 2           0.45 0.1631034    0.07670846           0.6985893
+## 3           0.02 0.1631034    0.07670846           0.6985893
+## 4           0.28 0.1631034    0.07670846           0.6985893
+## 5           0.02 0.1631034    0.07670846           0.6985893
+## 6           0.10 0.1631034    0.07670846           0.6985893
+##   LemasGangUnitDeploy LemasPctOfficDrugUn PolicBudgPerPop ViolentCrimesPerPop
+## 1           0.5000000                0.32       0.1400000                0.20
+## 2           0.4404389                0.00       0.1950784                0.67
+## 3           0.4404389                0.00       0.1950784                0.43
+## 4           0.4404389                0.00       0.1950784                0.12
+## 5           0.4404389                0.00       0.1950784                0.03
+## 6           0.4404389                0.00       0.1950784                0.14
 ```
 
 ---

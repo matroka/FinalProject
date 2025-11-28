@@ -11,6 +11,9 @@ This is a template repository for your group project. One of your group members 
 - `presentation.Rmd` -- Use this file to create your presentation. You will need to download and install the `xaringan` package that contains all of the R and markdown code that you will need to create and compile the presentation slides. For this, run `install.packages("xaringan")` once on your console. Guidance on using the `xaringan` package for creating a presentation in Rmarkdown can be found at [https://bookdown.org/yihui/rmarkdown/xaringan.html](https://bookdown.org/yihui/rmarkdown/xaringan.html).
 - `README.md` -- This document, which outlines the structure of the report. The contents of this file will be rendered on GitHub, and so you can add comments below to keep a track of what  and can be used to keep additional note or task lists.
 
+## Users
+- Adi Hirasaki, s2788209, adi-smh
+
 ## Task list
 
 (Optional) Use the space below to structure your group project and to distribute tasks amongst members. It is not expected that every member makes a contribution to each component of the investigation, but you should aim to share the work fairly that utilises each other's strengths (eg. coding, analysis, report writing, etc.)
