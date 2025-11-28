@@ -114,7 +114,6 @@ data_clean <- crime %>%
                 ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
 cat("Data cleaned. Shape:", nrow(data_clean), "rows and", ncol(data_clean), "columns\n")
 ```
-
 ## 4. Exploratory Data Analysis (EDA)
 
 Before performing any modelling, I conducted a statistical and visual assessment of the data set in order to see if there were any trends or anomalies.
