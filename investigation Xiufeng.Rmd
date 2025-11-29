@@ -270,3 +270,560 @@ ggplotly(p)
 
 
 ```
+
+
+```{r}
+# --- Community Crime Analysis in R ---
+#
+# This script replicates the Python analysis using the 'tidymodels' framework.
+#
+# Before running, you must install the required packages:
+# install.packages(c("readr", "dplyr", "ggplot2", "tidymodels", "ranger", "caTools"))
+#
+# --- 1. Load Libraries ---
+
+# This list of column names is from the dataset's documentation
+# NOTE: Corrected a typo from the original Python list ("Good," was removed)
+column_names <- c(
+    'state', 'county', 'community', 'communityname', 'fold', 'population', 'householdsize',
+    'racepctblack', 'racePctWhite', 'racePctAsian', 'racePctHisp', 'agePct12t21',
+    'agePct12t29', 'agePct16t24', 'agePct65up', 'numbUrban', 'pctUrban', 'medIncome',
+    'pctWWage', 'pctWFarmSelf', 'pctWInvInc', 'pctWSocSec', 'pctWPubAsst', 'pctWRetire',
+    'medFamInc', 'perCapInc', 'whitePerCap', 'blackPerCap', 'indianPerCap', 'AsianPerCap',
+    'OtherPerCap', 'HispPerCap', 'NumUnderPov', 'PctNotHSGrad', 'PctBSorMore',
+    'PctUnemployed', 'PctEmploy', 'PctEmplManu', 'PctEmplProfServ', 'PctOccupManu',
+    'PctOccupProfMgmt', 'MalePctDivorce', 'MalePctNevMarr', 'FemalePctDiv', 'TotalPctDiv',
+    'PersPerFam', 'PctFam2Par', 'PctKids2Par', 'PctYoungKids2Par', 'PctTeen2Par',
+    'PctWorkMomYoungKids', 'PctWorkMom', 'NumIlleg', 'PctIlleg', 'NumImmig',
+    'PctImmigRecent', 'PctImmigRec5', 'PctImmigRec8', 'PctImmigRec10', 'PctRecentImmig',
+    'PctRecImmig5', 'PctRecImmig8', 'PctRecImmig10', 'PctSpeakEnglOnly',
+    'PctNotSpeakEnglWell', 'PctLargHouseFam', 'PctLargHouseOccup', 'PersPerOccupHous',
+    'PersPerOwnOccHous', 'PersPerRentOccHous', 'PctPersOwnOccup', 'PctPersDenseHous',
+    'PctHousLess3BR', 'MedNumBR', 'HousVacant', 'PctHousOccup', 'PctHousOwnOcc',
+    'PctVacantBoarded', 'PctVacMore6Mos', 'MedYrHousBuilt', 'PctHousNoPhone',
+    'PctWOFullPlumb', 'OwnOccLowQuart', 'OwnOccMedVal', 'OwnOccHiQuart', 'RentLowQ',
+    'RentMedian', 'RentHighQ', 'MedRent', 'MedRentPctHousInc', 'MedOwnCostPctInc',
+    'MedOwnCostPctIncNoMtg', 'NumInShelters', 'NumStreet', 'PctForeignBorn',
+    'PctBornSameState', 'PctSameHouse85', 'PctSameCity85', 'PctSameState85',
+    'LemasSwornFT', 'LemasSwFTPerPop', 'LemasSwFTFieldOps', 'LemasSwFTFieldPerPop',
+    'LemasTotalReq', 'LemasTotReqPerPop', 'PolicReqPerPop', 'PolicPerPop',
+    'RacialMatchCommPol', 'PctPolicWhite', 'PctPolicBlack', 'PctPolicHisp',
+    'PctPolicAsian', 'PctPolicMinor', 'OfficAssgnDrugUnits', 'NumKindsDrugsSeiz',
+    'PolicPerPopAgg', 'PolicFieldPerPopAgg', 'LemasPctPolicOnPatr',
+    'LemasGangUnitDeploy', 'LemasPctOfficDrugUn', 'PolicBudgPerPop',
+    'ViolentCrimesPerPop' # This is the target variable
+)
+
+load_data <- function(filename = 'communities.data') {
+  # Loads the communities.data file, replacing '?' with NA.
+  cat(sprintf("Loading data from %s...\n", filename))
+  
+  # The dataset uses '?' for missing values
+  data <- read_csv(filename, col_names = column_names, na = '?', col_types = cols())
+  
+  cat(sprintf("Data loaded: %d rows, %d columns\n", nrow(data), ncol(data)))
+  return(data)
+}
+
+preprocess_and_split_data <- function(data) {
+  # Prepares the data for modeling:
+  # 1. Drops non-predictive columns.
+  # 2. Drops rows where the target variable is missing.
+  # 3. Drops feature columns with more than 50% missing values.
+  # 4. Splits into training and test sets.
+  
+  cat("Preprocessing data...\n")
+  
+  # 1. Drop non-predictive columns
+  non_predictive_cols <- c('state', 'county', 'community', 'communityname', 'fold')
+  data <- data %>% select(-all_of(non_predictive_cols))
+  
+  # 2. Drop rows with missing target variable
+  data <- data %>% filter(!is.na(ViolentCrimesPerPop))
+  
+  # 3. Drop feature columns with >50% missing values
+  # Calculate missing percentage for each column
+  missing_pct <- sapply(data, function(x) mean(is.na(x)))
+  
+  # Identify columns to drop (excluding the target)
+  cols_to_drop <- names(missing_pct)[missing_pct > 0.5 & names(missing_pct) != "ViolentCrimesPerPop"]
+  
+  data <- data %>% select(-all_of(cols_to_drop))
+  cat(sprintf("Dropped %d columns due to >50%% missing values: %s\n", 
+              length(cols_to_drop), paste(cols_to_drop, collapse=", ")))
+              
+  # 4. Split into training and test sets
+  set.seed(42) # For reproducibility
+  split <- sample.split(data$ViolentCrimesPerPop, SplitRatio = 0.8)
+  train_data <- subset(data, split == TRUE)
+  test_data <- subset(data, split == FALSE)
+  
+  cat(sprintf("Training set: %d samples\n", nrow(train_data)))
+  cat(sprintf("Test set: %d samples\n", nrow(test_data)))
+  
+  return(list(train = train_data, test = test_data))
+}
+
+perform_eda <- function(train_data) {
+  # Performs the EDA task: finding top correlated features.
+  cat("\n--- Exploratory Data Analysis (EDA) ---\n")
+  
+  # Use 'pairwise.complete.obs' to handle missing values during correlation calculation
+  cor_matrix <- cor(train_data, use = "pairwise.complete.obs")
+  
+  # Get correlation with target, remove NA, sort by absolute value
+  cor_with_target <- cor_matrix[, "ViolentCrimesPerPop"]
+  cor_with_target <- cor_with_target[!is.na(cor_with_target)]
+  cor_with_target_abs_sorted <- sort(abs(cor_with_target), decreasing = TRUE)
+  
+  cat("Top 15 Features Most Correlated with Violent Crime:\n")
+  print(cor_with_target_abs_sorted[2:16]) # [1] is the target itself
+}
+
+build_and_evaluate_models <- function(train_data, test_data) {
+  # Builds, trains, and evaluates models using a tidymodels workflow.
+  cat("\n--- Model Building & Evaluation ---\n")
+
+  # 1. Define the preprocessing recipe
+  # This is the R equivalent of the sklearn preprocessor pipeline
+  data_recipe <- recipe(ViolentCrimesPerPop ~ ., data = train_data) %>%
+    step_impute_median(all_numeric_predictors()) %>% # Fill missing with median
+    step_scale(all_numeric_predictors()) # Standardize (center and scale)
+    # We add step_dummy(all_nominal_predictors()) if we had text/factor columns
+
+  # 2. Define the model specifications
+  # Linear Regression
+  lr_spec <- linear_reg() %>%
+    set_engine("lm")
+  
+  # Random Forest (using 'ranger' engine)
+  rf_spec <- rand_forest(trees = 100) %>%
+    set_engine("ranger", importance = "permutation") %>% # 'permutation' is a robust way to get feature importance
+    set_mode("regression")
+
+  # 3. Create the workflows (Pipeline = Recipe + Model)
+  lr_workflow <- workflow() %>%
+    add_recipe(data_recipe) %>%
+    add_model(lr_spec)
+  
+  rf_workflow <- workflow() %>%
+    add_recipe(data_recipe) %>%
+    add_model(rf_spec)
+
+  # 4. Train the models
+  cat("Training Linear Regression model...\n")
+  lr_fit <- fit(lr_workflow, data = train_data)
+  
+  cat("Training Random Forest model...\n")
+  rf_fit <- fit(rf_workflow, data = train_data)
+
+  # 5. Evaluate the models on the test set
+  cat("\n--- Model Results ---\n")
+  
+  # Define the metrics we care about
+  model_metrics <- metric_set(rsq, rmse)
+  
+  # Evaluate Linear Regression
+  lr_preds <- predict(lr_fit, new_data = test_data) %>%
+    bind_cols(test_data %>% select(ViolentCrimesPerPop))
+  
+  lr_results <- lr_preds %>%
+    model_metrics(truth = ViolentCrimesPerPop, estimate = .pred)
+  
+  cat("Linear Regression:\n")
+  print(lr_results)
+  
+  # Evaluate Random Forest
+  rf_preds <- predict(rf_fit, new_data = test_data) %>%
+    bind_cols(test_data %>% select(ViolentCrimesPerPop))
+  
+  rf_results <- rf_preds %>%
+    model_metrics(truth = ViolentCrimesPerPop, estimate = .pred)
+  
+  cat("\nRandom Forest Regression:\n")
+  print(rf_results)
+  
+  # Return the fitted RF model and both sets of predictions
+  return(list(fit_rf = rf_fit, predictions_rf = rf_preds, predictions_lr = lr_preds))
+}
+
+get_feature_importance <- function(rf_fit_workflow) {
+  # Extracts and prints feature importances from the fitted Random Forest.
+  cat("\n--- Random Forest Feature Importance ---\n")
+  
+  # Extract the fitted 'ranger' object from the workflow
+  rf_model <- extract_fit_parsnip(rf_fit_workflow)$fit
+  
+  # Get importance, convert to data frame, sort, and print top 10
+  importances <- data.frame(
+    feature = names(rf_model$variable.importance),
+    importance = rf_model$variable.importance
+  ) %>%
+    arrange(desc(importance))
+    
+  cat("Top 10 Most Important Features:\n")
+  print(head(importances, 10))
+}
+
+visualize_results <- function(rf_predictions, lr_predictions) {
+  # Generates the visualizations described in the report using ggplot2.
+  cat("\n--- Generating Visualizations ---\n")
+  
+  # --- Linear Regression Plots ---
+  
+  # 1. Predicted vs. Actual Plot (Linear Regression)
+  plot1_lr <- ggplot(lr_predictions, aes(x = ViolentCrimesPerPop, y = .pred)) +
+    # MODIFIED: Increased size to 2.0 and set alpha to 1.0 (fully opaque)
+    geom_point(alpha = 1.0, size = 2.0, color = "blue") +
+    geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed", size = 1) +
+    labs(
+      title = "Linear Regression: Predicted vs. Actual Values (Test Set)",
+      x = "Actual Violent Crimes Per Pop",
+      y = "Predicted Violent Crimes Per Pop"
+    ) +
+    theme_minimal() +
+    coord_fixed()
+  
+  ggsave("predicted_vs_actual_LR.png", plot1_lr)
+  cat("Saved 'predicted_vs_actual_LR.png'\n")
+
+  # 2. Residual Distribution Map (Linear Regression)
+  lr_predictions <- lr_predictions %>%
+    mutate(residuals = ViolentCrimesPerPop - .pred)
+    
+  plot2_lr <- ggplot(lr_predictions, aes(x = residuals)) +
+    # Histogram uses same fill color as previous version
+    geom_histogram(bins = 30, fill = "steelblue", color = "black", alpha = 0.7) +
+    geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
+    labs(
+      title = "Linear Regression: Histogram of Residuals",
+      x = "Residual (Actual - Predicted)",
+      y = "Frequency"
+    ) +
+    theme_minimal()
+    
+  ggsave("residuals_histogram_LR.png", plot2_lr)
+  cat("Saved 'residuals_histogram_LR.png'\n")
+
+  # --- Random Forest Plots ---
+
+  # 1. Predicted vs. Actual Plot (Random Forest)
+  plot1_rf <- ggplot(rf_predictions, aes(x = ViolentCrimesPerPop, y = .pred)) +
+    # MODIFIED: Increased size to 2.0 and set alpha to 1.0 (fully opaque)
+    geom_point(alpha = 1.0, size = 2.0, color = "darkgreen") +
+    geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed", size = 1) +
+    labs(
+      title = "Random Forest: Predicted vs. Actual Values (Test Set)",
+      x = "Actual Violent Crimes Per Pop",
+      y = "Predicted Violent Crimes Per Pop"
+    ) +
+    theme_minimal() +
+    coord_fixed() # Ensures a 1:1 aspect ratio
+  
+  ggsave("predicted_vs_actual_R.png", plot1_rf)
+  cat("Saved 'predicted_vs_actual_R.png'\n")
+
+  # 2. Residual Distribution Map (Random Forest)
+  # First, calculate residuals
+  rf_predictions <- rf_predictions %>%
+    mutate(residuals = ViolentCrimesPerPop - .pred)
+    
+  plot2_rf <- ggplot(rf_predictions, aes(x = residuals)) +
+    # Histogram uses same fill color as previous version
+    geom_histogram(bins = 30, fill = "darkgreen", color = "black", alpha = 0.7) +
+    geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
+    labs(
+      title = "Random Forest: Histogram of Residuals",
+      x = "Residual (Actual - Predicted)",
+      y = "Frequency"
+    ) +
+    theme_minimal()
+    
+  ggsave("residuals_histogram_R.png", plot2_rf)
+  cat("Saved 'residuals_histogram_R.png'\n")
+}
+
+# --- Main execution ---
+main <- function() {
+  # Ensure the data file 'communities.data' is in the same directory
+  data <- tryCatch({
+    load_data('communities.data')
+  }, error = function(e) {
+    cat("Error: 'communities.data' file not found.\n")
+    cat("Please download it from the UCI repository or upload it.\n")
+    return(NULL)
+  })
+  
+  if (!is.null(data)) {
+    data_splits <- preprocess_and_split_data(data)
+    
+    perform_eda(data_splits$train)
+    
+    # Capture results for both models
+    model_results <- build_and_evaluate_models(data_splits$train, data_splits$test)
+    
+    get_feature_importance(model_results$fit_rf)
+    
+    # Pass predictions for both models to visualization
+    visualize_results(model_results$predictions_rf, model_results$predictions_lr)
+    
+    cat("\nAnalysis complete.\n")
+  }
+}
+
+# Run the main function
+main()
+```
+
+
+```{r}
+# --- Community Crime Analysis (Simplified R Script) ---
+#
+# This script performs the entire analysis (Data Prep, EDA, Model Building, Evaluation, and Visualization)
+# without custom functions, running sequentially for maximum readability.
+#
+# Prerequisite: Ensure you have the 'communities.data' file in the same directory.
+#
+# Before running, you must install the required packages:
+# install.packages(c("readr", "dplyr", "ggplot2", "tidymodels", "ranger", "caTools"))
+#
+# ----------------------------------------------------------------------
+
+# --- 1. Load Libraries ---
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidymodels)
+library(ranger)
+library(caTools) # For sample.split
+
+cat("Libraries loaded successfully.\n")
+
+# --- 2. Define Column Names ---
+# This list is necessary as the data file does not contain a header row.
+column_names <- c(
+    'state', 'county', 'community', 'communityname', 'fold', 'population', 'householdsize',
+    'racepctblack', 'racePctWhite', 'racePctAsian', 'racePctHisp', 'agePct12t21',
+    'agePct12t29', 'agePct16t24', 'agePct65up', 'numbUrban', 'pctUrban', 'medIncome',
+    'pctWWage', 'pctWFarmSelf', 'pctWInvInc', 'pctWSocSec', 'pctWPubAsst', 'pctWRetire',
+    'medFamInc', 'perCapInc', 'whitePerCap', 'blackPerCap', 'indianPerCap', 'AsianPerCap',
+    'OtherPerCap', 'HispPerCap', 'NumUnderPov', 'PctNotHSGrad', 'PctBSorMore',
+    'PctUnemployed', 'PctEmploy', 'PctEmplManu', 'PctEmplProfServ', 'PctOccupManu',
+    'PctOccupProfMgmt', 'MalePctDivorce', 'MalePctNevMarr', 'FemalePctDiv', 'TotalPctDiv',
+    'PersPerFam', 'PctFam2Par', 'PctKids2Par', 'PctYoungKids2Par', 'PctTeen2Par',
+    'PctWorkMomYoungKids', 'PctWorkMom', 'NumIlleg', 'PctIlleg', 'NumImmig',
+    'PctImmigRecent', 'PctImmigRec5', 'PctImmigRec8', 'PctImmigRec10', 'PctRecentImmig',
+    'PctRecImmig5', 'PctRecImmig8', 'PctRecImmig10', 'PctSpeakEnglOnly',
+    'PctNotSpeakEnglWell', 'PctLargHouseFam', 'PctLargHouseOccup', 'PersPerOccupHous',
+    'PersPerOwnOccHous', 'PersPerRentOccHous', 'PctPersOwnOccup', 'PctPersDenseHous',
+    'PctHousLess3BR', 'MedNumBR', 'HousVacant', 'PctHousOccup', 'PctHousOwnOcc',
+    'PctVacantBoarded', 'PctVacMore6Mos', 'MedYrHousBuilt', 'PctHousNoPhone',
+    'PctWOFullPlumb', 'OwnOccLowQuart', 'OwnOccMedVal', 'OwnOccHiQuart', 'RentLowQ',
+    'RentMedian', 'RentHighQ', 'MedRent', 'MedRentPctHousInc', 'MedOwnCostPctInc',
+    'MedOwnCostPctIncNoMtg', 'NumInShelters', 'NumStreet', 'PctForeignBorn',
+    'PctBornSameState', 'PctSameHouse85', 'PctSameCity85', 'PctSameState85',
+    'LemasSwornFT', 'LemasSwFTPerPop', 'LemasSwFTFieldOps', 'LemasSwFTFieldPerPop',
+    'LemasTotalReq', 'LemasTotReqPerPop', 'PolicReqPerPop', 'PolicPerPop',
+    'RacialMatchCommPol', 'PctPolicWhite', 'PctPolicBlack', 'PctPolicHisp',
+    'PctPolicAsian', 'PctPolicMinor', 'OfficAssgnDrugUnits', 'NumKindsDrugsSeiz',
+    'PolicPerPopAgg', 'PolicFieldPerPopAgg', 'LemasPctPolicOnPatr',
+    'LemasGangUnitDeploy', 'LemasPctOfficDrugUn', 'PolicBudgPerPop',
+    'ViolentCrimesPerPop' # The target variable
+)
+
+# --- 3. Load Data ---
+filename <- 'communities.data'
+cat(sprintf("Loading data from %s...\n", filename))
+
+# The dataset uses '?' for missing values, so we specify this in read_csv
+data_raw <- read_csv(filename, col_names = column_names, na = '?', col_types = cols())
+
+cat(sprintf("Data loaded: %d rows, %d columns\n", nrow(data_raw), ncol(data_raw)))
+
+# --- 4. Data Preprocessing (Cleaning) ---
+cat("\nPreprocessing data (dropping unnecessary and incomplete features)...\n")
+
+# Drop non-predictive columns (metadata)
+non_predictive_cols <- c('state', 'county', 'community', 'communityname', 'fold')
+data_clean <- data_raw %>% select(-all_of(non_predictive_cols))
+
+# Drop rows where the target variable is missing (not useful for training)
+data_clean <- data_clean %>% filter(!is.na(ViolentCrimesPerPop))
+
+# Drop feature columns with >50% missing values
+missing_pct <- sapply(data_clean, function(x) mean(is.na(x)))
+cols_to_drop <- names(missing_pct)[missing_pct > 0.5 & names(missing_pct) != "ViolentCrimesPerPop"]
+data_clean <- data_clean %>% select(-all_of(cols_to_drop))
+
+cat(sprintf("Total columns after initial cleaning: %d\n", ncol(data_clean)))
+
+# --- 5. Split Data into Training and Testing Sets ---
+set.seed(42) # For reproducibility
+split <- sample.split(data_clean$ViolentCrimesPerPop, SplitRatio = 0.8)
+train_data <- subset(data_clean, split == TRUE)
+test_data <- subset(data_clean, split == FALSE)
+
+cat(sprintf("Training set: %d samples\n", nrow(train_data)))
+cat(sprintf("Test set: %d samples\n", nrow(test_data)))
+
+# --- 6. Exploratory Data Analysis (EDA) - Correlation ---
+cat("\n--- Exploratory Data Analysis (EDA) ---\n")
+
+# Calculate correlation matrix
+cor_matrix <- cor(train_data, use = "pairwise.complete.obs")
+
+# Get correlation with target variable, sort by absolute value
+cor_with_target <- cor_matrix[, "ViolentCrimesPerPop"]
+cor_with_target <- cor_with_target[!is.na(cor_with_target)]
+cor_with_target_abs_sorted <- sort(abs(cor_with_target), decreasing = TRUE)
+
+cat("Top 15 Features Most Correlated with Violent Crime:\n")
+# Print features 2 through 16 (1 is the target itself)
+print(cor_with_target_abs_sorted[2:16])
+
+# --- 7. Define Preprocessing Recipe (Imputation and Scaling) ---
+# The 'recipe' handles the final missing value imputation (median) and standardization (scaling)
+data_recipe <- recipe(ViolentCrimesPerPop ~ ., data = train_data) %>%
+  step_impute_median(all_numeric_predictors()) %>% # Fill any remaining NA with median
+  step_scale(all_numeric_predictors())           # Standardize features
+
+# --- 8. Define Model Specifications ---
+
+# Linear Regression (Simple Benchmark Model)
+lr_spec <- linear_reg() %>%
+  set_engine("lm")
+
+# Random Forest (Complex Ensemble Model)
+rf_spec <- rand_forest(trees = 100) %>%
+  set_engine("ranger", importance = "permutation") %>%
+  set_mode("regression")
+
+# --- 9. Create and Train Workflows ---
+
+# Linear Regression Workflow
+lr_workflow <- workflow() %>%
+  add_recipe(data_recipe) %>%
+  add_model(lr_spec)
+
+cat("\nTraining Linear Regression model...\n")
+lr_fit <- fit(lr_workflow, data = train_data)
+
+# Random Forest Workflow
+rf_workflow <- workflow() %>%
+  add_recipe(data_recipe) %>%
+  add_model(rf_spec)
+
+cat("Training Random Forest model...\n")
+rf_fit <- fit(rf_workflow, data = train_data)
+
+# --- 10. Evaluate Models on Test Set ---
+cat("\n--- Model Results ---\n")
+
+# Define the metrics (R-squared and RMSE)
+model_metrics <- metric_set(rsq, rmse)
+
+# Get Predictions for Linear Regression
+lr_preds <- predict(lr_fit, new_data = test_data) %>%
+  bind_cols(test_data %>% select(ViolentCrimesPerPop))
+
+# Calculate and print LR metrics
+lr_results <- lr_preds %>%
+  model_metrics(truth = ViolentCrimesPerPop, estimate = .pred)
+
+cat("Linear Regression Performance:\n")
+print(lr_results)
+
+# Get Predictions for Random Forest
+rf_preds <- predict(rf_fit, new_data = test_data) %>%
+  bind_cols(test_data %>% select(ViolentCrimesPerPop))
+
+# Calculate and print RF metrics
+rf_results <- rf_preds %>%
+  model_metrics(truth = ViolentCrimesPerPop, estimate = .pred)
+
+cat("\nRandom Forest Regression Performance:\n")
+print(rf_results)
+
+# --- 11. Random Forest Feature Importance ---
+cat("\n--- Random Forest Feature Importance ---\n")
+
+# Extract the fitted model and importance scores
+rf_model <- extract_fit_parsnip(rf_fit)$fit
+importances <- data.frame(
+  feature = names(rf_model$variable.importance),
+  importance = rf_model$variable.importance
+) %>%
+  arrange(desc(importance))
+
+cat("Top 10 Most Important Features:\n")
+print(head(importances, 10))
+
+# --- 12. Visualization (Predicted vs. Actual and Residuals) ---
+cat("\n--- Generating Visualizations ---\n")
+
+# Calculate residuals for both models
+lr_preds <- lr_preds %>% mutate(residuals = ViolentCrimesPerPop - .pred)
+rf_preds <- rf_preds %>% mutate(residuals = ViolentCrimesPerPop - .pred)
+
+# --- 12.1 Predicted vs. Actual Plot (Linear Regression) ---
+plot1_lr <- ggplot(lr_preds, aes(x = ViolentCrimesPerPop, y = .pred)) +
+  geom_point(alpha = 1.0, size = 2.0, color = "blue") +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed", size = 1) +
+  labs(
+    title = "Linear Regression: Predicted vs. Actual Values",
+    x = "Actual Crime Rate",
+    y = "Predicted Crime Rate"
+  ) +
+  theme_minimal() +
+  coord_fixed()
+  
+ggsave("predicted_vs_actual_LR.png", plot1_lr, width = 6, height = 6)
+cat("Saved 'predicted_vs_actual_LR.png' \n")
+
+# --- 12.2 Residual Distribution Map (Linear Regression) ---
+plot2_lr <- ggplot(lr_preds, aes(x = residuals)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "black", alpha = 0.7) +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
+  labs(
+    title = "Linear Regression: Residual Distribution",
+    x = "Residual (Error)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+  
+ggsave("residuals_histogram_LR.png", plot2_lr, width = 6, height = 4)
+cat("Saved 'residuals_histogram_LR.png' \n")
+
+# --- 12.3 Predicted vs. Actual Plot (Random Forest) ---
+plot1_rf <- ggplot(rf_preds, aes(x = ViolentCrimesPerPop, y = .pred)) +
+  geom_point(alpha = 1.0, size = 2.0, color = "darkgreen") +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed", size = 1) +
+  labs(
+    title = "Random Forest: Predicted vs. Actual Values",
+    x = "Actual Crime Rate",
+    y = "Predicted Crime Rate"
+  ) +
+  theme_minimal() +
+  coord_fixed()
+  
+ggsave("predicted_vs_actual_R.png", plot1_rf, width = 6, height = 6)
+cat("Saved 'predicted_vs_actual_R.png' \n")
+
+# --- 12.4 Residual Distribution Map (Random Forest) ---
+plot2_rf <- ggplot(rf_preds, aes(x = residuals)) +
+  geom_histogram(bins = 30, fill = "darkgreen", color = "black", alpha = 0.7) +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
+  labs(
+    title = "Random Forest: Residual Distribution (Sharply Centered at Zero)",
+    x = "Residual (Error)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+  
+ggsave("residuals_histogram_R.png", plot2_rf, width = 6, height = 4)
+cat("Saved 'residuals_histogram_R.png' \n")
+
+cat("\nAnalysis complete. Check the output directory for four saved plot files.\n")
+# ----------------------------------------------------------------------
+```
+
