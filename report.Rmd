@@ -411,13 +411,11 @@ plot2_rf
 
 Some Possible Ways to Improve Things:
 
--   Optimize Hyperparameters: Systematic tuning of hyperparameters.
-
 -   Generate New Features: Create high dimensional and interpretive features.
 
 -   Normalize Data: To maintain consistent models, we need to standardize the dataset.
 
--   Analyze Gradient Boosted Decision Tree Learning Algorithms: Review some advanced versions of Gradient Boosted Decision Trees (GB-D): XGBoost and LightGBM.
+-   Analyze Gradient Boosted Decision Tree Learning Algorithms: Review some advanced versions of Gradient Boosted Decision Trees.
 
 ### 6.2 Ethical Issues
 
