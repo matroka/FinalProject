@@ -152,24 +152,22 @@ Before performing any modelling, I conducted a statistical and visual assessment
 I also produced summary statistics to give an overview of the main variables and how they can be described:
 
 ```{r summary statistics}
-summary_data <- function()
-data %>%
-  select(ViolentCrimesPerPop, medIncome, PctPopUnderPov, PctUnemployed) %>%
+data_clean %>%
+  select(ViolentCrimesPerPop, medIncome, PctUnemployed) %>%
   summarise_all(list(
     mean = ~mean(. , na.rm = TRUE),
     sd = ~sd(. , na.rm = TRUE),
     min = ~min(. , na.rm = TRUE),
     max = ~max(. , na.rm = TRUE)
   ))
+
 ```
 
-The violent crime rate is approximately a mean of 0.23 and a standard deviation of approximately 0.15.
+The violent crime rate is approximately a mean of 0.16 and a standard deviation of approximately 0.21.
 
 The socio-economic measures included in the analysis of my data set include:
 
-1.  The average poverty rate is about 14% and the average unemployment is about 7%. There are large differences in middle income levels from community to community.
-
-2.  The demographic data indicates that there is a wide variation in the ethnic/actual make-up of communities, which demonstrates that there are also significant differences in how well each community is represented by the population.
+The demographic data indicates that there is a wide variation in the ethnic/actual make-up of communities, which demonstrates that there are also significant differences in how well each community is represented by the population.
 
 ### 4.2 Visual Exploration
 

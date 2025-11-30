@@ -510,28 +510,30 @@ anomalies.</p>
 <h3>4.1 Summary Statistics</h3>
 <p>I also produced summary statistics to give an overview of the main
 variables and how they can be described:</p>
-<pre class="r"><code>summary_data &lt;- function()
-data %&gt;%
-  select(ViolentCrimesPerPop, medIncome, PctPopUnderPov, PctUnemployed) %&gt;%
+<pre class="r"><code>data_clean %&gt;%
+  select(ViolentCrimesPerPop, medIncome, PctUnemployed) %&gt;%
   summarise_all(list(
     mean = ~mean(. , na.rm = TRUE),
     sd = ~sd(. , na.rm = TRUE),
     min = ~min(. , na.rm = TRUE),
     max = ~max(. , na.rm = TRUE)
   ))</code></pre>
-<p>The violent crime rate is approximately a mean of 0.23 and a standard
-deviation of approximately 0.15.</p>
+<pre><code>## # A tibble: 1 × 12
+##   ViolentCrimesPerPop_mean medIncome_mean PctUnemployed_mean
+##                      &lt;dbl&gt;          &lt;dbl&gt;              &lt;dbl&gt;
+## 1                    0.163          0.305              0.430
+## # ℹ 9 more variables: ViolentCrimesPerPop_sd &lt;dbl&gt;, medIncome_sd &lt;dbl&gt;,
+## #   PctUnemployed_sd &lt;dbl&gt;, ViolentCrimesPerPop_min &lt;dbl&gt;, medIncome_min &lt;dbl&gt;,
+## #   PctUnemployed_min &lt;dbl&gt;, ViolentCrimesPerPop_max &lt;dbl&gt;,
+## #   medIncome_max &lt;dbl&gt;, PctUnemployed_max &lt;dbl&gt;</code></pre>
+<p>The violent crime rate is approximately a mean of 0.16 and a standard
+deviation of approximately 0.21.</p>
 <p>The socio-economic measures included in the analysis of my data set
 include:</p>
-<ol style="list-style-type: decimal">
-<li><p>The average poverty rate is about 14% and the average
-unemployment is about 7%. There are large differences in middle income
-levels from community to community.</p></li>
-<li><p>The demographic data indicates that there is a wide variation in
-the ethnic/actual make-up of communities, which demonstrates that there
-are also significant differences in how well each community is
-represented by the population.</p></li>
-</ol>
+<p>The demographic data indicates that there is a wide variation in the
+ethnic/actual make-up of communities, which demonstrates that there are
+also significant differences in how well each community is represented
+by the population.</p>
 </div>
 <div id="visual-exploration" class="section level3">
 <h3>4.2 Visual Exploration</h3>
