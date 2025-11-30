@@ -25,15 +25,15 @@ library(caTools)
 
 In Sociology, Criminology, and Public Policy, the causes of crime are studied in relation to society. The emergence of massive street and population datasets has created new opportunities for researchers to analyze large amounts of information using Data Science techniques to uncover new relationships and make better predictions.
 
-In this project, we utilized the Community and Crime dataset from the UCI machine learning repository, a dataset with thousands of records with social, economic, security, and demographic variables on approximately 2,000 US Communities, to investigate the effects of Community Characteristics on Violent Crimes in the Community, and whether Machine Learning Models (especially Linear Regression and Random Forest Regression models) have the ability to produce accurate predictions of the Violent Crime Rate in a given Community.
+In this project, we utilized the Community and Crime dataset from the UCI machine learning repository, a dataset with thousands of records with social, economic, security and demographic variables on approximately 2,000 US Communities, to investigate the effects of Community Characteristics on Violent Crimes in the Community, and whether Machine Learning Models have the ability to produce accurate predictions of the Violent Crime Rate in a given Community.
 
-To that end, we undertook intensive efforts in Data Preparation, Exploratory Data Analysis, Model Building, Model Evaluation, and Visualization of the Model's predictions and errors.
+To that end, we undertook intensive efforts in Data Preparation, Exploratory Data Analysis, Model Building, Model Evaluation and Visualization of the Model's predictions and errors.
 
-This report follows a systematic research procedure. First, it identifies and reviews the datasets and utilizes them in the modelling step and finally, evaluates the ethical issues and reflections. The prediction of the final model used in the project was not only accurate, but provided significant rationales which could provide an opportunity for further discussions about crime prevention or community safety.
+This report follows a systematic research procedure. First, it identifies and reviews the datasets and utilizes them in the modelling step and finally evaluates the ethical issues and reflections. The prediction of the final model used in the project was not only accurate but provided significant rationales which could provide an opportunity for further discussions about crime prevention or community safety.
 
 ## 2. Dataset Selection and Understanding
 
-The reason why the "Community and Crime" is selected for the data set is because it is well known within the field of machine learning research literature. Additionally, the data set presents comprehensive multi-dimensional values. There are 122 variables in the data set. These come from law enforcement data, U.S. census data, and other socio-economic measures.
+The reason why the "Community and Crime" is selected for the data set is because it is well known within the field of machine learning research literature. Additionally, the data set presents comprehensive multi-dimensional values. There are 122 variables in the data set. These come from law enforcement data, U.S. census data and other socio-economic measures.
 
 ### 2.1 What the dataset contains
 
@@ -49,7 +49,7 @@ The data set covers a variety of characteristic information, specifically includ
 
 -   Police resource data: number of sworn full-time officers, police budget, drug-unit assignments.
 
--   Crime situation: violent crimes per 100,000 residents (target variable).
+-   Crime situation: violent crimes per 100,000 residents.
 
 Each sample corresponds to a community or block unit, so the data set has strong empirical research value in analyzing regional differences.
 
@@ -97,13 +97,13 @@ In view of the richness of this data set, a series of research problems have eme
 
 -   Which machine learning model can capture the crime pattern best?
 
-Our project aims to predict the number of violent crimes per million people, which is a supervised return task. This prediction goal not only enables us to explore various relationships, but also allows us to test different modeling methods.
+Our project aims to predict the number of violent crimes per million people, which is a supervised return task. This prediction goal not only enables us to explore various relationships but also allows us to test different modeling methods.
 
 ## 3. Data Overview
 
 The main goals of this project are:
 
-Build a model that can predict the violent crime rate based on the characteristics of the community level, and compare the performance of the linear regression model and the random forest model.
+Build a model that can predict the violent crime rate based on the characteristics of the community level and compare the performance of the linear regression model and the random forest model.
 
 ### 3.1 Data Preprocessing
 
@@ -144,6 +144,7 @@ cat(sprintf("Total columns after initial cleaning: %d\n", ncol(data_clean)))
 
 
 ```
+
 ## 4. Exploratory Data Analysis (EDA)
 
 Before performing any modelling, I conducted a statistical and visual assessment of the data set in order to see if there were any trends or anomalies.
@@ -164,13 +165,13 @@ data %>%
   ))
 ```
 
-The violent crime rate (this is the target for our project) is approximately a mean of 0.23 (i.e. for the average community) and a standard deviation of approximately 0.15 (i.e. some communities can have violent crime rates that are much higher than the average).
+The violent crime rate is approximately a mean of 0.23 and a standard deviation of approximately 0.15.
 
 The socio-economic measures included in the analysis of my data set include:
 
 1.  The average poverty rate is about 14% and the average unemployment is about 7%. There are large differences in middle income levels from community to community.
 
-2.  The demographic data indicates that there is a wide variation in the ethnic/cultural make-up of communities, which demonstrates that there are also significant differences in how well each community is represented by the population.
+2.  The demographic data indicates that there is a wide variation in the ethnic/actual make-up of communities, which demonstrates that there are also significant differences in how well each community is represented by the population.
 
 ### 4.2 Visual Exploration
 
@@ -178,9 +179,9 @@ I have found several interesting visual patterns that I believe require a thorou
 
 1.  There is a moderate positive correlation between poverty, unemployment, and violent crime.
 
-2.  There is a weak or non-linear correlation between police-related variables (i.e. per capita police budgets) and the violent crime rate.
+2.  There is a weak or non-linear correlation between police-related variables and the violent crime rate.
 
-3.  Crime and poverty variables tend to have distributions that are right-heavy and skewed due to the existence of a few high crime and poverty areas, but overall, the majority of communities have lower levels of both.
+3.  Crime and poverty variables tend to have distributions that are right-heavy and skewed due to the existence of a few high crime and poverty areas but overall, the majority of communities have lower levels of both.
 
 ### 4.3 Identifying the Highest Correlated Predictors
 
@@ -192,7 +193,7 @@ Before embarking on the predictive model-building process, the initial aim was t
 
 Pearson correlation values for each predictor in the dataset against the variable ViolentCrimesPerPop were obtained. Missing values in the analysis were dealt with by use of the option ‘complete.obs’.
 
-Based on the above results, I was able to identify the top 15 variable terms having the strongest positive/negative correlation by extracting the relevant terms from the output.
+Based on the above results, I was able to identify the top 15 variable terms having the strongest positive or negative correlation by extracting the relevant terms from the output.
 
 #### 4.3.3 Findings
 
@@ -242,6 +243,7 @@ Two models for predicting have been developed:
 2.  Random forest regression
 
 Models consisting of simple linear structures are compared to nonlinear integrated learning.
+
 ```{r for EDA}
 set.seed(42) 
 split <- sample.split(data_clean$ViolentCrimesPerPop, SplitRatio = 0.8)
@@ -291,7 +293,7 @@ rf_fit <- fit(rf_workflow, data = train_data)
 
 Two important indicators used for evaluating the model are:
 
-1.  R² (Coefficient of Determination): ≈ 0.68 This indicates that the model explains only 68% of the variance in violent crime. While far from terrible, it suggests many important relationships are nonlinear/interactive.
+1.  R² (Coefficient of Determination): ≈ 0.68. This indicates that the model explains only 68% of the variance in violent crime. While far from terrible, it suggests many important relationships are nonlinear or interactive.
 
 2.  RMSE (Root Mean Squared Error): ≈ 0.10 This indicates the average error in the predicted values against the actual crime rates.
 
@@ -326,7 +328,7 @@ print(lr_results)
 
 Random Forest performed much better because:
 
-1.  R²: ≈ 0.83 The model captured around 70% of the variance—much higher than Linear Regression.
+1.  R²: ≈ 0.83 The model captured around 80% of the variance—much higher than Linear Regression.
 
 2.  RMSE: ≈ 0.06 Prediction error values plummeted. Their precision doubled from the values for the linear model.
 
@@ -345,6 +347,7 @@ Random Forest highlighted the important predictors:
 5.  Per-capita income
 
 These findings match common criminological theories and reinforce known socio-economic associations.
+
 ```{r random forest}
 rf_preds <- predict(rf_fit, new_data = test_data) %>%
   bind_cols(test_data %>% select(ViolentCrimesPerPop))
@@ -355,7 +358,6 @@ rf_results <- rf_preds %>%
 cat("\nRandom Forest Regression Performance:\n")
 print(rf_results)
 ```
-
 
 ### 5.3 Visual Evaluation of Models
 
@@ -386,7 +388,7 @@ plot1_rf
 
 #### 5.3.2 Residual distribution map
 
-The histogram of the random forest model’s residuals contains a strong central peak of the magnitude of 0.0, indicating that the majority of predicted results were based upon the results that included less residual error than what was observed by the model throughout the entire test dataset. The histogram of residuals for the linear regression model shows a wider and flatter shape, indicating that the linear regression model did not produce normally distributed residuals and exhibited larger residuals than random forests did.
+The histogram of the random forest model’s residuals contains a strong central peak of the magnitude of 0, indicating that the majority of predicted results were based upon the results that included less residual error than what was observed by the model throughout the entire test dataset. The histogram of residuals for the linear regression model shows a wider and flatter shape, indicating that the linear regression model did not produce normally distributed residuals and exhibited larger residuals than random forests did.
 
 ```{r visual evaluation}
 lr_preds <- lr_preds %>% mutate(residuals = ViolentCrimesPerPop - .pred)
@@ -415,15 +417,11 @@ plot2_rf
 
 Some Possible Ways to Improve Things:
 
+-   Optimize Hyperparameters: Systematic tuning of hyperparameters;
 
--   Optimize Hyperparameters: Systematic tuning of hyperparameters (e.g., number of trees, tree depth);
-
-
--   Generate New Features: Create high dimensional and interpretive features (e.g., interaction features);
-
+-   Generate New Features: Create high dimensional and interpretive features;
 
 -   Normalize Data: To maintain consistent models, we need to standardize the dataset;
-
 
 -   Analyze Gradient Boosted Decision Tree Learning Algorithms: Review some advanced versions of Gradient Boosted Decision Trees (GB-D) : XGBoost and LightGBM.
 
