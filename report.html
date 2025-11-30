@@ -447,18 +447,12 @@ cat(sprintf(&quot;Loading data from %s...\n&quot;, filename))</code></pre>
 <p>In view of the richness of this data set, a series of research
 problems have emerged:</p>
 <ul>
-<li><p>Which community characteristics are most closely related to
-violent crimes?</p></li>
-<li><p>Can the frequency of violent incidents be predicted based on
-factors such as socio-economic factors and public security management
-measures?</p></li>
-<li><p>Which machine learning model can capture the crime pattern
-best?</p></li>
+<li><p>Find most closely correlated community characteristics to violent
+crime rates</p></li>
+<li><p>Try to model the violent crime rate from the given data</p></li>
+<li><p>Find the machine learning model that produces the best
+predictions</p></li>
 </ul>
-<p>Our project aims to predict the number of violent crimes per million
-people, which is a supervised return task. This prediction goal not only
-enables us to explore various relationships but also allows us to test
-different modeling methods.</p>
 </div>
 </div>
 <div id="data-overview" class="section level2">
@@ -976,14 +970,14 @@ plot2_lr</code></pre>
 <p>Some Possible Ways to Improve Things:</p>
 <ul>
 <li><p>Optimize Hyperparameters: Systematic tuning of
-hyperparameters;</p></li>
+hyperparameters.</p></li>
 <li><p>Generate New Features: Create high dimensional and interpretive
-features;</p></li>
+features.</p></li>
 <li><p>Normalize Data: To maintain consistent models, we need to
-standardize the dataset;</p></li>
+standardize the dataset.</p></li>
 <li><p>Analyze Gradient Boosted Decision Tree Learning Algorithms:
-Review some advanced versions of Gradient Boosted Decision Trees (GB-D)
-: XGBoost and LightGBM.</p></li>
+Review some advanced versions of Gradient Boosted Decision Trees (GB-D):
+XGBoost and LightGBM.</p></li>
 </ul>
 </div>
 <div id="ethical-issues" class="section level3">
@@ -1005,8 +999,8 @@ community intervention over punitive enforcement.</p></li>
 <div id="results-feedback" class="section level2">
 <h2>7. Results &amp; feedback</h2>
 <p>Generally, the outcome of the models was:</p>
-<p>Linear Regression: Fair results. Suffered from multicolinearity.</p>
-<p>Random Forest: Strong performance, gave good indication on
+<p>Linear Regression: Fair results. Suffered from multicollinearity.</p>
+<p>Random Forest: Strong performance gave good indication on
 importance.</p>
 <p>This indicates that the interaction between the community attributes
 and violent crime is very nonlinear. Hence, tree-based ensemble methods

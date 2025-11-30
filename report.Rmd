@@ -91,13 +91,11 @@ cat(sprintf("Loading data from %s...\n", filename))
 
 In view of the richness of this data set, a series of research problems have emerged:
 
--   Which community characteristics are most closely related to violent crimes?
+-   Find most closely correlated community characteristics to violent crime rates
 
--   Can the frequency of violent incidents be predicted based on factors such as socio-economic factors and public security management measures?
+-   Try to model the violent crime rate from the given data
 
--   Which machine learning model can capture the crime pattern best?
-
-Our project aims to predict the number of violent crimes per million people, which is a supervised return task. This prediction goal not only enables us to explore various relationships but also allows us to test different modeling methods.
+-   Find the machine learning model that produces the best predictions
 
 ## 3. Data Overview
 
@@ -417,13 +415,13 @@ plot2_rf
 
 Some Possible Ways to Improve Things:
 
--   Optimize Hyperparameters: Systematic tuning of hyperparameters;
+-   Optimize Hyperparameters: Systematic tuning of hyperparameters.
 
--   Generate New Features: Create high dimensional and interpretive features;
+-   Generate New Features: Create high dimensional and interpretive features.
 
--   Normalize Data: To maintain consistent models, we need to standardize the dataset;
+-   Normalize Data: To maintain consistent models, we need to standardize the dataset.
 
--   Analyze Gradient Boosted Decision Tree Learning Algorithms: Review some advanced versions of Gradient Boosted Decision Trees (GB-D) : XGBoost and LightGBM.
+-   Analyze Gradient Boosted Decision Tree Learning Algorithms: Review some advanced versions of Gradient Boosted Decision Trees (GB-D): XGBoost and LightGBM.
 
 ### 6.2 Ethical Issues
 
@@ -443,9 +441,9 @@ Crime prediction requires extreme caution:
 
 Generally, the outcome of the models was:
 
-Linear Regression: Fair results. Suffered from multicolinearity.
+Linear Regression: Fair results. Suffered from multicollinearity.
 
-Random Forest: Strong performance, gave good indication on importance.
+Random Forest: Strong performance gave good indication on importance.
 
 This indicates that the interaction between the community attributes and violent crime is very nonlinear. Hence, tree-based ensemble methods are the best suited.
 
