@@ -497,12 +497,12 @@ cat(sprintf(&quot;Total columns after initial cleaning: %d\n&quot;, ncol(data_cl
 </div>
 <div id="exploratory-data-analysis-eda" class="section level2">
 <h2>4. Exploratory Data Analysis (EDA)</h2>
-<p>Before performing any modelling, I conducted a statistical and visual
-assessment of the data set in order to see if there were any trends or
-anomalies.</p>
+<p>Before performing any modelling, we conducted a statistical and
+visual assessment of the data set in order to see if there were any
+trends or anomalies.</p>
 <div id="summary-statistics" class="section level3">
 <h3>4.1 Summary Statistics</h3>
-<p>I also produced summary statistics to give an overview of the main
+<p>We also produced summary statistics to give an overview of the main
 variables and how they can be described:</p>
 <pre class="r"><code>data_clean %&gt;%
   select(ViolentCrimesPerPop, medIncome, PctUnemployed) %&gt;%
@@ -992,27 +992,17 @@ community intervention over punitive enforcement.</p></li>
 </ul>
 </div>
 </div>
-<div id="results-feedback" class="section level2">
-<h2>7. Results &amp; feedback</h2>
-<p>Generally, the outcome of the models was:</p>
-<p>Linear Regression: Fair results. Suffered from multicollinearity.</p>
-<p>Random Forest: Strong performance gave good indication on
-importance.</p>
-<p>This indicates that the interaction between the community attributes
-and violent crime is very nonlinear. Hence, tree-based ensemble methods
-are the best suited.</p>
-</div>
 <div id="overall-summary" class="section level2">
-<h2>8. Overall Summary</h2>
-<p>In this investigation of the Communities and Crime database, the
-researcher explored whether some demographic and socio-economic
-variables correlated with incidents of violent crime.</p>
+<h2>7. Overall Summary</h2>
+<p>In this investigation of the Communities and Crime database, we
+explored whether some demographic and socio-economic variables
+correlated with incidents of violent crime.</p>
 <p>Poverty, unemployment, and family structure are associated with
 violent crime. Based on a linear regression analysis, a moderate
 correlation exists. The predicted correlation was approximately
 0.68.</p>
-<p>Random Forests, however, produced a superior outcome versus that of
-linear regression. The predicted correlation from Random Forest was
+<p>Random Forests produced a superior outcome versus that of linear
+regression. The predicted correlation from Random Forest was
 approximately 0.83, with a much lower margin of error.</p>
 <p>Both visual analyses illustrate the considerable improvement in
 prediction accuracy of Random Forest over the linear regression
@@ -1021,7 +1011,7 @@ method.</p>
 of this investigation are ethically significant.</p>
 </div>
 <div id="conclusion" class="section level2">
-<h2>9. Conclusion</h2>
+<h2>8. Conclusion</h2>
 <p>To analyze socio-economic factors associated with violent crime, the
 Community and Crime dataset was used in forecasting future violent crime
 with historical data using Random Forest technique. The Random Forest
@@ -1039,7 +1029,7 @@ public safety solutions to improve the quality of life for people who
 live within a community.</p>
 </div>
 <div id="reference" class="section level2">
-<h2>10. Reference</h2>
+<h2>9. Reference</h2>
 <p>Redmond, M. (2002). Communities and Crime [Dataset]. UCI Machine
 Learning Repository. <a href="https://doi.org/10.24432/C53W3X" class="uri">https://doi.org/10.24432/C53W3X</a>.</p>
 </div>

@@ -143,11 +143,11 @@ cat(sprintf("Total columns after initial cleaning: %d\n", ncol(data_clean)))
 
 ## 4. Exploratory Data Analysis (EDA)
 
-Before performing any modelling, I conducted a statistical and visual assessment of the data set in order to see if there were any trends or anomalies.
+Before performing any modelling, we conducted a statistical and visual assessment of the data set in order to see if there were any trends or anomalies.
 
 ### 4.1 Summary Statistics
 
-I also produced summary statistics to give an overview of the main variables and how they can be described:
+We also produced summary statistics to give an overview of the main variables and how they can be described:
 
 ```{r summary statistics}
 data_clean %>%
@@ -433,33 +433,23 @@ Crime prediction requires extreme caution:
 
 -   Mandate: Model application must be responsible, promoting community intervention over punitive enforcement.
 
-## 7. Results & feedback
+## 7. Overall Summary
 
-Generally, the outcome of the models was:
-
-Linear Regression: Fair results. Suffered from multicollinearity.
-
-Random Forest: Strong performance gave good indication on importance.
-
-This indicates that the interaction between the community attributes and violent crime is very nonlinear. Hence, tree-based ensemble methods are the best suited.
-
-## 8. Overall Summary
-
-In this investigation of the Communities and Crime database, the researcher explored whether some demographic and socio-economic variables correlated with incidents of violent crime.
+In this investigation of the Communities and Crime database, we explored whether some demographic and socio-economic variables correlated with incidents of violent crime.
 
 Poverty, unemployment, and family structure are associated with violent crime. Based on a linear regression analysis, a moderate correlation exists. The predicted correlation was approximately 0.68.
 
-Random Forests, however, produced a superior outcome versus that of linear regression. The predicted correlation from Random Forest was approximately 0.83, with a much lower margin of error.
+Random Forests produced a superior outcome versus that of linear regression. The predicted correlation from Random Forest was approximately 0.83, with a much lower margin of error.
 
 Both visual analyses illustrate the considerable improvement in prediction accuracy of Random Forest over the linear regression method.
 
 The implications regarding the use of sensitive social data as part of this investigation are ethically significant.
 
-## 9. Conclusion
+## 8. Conclusion
 
 To analyze socio-economic factors associated with violent crime, the Community and Crime dataset was used in forecasting future violent crime with historical data using Random Forest technique. The Random Forest technique's superior predictive ability over linear regression lies in the very complex nature of the socio-economic factors contributing to violent crime. Predicting violent crime, however, is just one application that was addressed in the study, as there were additional objectives of developing proper intervention strategies as well as fully understanding the structure of society. For these reasons, this project showcases the potential and limitations of predictive modeling in social science, especially regarding the ethical considerations of using sensitive social data, as well as how predictive models may enhance public safety by providing evidence-based solutions to create targeted public safety solutions to improve the quality of life for people who live within a community.
 
-## 10. Reference
+## 9. Reference
 
 Redmond, M. (2002). Communities and Crime [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C53W3X>.
 
