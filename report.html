@@ -11,7 +11,7 @@
 
 <meta name="author" content="4677" />
 
-<meta name="date" content="2025-11-29" />
+<meta name="date" content="2025-11-30" />
 
 <title>Final Report</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Final Report</h1>
 <h4 class="author">4677</h4>
-<h4 class="date">2025-11-29</h4>
+<h4 class="date">2025-11-30</h4>
 
 </div>
 
@@ -456,8 +456,6 @@ factors such as socio-economic factors and public security management
 measures?</p></li>
 <li><p>Which machine learning model can capture the crime pattern
 best?</p></li>
-<li><p>Are there any community groups with similar criminal behavior
-patterns?</p></li>
 </ul>
 <p>Our project aims to predict the number of violent crimes per million
 people, which is a supervised return task. This prediction goal not only
@@ -913,16 +911,11 @@ cat(&quot;\nRandom Forest Regression Performance:\n&quot;)</code></pre>
 <h3>5.3 Visual Evaluation of Models</h3>
 <div id="compare-the-predicted-plot-with-the-actual-plot" class="section level4">
 <h4>5.3.1 Compare the predicted plot with the actual plot</h4>
-<p>The scatter chart comparing the predicted value and the actual
-violent crime rate shows:</p>
-<p>On the diagonal of the red “perfect prediction” line, there is a
-dense group of points.</p>
-<p>For communities with a very high crime rate, there is a slight
-difference.</p>
-<p>Its performance is much stronger than that of linear regression
-algorithms.</p>
-<p>This visualization result confirms that the random forest model has
-good prediction accuracy.</p>
+<p>The plot for Linear Regression revealed that the points were spread
+irregularly, being far from the perfect result of 45 degrees, especially
+at the ends of the graph for crime rate. The plot for Random Forest
+revealed that the data points were closely plotted around the 45-degree
+line.</p>
 <pre class="r"><code>plot1_lr &lt;- ggplot(lr_preds, aes(x = ViolentCrimesPerPop, y = .pred)) +
   geom_point(alpha = 1.0, size = 2.0, color = &quot;blue&quot;) +
   geom_abline(slope = 1, intercept = 0, color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1) +
@@ -950,17 +943,14 @@ plot1_lr</code></pre>
 </div>
 <div id="residual-distribution-map" class="section level4">
 <h4>5.3.2 Residual distribution map</h4>
-<p>The histogram of the residual shows:</p>
-<ul>
-<li><p>A curve with zero as the center and a clear bell-shaped
-distribution.</p></li>
-<li><p>Low deviation (the residual difference will not be systematically
-biased positive or negative).</p></li>
-<li><p>There are some extreme cases that correspond to communities with
-abnormally high or unpredictable crime rates.</p></li>
-</ul>
-<p>This shows that the model can capture general patterns well, and most
-of the errors are random.</p>
+<p>The histogram of the random forest model’s residuals contains a
+strong central peak of the magnitude of 0.0, indicating that the
+majority of predicted results were based upon the results that included
+less residual error than what was observed by the model throughout the
+entire test dataset. The histogram of residuals for the linear
+regression model shows a wider and flatter shape, indicating that the
+linear regression model did not produce normally distributed residuals
+and exhibited larger residuals than random forests did.</p>
 <pre class="r"><code>lr_preds &lt;- lr_preds %&gt;% mutate(residuals = ViolentCrimesPerPop - .pred)
 rf_preds &lt;- rf_preds %&gt;% mutate(residuals = ViolentCrimesPerPop - .pred)
 plot2_lr &lt;- ggplot(lr_preds, aes(x = residuals)) +

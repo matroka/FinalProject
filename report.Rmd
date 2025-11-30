@@ -97,8 +97,6 @@ In view of the richness of this data set, a series of research problems have eme
 
 -   Which machine learning model can capture the crime pattern best?
 
--   Are there any community groups with similar criminal behavior patterns?
-
 Our project aims to predict the number of violent crimes per million people, which is a supervised return task. This prediction goal not only enables us to explore various relationships, but also allows us to test different modeling methods.
 
 ## 3. Data Overview
@@ -363,15 +361,7 @@ print(rf_results)
 
 #### 5.3.1 Compare the predicted plot with the actual plot
 
-The scatter chart comparing the predicted value and the actual violent crime rate shows:
-
-On the diagonal of the red "perfect prediction" line, there is a dense group of points.
-
-For communities with a very high crime rate, there is a slight difference.
-
-Its performance is much stronger than that of linear regression algorithms.
-
-This visualization result confirms that the random forest model has good prediction accuracy.
+The plot for Linear Regression revealed that the points were spread irregularly, being far from the perfect result of 45 degrees, especially at the ends of the graph for crime rate. The plot for Random Forest revealed that the data points were closely plotted around the 45-degree line.
 ```{r predicted plot vs. actual plot}
 plot1_lr <- ggplot(lr_preds, aes(x = ViolentCrimesPerPop, y = .pred)) +
   geom_point(alpha = 1.0, size = 2.0, color = "blue") +
@@ -395,15 +385,7 @@ plot1_rf
 
 #### 5.3.2 Residual distribution map
 
-The histogram of the residual shows:
-
--   A curve with zero as the center and a clear bell-shaped distribution.
-
--   Low deviation (the residual difference will not be systematically biased positive or negative).
-
--   There are some extreme cases that correspond to communities with abnormally high or unpredictable crime rates.
-
-This shows that the model can capture general patterns well, and most of the errors are random.
+The histogram of the random forest model’s residuals contains a strong central peak of the magnitude of 0.0, indicating that the majority of predicted results were based upon the results that included less residual error than what was observed by the model throughout the entire test dataset. The histogram of residuals for the linear regression model shows a wider and flatter shape, indicating that the linear regression model did not produce normally distributed residuals and exhibited larger residuals than random forests did.
 
 ```{r visual evaluation}
 lr_preds <- lr_preds %>% mutate(residuals = ViolentCrimesPerPop - .pred)
