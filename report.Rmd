@@ -29,8 +29,6 @@ In this project, we utilized the Community and Crime dataset from the UCI machin
 
 To that end, we undertook intensive efforts in Data Preparation, Exploratory Data Analysis, Model Building, Model Evaluation and Visualization of the Model's predictions and errors.
 
-This report follows a systematic research procedure. First, it identifies and reviews the datasets and utilizes them in the modelling step and finally evaluates the ethical issues and reflections. The prediction of the final model used in the project was not only accurate but provided significant rationales which could provide an opportunity for further discussions about crime prevention or community safety.
-
 ## 2. Dataset Selection and Understanding
 
 The reason why the "Community and Crime" is selected for the data set is because it is well known within the field of machine learning research literature. Additionally, the data set presents comprehensive multi-dimensional values. There are 122 variables in the data set. These come from law enforcement data, U.S. census data and other socio-economic measures.
